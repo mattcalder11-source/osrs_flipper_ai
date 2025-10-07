@@ -5,6 +5,7 @@ import joblib
 import threading
 import time
 import numpy as np
+from glob import glob
 from fastapi import FastAPI, HTTPException
 from datetime import datetime
 from watchdog.observers import Observer
@@ -16,7 +17,7 @@ FEATURES_FILE = "data/features/latest_train_enriched.parquet"
 
 REFRESH_INTERVAL = 300  # 5 minutes
 
-app = FastAPI(title="OSRS Flipper AI API", version="2.2")
+app = FastAPI(title="OSRS Flipper AI API", version="2.3")
 
 # In-memory cache
 CACHE = {
@@ -44,7 +45,6 @@ def safe_load_model():
         raise FileNotFoundError("Model file not found.")
     model_dict = joblib.load(MODEL_PATH)
 
-    # Support models saved as { "model": estimator, "features": list[str] }
     if isinstance(model_dict, dict):
         model = model_dict.get("model", model_dict)
         features = model_dict.get("features", None)
@@ -179,7 +179,6 @@ def predict_item(item_id: int):
 
     feature_cols = CACHE.get("model_features")
     if not feature_cols:
-        # fallback to known default if metadata missing
         feature_cols = [
             "spread", "mid_price", "spread_ratio", "momentum",
             "potential_profit", "margin_pct", "hour",
@@ -200,3 +199,54 @@ def predict_item(item_id: int):
         "predicted_margin": pred,
         "timestamp": datetime.utcnow().isoformat(),
     }
+
+
+# --- History Endpoints ---
+@app.get("/history/top_items")
+def top_items_history(limit: int = 10):
+    """Return items most frequently appearing in past top flip predictions."""
+    files = sorted(glob("data/predictions/top_flips_*.csv"))
+    if not files:
+        raise HTTPException(status_code=404, detail="No historical predictions found.")
+
+    dfs = []
+    for f in files[-60:]:  # last 60 runs (~2 months if daily)
+        df = pd.read_csv(f)
+        df["timestamp"] = f.split("_")[-1].replace(".csv", "")
+        dfs.append(df)
+
+    all_preds = pd.concat(dfs, ignore_index=True)
+    top_items = (
+        all_preds.groupby("item_id")["predicted_profit_gp"]
+        .count()
+        .sort_values(ascending=False)
+        .head(limit)
+    )
+
+    result = [{"item_id": int(k), "appearances": int(v)} for k, v in top_items.items()]
+    return {"status": "ok", "count": len(result), "results": result}
+
+
+@app.get("/history/trends/{item_id}")
+def item_trend_history(item_id: int):
+    """Return historical predicted profits for a specific item."""
+    files = sorted(glob("data/predictions/top_flips_*.csv"))
+    if not files:
+        raise HTTPException(status_code=404, detail="No historical predictions found.")
+
+    records = []
+    for f in files[-60:]:
+        df = pd.read_csv(f)
+        if item_id in df["item_id"].values:
+            row = df[df["item_id"] == item_id].iloc[0]
+            timestamp = f.split("_")[-1].replace(".csv", "")
+            records.append({
+                "timestamp": timestamp,
+                "predicted_profit_gp": float(row.get("predicted_profit_gp", 0)),
+                "predicted_margin": float(row.get("predicted_margin", 0)),
+            })
+
+    if not records:
+        raise HTTPException(status_code=404, detail=f"No historical records found for item {item_id}.")
+
+    return {"item_id": item_id, "history": records, "count": len(records)}
