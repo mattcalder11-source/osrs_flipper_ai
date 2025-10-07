@@ -14,20 +14,23 @@ MODEL_PATH = "models/latest_model.pkl"
 LATEST_PRED_FILE = "data/predictions/latest_top_flips.csv"
 FEATURES_FILE = "data/features/latest_train_enriched.parquet"
 
-app = FastAPI(title="OSRS Flipper AI API", version="2.1")
+REFRESH_INTERVAL = 300  # 5 minutes
+
+app = FastAPI(title="OSRS Flipper AI API", version="2.2")
 
 # In-memory cache
 CACHE = {
     "model": None,
+    "model_features": None,
     "model_mtime": None,
     "predictions": None,
     "pred_mtime": None,
     "features": None,
     "features_mtime": None,
+    "last_refresh": None,
 }
 
-
-# --- Helper Functions ---
+# --- Utility Functions ---
 def get_mtime(path: str):
     """Return modification time or None."""
     try:
@@ -39,8 +42,18 @@ def get_mtime(path: str):
 def safe_load_model():
     if not os.path.exists(MODEL_PATH):
         raise FileNotFoundError("Model file not found.")
-    model = joblib.load(MODEL_PATH)
+    model_dict = joblib.load(MODEL_PATH)
+
+    # Support models saved as { "model": estimator, "features": list[str] }
+    if isinstance(model_dict, dict):
+        model = model_dict.get("model", model_dict)
+        features = model_dict.get("features", None)
+    else:
+        model = model_dict
+        features = None
+
     CACHE["model_mtime"] = get_mtime(MODEL_PATH)
+    CACHE["model_features"] = features
     print(f"✅ Model reloaded from {MODEL_PATH}")
     return model
 
@@ -64,15 +77,15 @@ def safe_load_features():
     return df
 
 
-# --- File Watcher ---
+# --- File Watcher for Auto-Reload ---
 class ReloadHandler(FileSystemEventHandler):
     def on_modified(self, event):
         path = event.src_path
-        if path.endswith(".pkl") and MODEL_PATH in path:
+        if MODEL_PATH in path and path.endswith(".pkl"):
             CACHE["model"] = safe_load_model()
-        elif path.endswith(".csv") and LATEST_PRED_FILE in path:
+        elif LATEST_PRED_FILE in path and path.endswith(".csv"):
             CACHE["predictions"] = safe_load_predictions()
-        elif path.endswith(".parquet") and FEATURES_FILE in path:
+        elif FEATURES_FILE in path and path.endswith(".parquet"):
             CACHE["features"] = safe_load_features()
 
 
@@ -87,27 +100,49 @@ def start_watcher():
     print("👀 File watcher started — automatic reload active.")
 
 
-# --- API Endpoints ---
+# --- Background Refresh Thread ---
+def refresh_predictions_periodically():
+    """Refresh predictions every REFRESH_INTERVAL seconds."""
+    while True:
+        time.sleep(REFRESH_INTERVAL)
+        try:
+            if os.path.exists(LATEST_PRED_FILE):
+                new_mtime = get_mtime(LATEST_PRED_FILE)
+                if new_mtime != CACHE["pred_mtime"]:
+                    CACHE["predictions"] = safe_load_predictions()
+                    CACHE["last_refresh"] = datetime.utcnow().isoformat()
+                    print("🔁 Predictions auto-refreshed.")
+        except Exception as e:
+            print(f"⚠ Prediction refresh failed: {e}")
+
+
+# --- Startup ---
 @app.on_event("startup")
 def startup_event():
-    """Initialize cache and file watcher on startup."""
+    """Initial load and start background services."""
     try:
         CACHE["model"] = safe_load_model()
         CACHE["predictions"] = safe_load_predictions()
         CACHE["features"] = safe_load_features()
+        CACHE["last_refresh"] = datetime.utcnow().isoformat()
         start_watcher()
+
+        threading.Thread(target=refresh_predictions_periodically, daemon=True).start()
+        print("🧠 Background refresh thread running (every 5 min).")
+
     except Exception as e:
         print(f"⚠ Startup load error: {e}")
 
 
+# --- API Endpoints ---
 @app.get("/")
 def root():
-    return {"status": "ok", "message": "OSRS Flipper AI API is running with auto-reload."}
+    return {"status": "ok", "message": "OSRS Flipper AI API is running with auto-reload + 5m refresh."}
 
 
 @app.get("/status")
 def status():
-    """Return the current load status and timestamps."""
+    """Return current system load status and timestamps."""
     return {
         "status": "ok",
         "model_loaded": CACHE["model"] is not None,
@@ -116,42 +151,49 @@ def status():
         "predictions_last_reload": CACHE["pred_mtime"],
         "features_loaded": CACHE["features"] is not None,
         "features_last_reload": CACHE["features_mtime"],
-        "timestamp": datetime.utcnow().isoformat()
+        "last_auto_refresh": CACHE["last_refresh"],
+        "timestamp": datetime.utcnow().isoformat(),
     }
 
 
 @app.get("/top_flips")
-def get_top_flips(limit: int = 50):
-    """Return top N predicted flips."""
+def get_top_flips(limit: int = 10):
+    """Return top N predicted flips (default = 10)."""
     if CACHE["predictions"] is None:
         raise HTTPException(status_code=503, detail="Predictions not loaded.")
+
     df = CACHE["predictions"].head(limit)
+    df = df.replace([np.inf, -np.inf], np.nan).fillna(0)
     return df.to_dict(orient="records")
 
 
 @app.get("/predict_item/{item_id}")
 def predict_item(item_id: int):
-    """Predict flip margin for a specific item."""
+    """Predict flip margin for a specific item using the cached model."""
     if CACHE["model"] is None or CACHE["features"] is None:
         raise HTTPException(status_code=503, detail="Model or features not loaded.")
 
     df = CACHE["features"]
     if item_id not in df["item_id"].values:
-        raise HTTPException(status_code=404, detail=f"Item ID {item_id} not found.")
+        raise HTTPException(status_code=404, detail=f"Item ID {item_id} not found in features dataset.")
 
-    feature_cols = [
-        "spread", "mid_price", "spread_ratio", "momentum",
-        "potential_profit", "margin_pct", "hour",
-        "liquidity_1h", "volatility_1h",
-        "rsi", "roc", "macd", "technical_score"
-    ]
-    missing = [c for c in feature_cols if c not in df.columns]
-    if missing:
-        raise HTTPException(status_code=500, detail=f"Missing columns: {missing}")
+    feature_cols = CACHE.get("model_features")
+    if not feature_cols:
+        # fallback to known default if metadata missing
+        feature_cols = [
+            "spread", "mid_price", "spread_ratio", "momentum",
+            "potential_profit", "margin_pct", "hour",
+            "liquidity_1h", "volatility_1h",
+            "rsi", "roc", "macd", "technical_score"
+        ]
 
     item_features = df[df["item_id"] == item_id][feature_cols].iloc[0]
     item_features = item_features.replace([np.inf, -np.inf], np.nan).fillna(0)
-    pred = float(CACHE["model"].predict([item_features])[0])
+
+    try:
+        pred = float(CACHE["model"].predict([item_features])[0])
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Prediction failed: {e}")
 
     return {
         "item_id": int(item_id),
