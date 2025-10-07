@@ -12,6 +12,18 @@ from sklearn.metrics import mean_absolute_error, r2_score
 # Import feature helpers (must be in src/features.py)
 from features import compute_features, compute_technical_indicators
 
+# ---------------------------------------------------------------------
+# GLOBAL FEATURE DEFINITIONS
+# ---------------------------------------------------------------------
+FEATURE_COLS = [
+    "spread", "mid_price", "spread_ratio", "momentum",
+    "potential_profit", "hour",
+    "liquidity_1h", "volatility_1h",
+    "rsi", "roc", "macd", "macd_signal",
+    "contrarian_flag", "technical_score"
+]
+TARGET_COL = "margin_pct"
+
 # Paths
 DATA_PATH = "data/features/latest_train.parquet"
 MODEL_DIR = "models"
@@ -23,101 +35,84 @@ os.makedirs("logs", exist_ok=True)
 os.makedirs(PRED_DIR, exist_ok=True)
 
 
+# ---------------------------------------------------------------------
+# LOAD DATA AND ENSURE FEATURE CONSISTENCY
+# ---------------------------------------------------------------------
 def load_data_and_ensure_features():
     """
-    Loads feature data, ensures all required columns exist, computes missing features,
-    and caches the enriched dataset for faster future training.
-    Cache auto-refreshes every 24 hours.
+    Loads feature data, ensures all required columns exist,
+    computes missing engineered/technical features, and caches
+    the enriched dataset for faster retraining.
     """
-
     BASE_DATA_PATH = DATA_PATH
     CACHE_PATH = "data/features/latest_train_enriched.parquet"
-    REFRESH_INTERVAL_HOURS = 24  # <-- configurable refresh window
+    REFRESH_INTERVAL_HOURS = 24
 
-    # --- Check if cache exists and is still fresh ---
     if os.path.exists(CACHE_PATH):
         cache_age_hours = (time.time() - os.path.getmtime(CACHE_PATH)) / 3600
         if cache_age_hours < REFRESH_INTERVAL_HOURS:
-            print(f"⚡ Using cached enriched dataset (age: {cache_age_hours:.2f}h): {CACHE_PATH}")
+            print(f"⚡ Using cached enriched dataset ({cache_age_hours:.2f}h old): {CACHE_PATH}")
             df = pd.read_parquet(CACHE_PATH)
-            print(f"📦 Cached dataset loaded: {df.shape[0]} rows, {df.shape[1]} columns")
+            print(f"📦 Cached dataset loaded: {df.shape[0]} rows, {df.shape[1]} cols")
             return df
         else:
-            print(f"🕒 Cache is {cache_age_hours:.1f}h old — refreshing now...")
+            print(f"🕒 Cache is {cache_age_hours:.1f}h old — refreshing...")
 
-    # --- Load base feature file ---
     if not os.path.exists(BASE_DATA_PATH):
         raise FileNotFoundError(f"❌ Feature file not found: {BASE_DATA_PATH}")
 
     df = pd.read_parquet(BASE_DATA_PATH)
-    print(f"📦 Loaded raw dataset: {df.shape[0]} rows, {df.shape[1]} columns")
+    print(f"📦 Loaded raw dataset: {df.shape[0]} rows, {df.shape[1]} cols")
 
-    # Ensure required columns
     required_cols = ["ts_utc", "item_id", "low", "high"]
     for col in required_cols:
         if col not in df.columns:
             raise RuntimeError(f"❌ Required column '{col}' missing from dataset.")
 
-    # --- Compute rolling averages if missing ---
+    # Compute rolling averages if missing
     if any(col not in df.columns for col in ["avg_5m_low", "avg_5m_high", "avg_1h_low"]):
-        print("⚙️ Computing missing rolling averages (avg_5m_low, avg_5m_high, avg_1h_low)...")
+        print("⚙️ Computing missing rolling averages...")
         df = df.sort_values(["item_id", "ts_utc"])
-        df["avg_5m_low"] = df.groupby("item_id")["low"].transform(
-            lambda x: x.rolling(window=5, min_periods=1).mean()
-        )
-        df["avg_5m_high"] = df.groupby("item_id")["high"].transform(
-            lambda x: x.rolling(window=5, min_periods=1).mean()
-        )
-        df["avg_1h_low"] = df.groupby("item_id")["low"].transform(
-            lambda x: x.rolling(window=12, min_periods=1).mean()
-        )
-        print("✅ Rolling averages computed successfully.")
+        df["avg_5m_low"] = df.groupby("item_id")["low"].transform(lambda x: x.rolling(5, min_periods=1).mean())
+        df["avg_5m_high"] = df.groupby("item_id")["high"].transform(lambda x: x.rolling(5, min_periods=1).mean())
+        df["avg_1h_low"] = df.groupby("item_id")["low"].transform(lambda x: x.rolling(12, min_periods=1).mean())
 
-    # --- Compute engineered features ---
+    # Compute engineered features
     try:
         df = compute_features(df)
         print("✅ compute_features() applied successfully.")
     except Exception as e:
         print(f"⚠️ compute_features() failed: {e}")
 
-    # --- Compute technical indicators ---
-    tech_cols = ["rsi", "roc", "macd", "macd_signal", "contrarian_flag", "technical_score"]
-    missing_tech = [c for c in tech_cols if c not in df.columns]
+    # Compute technical indicators
+    try:
+        df = compute_technical_indicators(df)
+        print("✅ compute_technical_indicators() applied successfully.")
+    except Exception as e:
+        print(f"⚠️ Failed to compute technical indicators: {e}")
 
-    if missing_tech:
-        print(f"⚙️ Computing missing technical indicators: {missing_tech}")
-        try:
-            df = compute_technical_indicators(df)
-            print("✅ compute_technical_indicators() applied successfully.")
-        except Exception as e:
-            print(f"⚠️ Failed to compute technical indicators: {e}")
-
-    # --- Clean and save ---
-    df = df.dropna(subset=["margin_pct"])
+    # Drop bad data and ensure TARGET_COL
+    df = df.dropna(subset=[TARGET_COL])
     df = df[df["low"] > 0]
+
+    # Ensure all training features exist
+    for col in FEATURE_COLS:
+        if col not in df.columns:
+            print(f"⚠ Missing feature '{col}', filling with 0.")
+            df[col] = 0
 
     os.makedirs(os.path.dirname(CACHE_PATH), exist_ok=True)
     df.to_parquet(CACHE_PATH, index=False)
-
     print(f"💾 Cached enriched dataset saved: {CACHE_PATH}")
-    print("⏳ Next refresh in 24 hours.")
     return df
 
 
+# ---------------------------------------------------------------------
+# MODEL TRAINING
+# ---------------------------------------------------------------------
 def train_model(df):
-    # Define candidate feature columns (base + tech)
-    base_features = [
-        "spread", "mid_price", "spread_ratio", "momentum",
-        "potential_profit", "hour", "liquidity_1h", "volatility_1h"
-    ]
-    tech_features = ["rsi", "roc", "macd", "macd_signal", "contrarian_flag", "technical_score"]
-
-    feature_cols = [c for c in (base_features + tech_features) if c in df.columns]
-    if len(feature_cols) < 5:
-        raise RuntimeError(f"Too few features available for training: {feature_cols}")
-
-    X = df[feature_cols].fillna(0)
-    y = df["margin_pct"].fillna(0)
+    X = df[FEATURE_COLS].fillna(0)
+    y = df[TARGET_COL].fillna(0)
 
     X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, random_state=42)
 
@@ -137,24 +132,34 @@ def train_model(df):
     r2 = r2_score(y_val, y_pred)
 
     print(f"✅ Model trained — MAE: {mae:.6f}, R²: {r2:.4f}")
-    return model, mae, r2, feature_cols
+    return model, mae, r2
 
 
-def save_model_and_log(model, mae, r2, feature_cols):
+# ---------------------------------------------------------------------
+# SAVE MODEL + LOG METRICS
+# ---------------------------------------------------------------------
+def save_model_and_log(model, mae, r2):
     timestamp = datetime.now().strftime("%Y%m%d_%H%M")
     model_path = os.path.join(MODEL_DIR, f"model_{timestamp}.pkl")
     latest_path = os.path.join(MODEL_DIR, "latest_model.pkl")
 
-    # Save model and the list of features used (so predict stage can align)
-    joblib.dump({"model": model, "features": feature_cols}, model_path)
-    joblib.dump({"model": model, "features": feature_cols}, latest_path)
+    model_info = {
+        "model": model,
+        "features": FEATURE_COLS,
+        "timestamp": timestamp,
+        "mae": mae,
+        "r2": r2,
+    }
+
+    joblib.dump(model_info, model_path)
+    joblib.dump(model_info, latest_path)
 
     row = {
         "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "mae": mae,
         "r2": r2,
         "model_path": model_path,
-        "n_features": len(feature_cols)
+        "n_features": len(FEATURE_COLS)
     }
 
     if not os.path.exists(LOG_PATH):
@@ -164,34 +169,25 @@ def save_model_and_log(model, mae, r2, feature_cols):
 
     print(f"💾 Model saved: {model_path}")
     print(f"📊 Metrics logged: {LOG_PATH}")
-
     return model_path
 
 
+# ---------------------------------------------------------------------
+# PREDICT TOP FLIPS
+# ---------------------------------------------------------------------
 def predict_top_flips(model, df, top_n=10):
-    """
-    Generate top N flip predictions using the trained model.
-    Saves both latest and timestamped predictions.
-    """
     print(f"🔮 Generating top {top_n} flip predictions...")
 
-    feature_cols = [
-        "spread", "mid_price", "spread_ratio", "momentum",
-        "potential_profit", "margin_pct", "hour",
-        "liquidity_1h", "volatility_1h",
-        "rsi", "roc", "macd", "technical_score"
-    ]
-
-    # Ensure all required columns exist
-    missing = [c for c in feature_cols if c not in df.columns]
-    if missing:
-        raise ValueError(f"Missing required features for prediction: {missing}")
-
     df = df.copy()
-    df["predicted_margin"] = model.predict(df[feature_cols])
+    # Ensure consistency with training features
+    for col in FEATURE_COLS:
+        if col not in df.columns:
+            print(f"⚠ Adding missing feature '{col}' with default 0.")
+            df[col] = 0
+
+    df["predicted_margin"] = model.predict(df[FEATURE_COLS])
     df["predicted_profit_gp"] = df["predicted_margin"] * df["mid_price"]
 
-    # Rank and select top N (default = 10)
     top_flips = (
         df.sort_values("predicted_profit_gp", ascending=False)
         .head(top_n)
@@ -207,19 +203,21 @@ def predict_top_flips(model, df, top_n=10):
 
     top_flips.to_csv(pred_file, index=False)
     top_flips.to_csv(latest_file, index=False)
-
     print(f"💰 Top {top_n} flips saved: {pred_file}")
+
     return top_flips
 
 
+# ---------------------------------------------------------------------
+# MAIN EXECUTION
+# ---------------------------------------------------------------------
 if __name__ == "__main__":
     try:
         df = load_data_and_ensure_features()
-        model, mae, r2, feature_cols = train_model(df)
-        model_path = save_model_and_log(model, mae, r2, feature_cols)
-        # reload the saved dict to ensure consistency for prediction
+        model, mae, r2 = train_model(df)
+        save_model_and_log(model, mae, r2)
         model_dict = joblib.load(os.path.join(MODEL_DIR, "latest_model.pkl"))
-        top = predict_top_flips(model_dict["model"], df, top_n=50)
+        top = predict_top_flips(model_dict["model"], df, top_n=10)
     except Exception as e:
         print(f"❌ Training failed: {e}")
         raise
