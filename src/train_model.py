@@ -108,11 +108,28 @@ def load_data_and_ensure_features():
 
 
 # ---------------------------------------------------------------------
-# MODEL TRAINING
+# MODEL TRAINING (with median imputation)
 # ---------------------------------------------------------------------
 def train_model(df):
-    X = df[FEATURE_COLS].fillna(0)
-    y = df[TARGET_COL].fillna(0)
+    # Clean up inf/nan in features and target
+    df = df.replace([np.inf, -np.inf], np.nan)
+    df = df.dropna(subset=[TARGET_COL])
+
+    X = df[FEATURE_COLS]
+    y = df[TARGET_COL]
+
+    # Median-fill missing values column by column
+    na_counts = X.isna().sum()
+    if na_counts.sum() > 0:
+        print("⚠️ Missing feature values detected — applying median imputation:")
+        print(na_counts[na_counts > 0])
+        X = X.apply(lambda col: col.fillna(col.median()))
+    else:
+        print("✅ No missing feature values detected.")
+
+    # Replace any remaining NaNs (all-NaN columns) with 0
+    X = X.fillna(0)
+    y = y.fillna(y.median())
 
     X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, random_state=42)
 
@@ -179,12 +196,12 @@ def predict_top_flips(model, df, top_n=10):
     print(f"🔮 Generating top {top_n} flip predictions...")
 
     df = df.copy()
-    # Ensure consistency with training features
     for col in FEATURE_COLS:
         if col not in df.columns:
             print(f"⚠ Adding missing feature '{col}' with default 0.")
             df[col] = 0
 
+    df[FEATURE_COLS] = df[FEATURE_COLS].apply(lambda col: col.fillna(col.median()))
     df["predicted_margin"] = model.predict(df[FEATURE_COLS])
     df["predicted_profit_gp"] = df["predicted_margin"] * df["mid_price"]
 
