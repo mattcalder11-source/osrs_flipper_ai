@@ -168,33 +168,47 @@ def save_model_and_log(model, mae, r2, feature_cols):
     return model_path
 
 
-def predict_top_flips_from_model_dict(model_dict, df, top_n=50):
-    model = model_dict["model"]
-    features = model_dict["features"]
+def predict_top_flips(model, df, top_n=10):
+    """
+    Generate top N flip predictions using the trained model.
+    Saves both latest and timestamped predictions.
+    """
+    print(f"🔮 Generating top {top_n} flip predictions...")
 
-    # Ensure all features exist in df
-    for c in features:
-        if c not in df.columns:
-            df[c] = 0
+    feature_cols = [
+        "spread", "mid_price", "spread_ratio", "momentum",
+        "potential_profit", "margin_pct", "hour",
+        "liquidity_1h", "volatility_1h",
+        "rsi", "roc", "macd", "technical_score"
+    ]
 
-    X = df[features].fillna(0)
+    # Ensure all required columns exist
+    missing = [c for c in feature_cols if c not in df.columns]
+    if missing:
+        raise ValueError(f"Missing required features for prediction: {missing}")
+
     df = df.copy()
-    df["predicted_margin"] = model.predict(X)
+    df["predicted_margin"] = model.predict(df[feature_cols])
     df["predicted_profit_gp"] = df["predicted_margin"] * df["mid_price"]
 
+    # Rank and select top N (default = 10)
     top_flips = (
         df.sort_values("predicted_profit_gp", ascending=False)
         .head(top_n)
-        .loc[:, ["item_id", "name", "predicted_profit_gp", "predicted_margin", "mid_price", "liquidity_1h", "volatility_1h"] +
-               [c for c in ["rsi", "roc", "macd", "technical_score"] if c in df.columns]]
+        .loc[:, [
+            "item_id", "name", "predicted_profit_gp", "predicted_margin",
+            "mid_price", "liquidity_1h", "volatility_1h", "technical_score"
+        ]]
     )
 
-    timestamp = datetime.now().strftime("%Y%m%d")
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M")
     pred_file = os.path.join(PRED_DIR, f"top_flips_{timestamp}.csv")
     latest_file = os.path.join(PRED_DIR, "latest_top_flips.csv")
+
     top_flips.to_csv(pred_file, index=False)
     top_flips.to_csv(latest_file, index=False)
-    print(f"💰 Top {len(top_flips)} flips saved: {pred_file}")
+
+    print(f"💰 Top {top_n} flips saved: {pred_file}")
     return top_flips
 
 
@@ -205,7 +219,7 @@ if __name__ == "__main__":
         model_path = save_model_and_log(model, mae, r2, feature_cols)
         # reload the saved dict to ensure consistency for prediction
         model_dict = joblib.load(os.path.join(MODEL_DIR, "latest_model.pkl"))
-        top = predict_top_flips_from_model_dict(model_dict, df, top_n=50)
+        top = predict_top_flips(model_dict["model"], df, top_n=50)
     except Exception as e:
         print(f"❌ Training failed: {e}")
         raise
