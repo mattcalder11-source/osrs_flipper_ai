@@ -9,11 +9,12 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.metrics import mean_absolute_error, r2_score
 
-# Import feature helpers (must be in src/features.py)
+# Import feature helpers
 from features import compute_features, compute_technical_indicators
 
+
 # ---------------------------------------------------------------------
-# GLOBAL FEATURE DEFINITIONS
+# GLOBAL CONFIG
 # ---------------------------------------------------------------------
 FEATURE_COLS = [
     "spread", "mid_price", "spread_ratio", "momentum",
@@ -24,7 +25,6 @@ FEATURE_COLS = [
 ]
 TARGET_COL = "margin_pct"
 
-# Paths
 DATA_PATH = "data/features/latest_train.parquet"
 MODEL_DIR = "models"
 LOG_PATH = "logs/train_metrics.csv"
@@ -39,11 +39,6 @@ os.makedirs(PRED_DIR, exist_ok=True)
 # LOAD DATA AND ENSURE FEATURE CONSISTENCY
 # ---------------------------------------------------------------------
 def load_data_and_ensure_features():
-    """
-    Loads feature data, ensures all required columns exist,
-    computes missing engineered/technical features, and caches
-    the enriched dataset for faster retraining.
-    """
     BASE_DATA_PATH = DATA_PATH
     CACHE_PATH = "data/features/latest_train_enriched.parquet"
     REFRESH_INTERVAL_HOURS = 24
@@ -64,12 +59,12 @@ def load_data_and_ensure_features():
     df = pd.read_parquet(BASE_DATA_PATH)
     print(f"📦 Loaded raw dataset: {df.shape[0]} rows, {df.shape[1]} cols")
 
-    required_cols = ["ts_utc", "item_id", "low", "high"]
-    for col in required_cols:
+    # Validate minimal required columns
+    for col in ["ts_utc", "item_id", "low", "high"]:
         if col not in df.columns:
             raise RuntimeError(f"❌ Required column '{col}' missing from dataset.")
 
-    # Compute rolling averages if missing
+    # Compute missing rolling averages
     if any(col not in df.columns for col in ["avg_5m_low", "avg_5m_high", "avg_1h_low"]):
         print("⚙️ Computing missing rolling averages...")
         df = df.sort_values(["item_id", "ts_utc"])
@@ -77,21 +72,20 @@ def load_data_and_ensure_features():
         df["avg_5m_high"] = df.groupby("item_id")["high"].transform(lambda x: x.rolling(5, min_periods=1).mean())
         df["avg_1h_low"] = df.groupby("item_id")["low"].transform(lambda x: x.rolling(12, min_periods=1).mean())
 
-    # Compute engineered features
+    # Compute engineered + technical features
     try:
         df = compute_features(df)
         print("✅ compute_features() applied successfully.")
     except Exception as e:
         print(f"⚠️ compute_features() failed: {e}")
 
-    # Compute technical indicators
     try:
         df = compute_technical_indicators(df)
         print("✅ compute_technical_indicators() applied successfully.")
     except Exception as e:
         print(f"⚠️ Failed to compute technical indicators: {e}")
 
-    # Drop bad data and ensure TARGET_COL
+    # Drop bad data
     df = df.dropna(subset=[TARGET_COL])
     df = df[df["low"] > 0]
 
@@ -101,6 +95,7 @@ def load_data_and_ensure_features():
             print(f"⚠ Missing feature '{col}', filling with 0.")
             df[col] = 0
 
+    # Save cache
     os.makedirs(os.path.dirname(CACHE_PATH), exist_ok=True)
     df.to_parquet(CACHE_PATH, index=False)
     print(f"💾 Cached enriched dataset saved: {CACHE_PATH}")
@@ -108,27 +103,25 @@ def load_data_and_ensure_features():
 
 
 # ---------------------------------------------------------------------
-# MODEL TRAINING (with median imputation)
+# TRAIN MODEL — with robust NaN / inf handling
 # ---------------------------------------------------------------------
 def train_model(df):
-    # Clean up inf/nan in features and target
     df = df.replace([np.inf, -np.inf], np.nan)
     df = df.dropna(subset=[TARGET_COL])
 
-    X = df[FEATURE_COLS]
-    y = df[TARGET_COL]
+    X = df[FEATURE_COLS].copy()
+    y = df[TARGET_COL].copy()
 
-    # Median-fill missing values column by column
-    na_counts = X.isna().sum()
-    if na_counts.sum() > 0:
-        print("⚠️ Missing feature values detected — applying median imputation:")
-        print(na_counts[na_counts > 0])
-        X = X.apply(lambda col: col.fillna(col.median()))
-    else:
-        print("✅ No missing feature values detected.")
+    # Median-fill NaN/inf values
+    print("🧹 Cleaning feature matrix...")
+    for col in X.columns:
+        if X[col].isna().any():
+            X[col] = X[col].fillna(X[col].median())
+        if np.isinf(X[col]).any():
+            X[col] = np.where(np.isinf(X[col]), X[col].median(), X[col])
+        if X[col].isna().all():
+            X[col] = 0
 
-    # Replace any remaining NaNs (all-NaN columns) with 0
-    X = X.fillna(0)
     y = y.fillna(y.median())
 
     X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -160,14 +153,7 @@ def save_model_and_log(model, mae, r2):
     model_path = os.path.join(MODEL_DIR, f"model_{timestamp}.pkl")
     latest_path = os.path.join(MODEL_DIR, "latest_model.pkl")
 
-    model_info = {
-        "model": model,
-        "features": FEATURE_COLS,
-        "timestamp": timestamp,
-        "mae": mae,
-        "r2": r2,
-    }
-
+    model_info = {"model": model, "features": FEATURE_COLS, "timestamp": timestamp, "mae": mae, "r2": r2}
     joblib.dump(model_info, model_path)
     joblib.dump(model_info, latest_path)
 
@@ -179,10 +165,7 @@ def save_model_and_log(model, mae, r2):
         "n_features": len(FEATURE_COLS)
     }
 
-    if not os.path.exists(LOG_PATH):
-        pd.DataFrame([row]).to_csv(LOG_PATH, index=False)
-    else:
-        pd.DataFrame([row]).to_csv(LOG_PATH, mode="a", header=False, index=False)
+    pd.DataFrame([row]).to_csv(LOG_PATH, mode="a", header=not os.path.exists(LOG_PATH), index=False)
 
     print(f"💾 Model saved: {model_path}")
     print(f"📊 Metrics logged: {LOG_PATH}")
@@ -190,7 +173,7 @@ def save_model_and_log(model, mae, r2):
 
 
 # ---------------------------------------------------------------------
-# PREDICT TOP FLIPS
+# PREDICT TOP FLIPS — with same imputation
 # ---------------------------------------------------------------------
 def predict_top_flips(model, df, top_n=10):
     print(f"🔮 Generating top {top_n} flip predictions...")
@@ -201,17 +184,21 @@ def predict_top_flips(model, df, top_n=10):
             print(f"⚠ Adding missing feature '{col}' with default 0.")
             df[col] = 0
 
-    df[FEATURE_COLS] = df[FEATURE_COLS].apply(lambda col: col.fillna(col.median()))
-    df["predicted_margin"] = model.predict(df[FEATURE_COLS])
+    X = df[FEATURE_COLS].replace([np.inf, -np.inf], np.nan)
+    for col in X.columns:
+        if X[col].isna().all():
+            X[col] = 0
+        else:
+            X[col] = X[col].fillna(X[col].median())
+
+    df["predicted_margin"] = model.predict(X)
     df["predicted_profit_gp"] = df["predicted_margin"] * df["mid_price"]
 
     top_flips = (
         df.sort_values("predicted_profit_gp", ascending=False)
         .head(top_n)
-        .loc[:, [
-            "item_id", "name", "predicted_profit_gp", "predicted_margin",
-            "mid_price", "liquidity_1h", "volatility_1h", "technical_score"
-        ]]
+        .loc[:, ["item_id", "name", "predicted_profit_gp", "predicted_margin",
+                 "mid_price", "liquidity_1h", "volatility_1h", "technical_score"]]
     )
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M")
@@ -220,13 +207,13 @@ def predict_top_flips(model, df, top_n=10):
 
     top_flips.to_csv(pred_file, index=False)
     top_flips.to_csv(latest_file, index=False)
-    print(f"💰 Top {top_n} flips saved: {pred_file}")
 
+    print(f"💰 Top {top_n} flips saved: {pred_file}")
     return top_flips
 
 
 # ---------------------------------------------------------------------
-# MAIN EXECUTION
+# MAIN
 # ---------------------------------------------------------------------
 if __name__ == "__main__":
     try:
