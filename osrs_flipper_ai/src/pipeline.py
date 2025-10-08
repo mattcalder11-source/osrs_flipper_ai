@@ -2,7 +2,7 @@ import os
 import time
 import pandas as pd
 from datetime import datetime, timezone
-from config import DATA_DIR
+from osrs_flipper_ai.config import DATA_DIR
 from data_ingest.ingest import snapshot
 from features.features import compute_features
 
