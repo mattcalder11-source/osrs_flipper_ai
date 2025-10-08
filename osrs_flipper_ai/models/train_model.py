@@ -10,7 +10,6 @@ from datetime import datetime, timedelta
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.metrics import mean_absolute_error, r2_score
-
 from osrs_flipper_ai.features.features import compute_features, compute_technical_indicators
 
 print(f"\n=== 🧠 TRAIN MODEL RUN START: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ===")
