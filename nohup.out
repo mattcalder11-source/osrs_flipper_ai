@@ -1,0 +1,53 @@
+Usage: streamlit run [OPTIONS] TARGET [ARGS]...
+Try 'streamlit run --help' for help.
+
+Error: Invalid value: File does not exist: src/dashboard.py
+Usage: streamlit run [OPTIONS] TARGET [ARGS]...
+Try 'streamlit run --help' for help.
+
+Error: Invalid value: File does not exist: src/dashboard.py
+INFO:     Started server process [6265]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+⚠ Startup load error: Model file not found.
+INFO:     58.96.116.254:51208 - "GET /docs HTTP/1.1" 200 OK
+INFO:     58.96.116.254:51208 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52930 - "GET /status HTTP/1.1" 200 OK
+INFO:     58.96.116.254:52736 - "GET /docs HTTP/1.1" 200 OK
+INFO:     58.96.116.254:52736 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     58.96.116.254:52736 - "GET /history/top_items?limit=10 HTTP/1.1" 200 OK
+INFO:     58.96.116.254:52747 - "GET /top_flips?limit=10 HTTP/1.1" 503 Service Unavailable
+WARNING:  Invalid HTTP request received.
+INFO:     45.79.8.221:40735 - "GET / HTTP/1.1" 200 OK
+INFO:     172.236.228.38:35370 - "GET / HTTP/1.1" 200 OK
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+INFO:     103.108.174.10:28443 - "GET / HTTP/1.1" 200 OK
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+INFO:     103.108.174.10:36979 - "GET / HTTP/1.1" 200 OK
+WARNING:  Invalid HTTP request received.
+INFO:     198.235.24.83:61298 - "GET / HTTP/1.1" 200 OK
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+INFO:     159.223.164.134:33384 - "GET / HTTP/1.1" 200 OK
+INFO:     159.223.164.134:33400 - "GET /login HTTP/1.1" 404 Not Found
+INFO:     44.220.185.96:56146 - "GET / HTTP/1.1" 200 OK
+INFO:     185.247.137.122:52703 - "GET / HTTP/1.1" 200 OK
+INFO:     58.96.116.254:56460 - "GET /docs HTTP/1.1" 200 OK
+INFO:     58.96.116.254:56460 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     58.96.116.254:56574 - "GET / HTTP/1.1" 200 OK
+INFO:     58.96.116.254:56574 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:33478 - "GET / HTTP/1.1" 200 OK
+INFO:     3.130.96.91:52812 - "GET / HTTP/1.1" 200 OK
+WARNING:  Invalid HTTP request received.
+INFO:     3.130.96.91:41714 - "GET / HTTP/1.1" 200 OK
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
