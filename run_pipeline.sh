@@ -3,6 +3,8 @@
 # OSRS AI Flipper Automation Script (Package Mode)
 # ==============================================
 
+source /osrs_flipper_ai/.venv/bin/activate
+
 set -e
 set -o pipefail
 
