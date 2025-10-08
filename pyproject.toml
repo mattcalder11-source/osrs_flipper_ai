@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "osrs-flipper-ai"
+version = "0.1.0"
+description = "Automated OSRS Grand Exchange flipping optimizer powered by AI."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+
+authors = [
+  { name = "Matthew Calder" }
+]
+
+dependencies = [
+  "pandas>=2.0",
+  "numpy>=1.25",
+  "requests>=2.31",
+  "scikit-learn>=1.3",
+  "joblib>=1.3",
+  "matplotlib>=3.7",
+  "pyarrow>=15.0",
+]
+
+[project.optional-dependencies]
+dev = ["black", "flake8", "pytest"]
+
+[tool.setuptools.packages.find]
+where = ["osrs_flipper_ai"]
+include = ["osrs_flipper_ai*"]
+
+[tool.setuptools]
+package-dir = {"" = "."}
