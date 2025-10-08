@@ -16,7 +16,7 @@ import numpy as np
 from datetime import datetime
 from pathlib import Path
 from osrs_flipper_ai.models.recommend_sell import batch_recommend_sell
-from src.fetch_latest_prices import fetch_latest_prices_dict
+from osrs_flipper_ai.src.fetch_latest_prices import fetch_latest_prices_dict
 
 # Allow imports from the parent "src" folder
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "src"))
