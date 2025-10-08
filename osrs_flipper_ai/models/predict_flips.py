@@ -20,7 +20,6 @@ from osrs_flipper_ai.src.fetch_latest_prices import fetch_latest_prices_dict
 
 # Allow imports from the parent "src" folder
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "src"))
-
 from osrs_flipper_ai.features.features import compute_features, compute_technical_indicators
 
 # ---------------------------------------------------------------------
@@ -193,7 +192,7 @@ def recommend_flips_by_tier(df, capital_tiers=CAPITAL_TIERS, flips_per_tier=FLIP
     return full
 
 # Load active flips (your buy recommendations or holdings)
-active = pd.read_csv("data/predictions/top_flips_latest.csv")
+active = pd.read_csv("data/predictions/latest_top_flips.csv")
 
 # Fetch current prices from API or cache
 latest_prices = fetch_latest_prices_dict()  # e.g. {item_id: mid_price}
