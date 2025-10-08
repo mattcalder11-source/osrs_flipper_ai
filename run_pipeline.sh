@@ -1,47 +1,43 @@
 #!/bin/bash
 # ==============================================
-# OSRS AI Flipper Automation Script
+# OSRS AI Flipper Automation Script (Package Mode)
 # ==============================================
 
-set -e          # Exit immediately on error
-set -o pipefail # Catch pipeline failures
+set -e
+set -o pipefail
 
 PROJECT_DIR="/osrs_flipper_ai"
 VENV="$PROJECT_DIR/.venv/bin/activate"
 LOG_DIR="$PROJECT_DIR/logs"
 PIPELINE_LOG="$LOG_DIR/pipeline.log"
 
-# Ensure logs directory exists
 mkdir -p "$LOG_DIR"
 
-# Activate virtual environment and enter project root
+# Activate venv and enter project root
 source "$VENV"
 cd "$PROJECT_DIR"
 
-# Ensure Python can import from project root
+# Ensure Python sees package root
 export PYTHONPATH="$PROJECT_DIR:$PYTHONPATH"
 
-# ----------------------------------------------
-# Helper functions
+# Logging helpers
 timestamp() { date +"%Y-%m-%d %H:%M:%S"; }
 log() { echo "[$(timestamp)] $*" | tee -a "$PIPELINE_LOG"; }
 
-# ANSI colors
 GREEN="\033[1;32m"
 RED="\033[1;31m"
 YELLOW="\033[1;33m"
 RESET="\033[0m"
 
-# ----------------------------------------------
 log "=============================================="
-log "🚀 ${GREEN}Starting OSRS Flipper Pipeline${RESET}"
+log "🚀 ${GREEN}Starting OSRS Flipper Pipeline (Package Mode)${RESET}"
 log "=============================================="
 
 START_TIME=$(date +%s)
 
 # ----------------------------------------------
 log "🧾 [1/4] Ingesting latest market data..."
-if python -m osrs_flipper_ai.data_ingest.ingest >> "$LOG_DIR/ingest.log" 2>&1; then
+if python -m osrs_flipper_ai.data_ingestion.ingest >> "$LOG_DIR/ingest.log" 2>&1; then
   log "✅ Ingestion completed successfully."
 else
   log "${RED}❌ Ingestion failed! Check $LOG_DIR/ingest.log${RESET}"
@@ -79,9 +75,9 @@ else
   exit 1
 fi
 
-# ----------------------------------------------
 END_TIME=$(date +%s)
 RUNTIME=$((END_TIME - START_TIME))
+
 log "----------------------------------------------"
 log "🏁 ${GREEN}Pipeline finished successfully in ${RUNTIME}s${RESET}"
 log "----------------------------------------------"
