@@ -31,6 +31,8 @@ RED="\033[1;31m"
 YELLOW="\033[1;33m"
 RESET="\033[0m"
 
+log "🧩 DEBUG: Script args received -> '$*'"
+
 log "=============================================="
 log "🚀 ${GREEN}Starting OSRS Flipper Pipeline (Package Mode)${RESET}"
 log "=============================================="
