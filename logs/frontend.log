@@ -1,5 +1,6 @@
 
 > osrs-flipper-dashboard@1.0.0 dev
+<<<<<<< HEAD
 > vite "--host" "0.0.0.0" "--port" "5173"
 
 
@@ -1032,6 +1033,8 @@
 
 
 > osrs-flipper-dashboard@1.0.0 dev
+=======
+>>>>>>> 98131b6412a8278f97aaca5bb7a77204b1073561
 > vite --host 0.0.0.0 --port 5173
 
 
@@ -1514,23 +1517,54 @@
 > osrs-flipper-dashboard@1.0.0 dev
 > vite --host 0.0.0.0 --port 5173
 
+<<<<<<< HEAD
 
 > osrs-flipper-dashboard@1.0.0 dev
 > vite --host 0.0.0.0 --port 5173
 
+=======
+Port 5173 is in use, trying another one...
 
+  VITE v7.1.9  ready in 664 ms
+
+  ➜  Local:   http://localhost:5174/
+  ➜  Network: http://209.38.91.166:5174/
+  ➜  Network: http://10.49.0.5:5174/
+  ➜  Network: http://10.126.0.2:5174/
+>>>>>>> 98131b6412a8278f97aaca5bb7a77204b1073561
+
 > osrs-flipper-dashboard@1.0.0 dev
 > vite --host 0.0.0.0 --port 5173
 
+<<<<<<< HEAD
 
 > osrs-flipper-dashboard@1.0.0 dev
 > vite --host 0.0.0.0 --port 5173
 
+=======
+Port 5173 is in use, trying another one...
 
+  VITE v7.1.9  ready in 314 ms
+
+  ➜  Local:   http://localhost:5174/
+  ➜  Network: http://209.38.91.166:5174/
+  ➜  Network: http://10.49.0.5:5174/
+  ➜  Network: http://10.126.0.2:5174/
+>>>>>>> 98131b6412a8278f97aaca5bb7a77204b1073561
+
 > osrs-flipper-dashboard@1.0.0 dev
 > vite --host 0.0.0.0 --port 5173
 
 
+<<<<<<< HEAD
 > osrs-flipper-dashboard@1.0.0 dev
 > vite --host 0.0.0.0 --port 5173
+
+=======
+  VITE v7.1.9  ready in 2708 ms
 
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: http://209.38.91.166:5173/
+  ➜  Network: http://10.49.0.5:5173/
+  ➜  Network: http://10.126.0.2:5173/
+>>>>>>> 98131b6412a8278f97aaca5bb7a77204b1073561

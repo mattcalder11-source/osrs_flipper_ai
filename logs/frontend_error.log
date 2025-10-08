@@ -71,6 +71,7 @@ sh: 1: vite: Permission denied
 sh: 1: vite: Permission denied
 sh: 1: vite: Permission denied
 sh: 1: vite: Permission denied
+<<<<<<< HEAD
 sh: 1: vite: Permission denied
 sh: 1: vite: Permission denied
 sh: 1: vite: Permission denied
@@ -299,6 +300,393 @@ sh: 1: vite: not found
 sh: 1: vite: not found
 sh: 1: vite: not found
 sh: 1: vite: not found
+=======
+You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:83
+		throw new Error(
+		      ^
+
+Error: Cannot find module @rollup/rollup-linux-x64-gnu. npm has a bug related to optional dependencies (https://github.com/npm/cli/issues/4828). Please try `npm i` again after removing both package-lock.json and node_modules directory.
+    at requireWithFriendlyError (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:83:9)
+    at Object.<anonymous> (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:92:76)
+    ... 3 lines matching cause stack trace ...
+    at Module._load (node:internal/modules/cjs/loader:1019:12)
+    at ModuleWrap.<anonymous> (node:internal/modules/esm/translators:203:29)
+    at ModuleJob.run (node:internal/modules/esm/module_job:195:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:337:24)
+    at async CAC.<anonymous> (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/cli.js:571:27) {
+  [cause]: Error: Cannot find module '@rollup/rollup-linux-x64-gnu'
+  Require stack:
+  - /root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1140:15)
+      at Module._load (node:internal/modules/cjs/loader:981:27)
+      at Module.require (node:internal/modules/cjs/loader:1231:19)
+      at require (node:internal/modules/helpers:177:18)
+      at requireWithFriendlyError (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:65:10)
+      at Object.<anonymous> (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:92:76)
+      at Module._compile (node:internal/modules/cjs/loader:1364:14)
+      at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+      at Module.load (node:internal/modules/cjs/loader:1203:32)
+      at Module._load (node:internal/modules/cjs/loader:1019:12) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [
+      '/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js'
+    ]
+  }
+}
+
+Node.js v18.20.8
+You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:83
+		throw new Error(
+		      ^
+
+Error: Cannot find module @rollup/rollup-linux-x64-gnu. npm has a bug related to optional dependencies (https://github.com/npm/cli/issues/4828). Please try `npm i` again after removing both package-lock.json and node_modules directory.
+    at requireWithFriendlyError (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:83:9)
+    at Object.<anonymous> (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:92:76)
+    ... 3 lines matching cause stack trace ...
+    at Module._load (node:internal/modules/cjs/loader:1019:12)
+    at ModuleWrap.<anonymous> (node:internal/modules/esm/translators:203:29)
+    at ModuleJob.run (node:internal/modules/esm/module_job:195:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:337:24)
+    at async CAC.<anonymous> (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/cli.js:571:27) {
+  [cause]: Error: Cannot find module '@rollup/rollup-linux-x64-gnu'
+  Require stack:
+  - /root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1140:15)
+      at Module._load (node:internal/modules/cjs/loader:981:27)
+      at Module.require (node:internal/modules/cjs/loader:1231:19)
+      at require (node:internal/modules/helpers:177:18)
+      at requireWithFriendlyError (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:65:10)
+      at Object.<anonymous> (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:92:76)
+      at Module._compile (node:internal/modules/cjs/loader:1364:14)
+      at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+      at Module.load (node:internal/modules/cjs/loader:1203:32)
+      at Module._load (node:internal/modules/cjs/loader:1019:12) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [
+      '/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js'
+    ]
+  }
+}
+
+Node.js v18.20.8
+You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:83
+		throw new Error(
+		      ^
+
+Error: Cannot find module @rollup/rollup-linux-x64-gnu. npm has a bug related to optional dependencies (https://github.com/npm/cli/issues/4828). Please try `npm i` again after removing both package-lock.json and node_modules directory.
+    at requireWithFriendlyError (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:83:9)
+    at Object.<anonymous> (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:92:76)
+    ... 3 lines matching cause stack trace ...
+    at Module._load (node:internal/modules/cjs/loader:1019:12)
+    at ModuleWrap.<anonymous> (node:internal/modules/esm/translators:203:29)
+    at ModuleJob.run (node:internal/modules/esm/module_job:195:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:337:24)
+    at async CAC.<anonymous> (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/cli.js:571:27) {
+  [cause]: Error: Cannot find module '@rollup/rollup-linux-x64-gnu'
+  Require stack:
+  - /root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1140:15)
+      at Module._load (node:internal/modules/cjs/loader:981:27)
+      at Module.require (node:internal/modules/cjs/loader:1231:19)
+      at require (node:internal/modules/helpers:177:18)
+      at requireWithFriendlyError (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:65:10)
+      at Object.<anonymous> (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:92:76)
+      at Module._compile (node:internal/modules/cjs/loader:1364:14)
+      at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+      at Module.load (node:internal/modules/cjs/loader:1203:32)
+      at Module._load (node:internal/modules/cjs/loader:1019:12) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [
+      '/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js'
+    ]
+  }
+}
+
+Node.js v18.20.8
+You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:83
+		throw new Error(
+		      ^
+
+Error: Cannot find module @rollup/rollup-linux-x64-gnu. npm has a bug related to optional dependencies (https://github.com/npm/cli/issues/4828). Please try `npm i` again after removing both package-lock.json and node_modules directory.
+    at requireWithFriendlyError (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:83:9)
+    at Object.<anonymous> (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:92:76)
+    ... 3 lines matching cause stack trace ...
+    at Module._load (node:internal/modules/cjs/loader:1019:12)
+    at ModuleWrap.<anonymous> (node:internal/modules/esm/translators:203:29)
+    at ModuleJob.run (node:internal/modules/esm/module_job:195:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:337:24)
+    at async CAC.<anonymous> (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/cli.js:571:27) {
+  [cause]: Error: Cannot find module '@rollup/rollup-linux-x64-gnu'
+  Require stack:
+  - /root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1140:15)
+      at Module._load (node:internal/modules/cjs/loader:981:27)
+      at Module.require (node:internal/modules/cjs/loader:1231:19)
+      at require (node:internal/modules/helpers:177:18)
+      at requireWithFriendlyError (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:65:10)
+      at Object.<anonymous> (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:92:76)
+      at Module._compile (node:internal/modules/cjs/loader:1364:14)
+      at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+      at Module.load (node:internal/modules/cjs/loader:1203:32)
+      at Module._load (node:internal/modules/cjs/loader:1019:12) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [
+      '/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js'
+    ]
+  }
+}
+
+Node.js v18.20.8
+You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:83
+		throw new Error(
+		      ^
+
+Error: Cannot find module @rollup/rollup-linux-x64-gnu. npm has a bug related to optional dependencies (https://github.com/npm/cli/issues/4828). Please try `npm i` again after removing both package-lock.json and node_modules directory.
+    at requireWithFriendlyError (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:83:9)
+    at Object.<anonymous> (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:92:76)
+    ... 3 lines matching cause stack trace ...
+    at Module._load (node:internal/modules/cjs/loader:1019:12)
+    at ModuleWrap.<anonymous> (node:internal/modules/esm/translators:203:29)
+    at ModuleJob.run (node:internal/modules/esm/module_job:195:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:337:24)
+    at async CAC.<anonymous> (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/cli.js:571:27) {
+  [cause]: Error: Cannot find module '@rollup/rollup-linux-x64-gnu'
+  Require stack:
+  - /root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1140:15)
+      at Module._load (node:internal/modules/cjs/loader:981:27)
+      at Module.require (node:internal/modules/cjs/loader:1231:19)
+      at require (node:internal/modules/helpers:177:18)
+      at requireWithFriendlyError (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:65:10)
+      at Object.<anonymous> (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:92:76)
+      at Module._compile (node:internal/modules/cjs/loader:1364:14)
+      at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+      at Module.load (node:internal/modules/cjs/loader:1203:32)
+      at Module._load (node:internal/modules/cjs/loader:1019:12) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [
+      '/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js'
+    ]
+  }
+}
+
+Node.js v18.20.8
+You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:83
+		throw new Error(
+		      ^
+
+Error: Cannot find module @rollup/rollup-linux-x64-gnu. npm has a bug related to optional dependencies (https://github.com/npm/cli/issues/4828). Please try `npm i` again after removing both package-lock.json and node_modules directory.
+    at requireWithFriendlyError (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:83:9)
+    at Object.<anonymous> (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:92:76)
+    ... 3 lines matching cause stack trace ...
+    at Module._load (node:internal/modules/cjs/loader:1019:12)
+    at ModuleWrap.<anonymous> (node:internal/modules/esm/translators:203:29)
+    at ModuleJob.run (node:internal/modules/esm/module_job:195:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:337:24)
+    at async CAC.<anonymous> (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/cli.js:571:27) {
+  [cause]: Error: Cannot find module '@rollup/rollup-linux-x64-gnu'
+  Require stack:
+  - /root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1140:15)
+      at Module._load (node:internal/modules/cjs/loader:981:27)
+      at Module.require (node:internal/modules/cjs/loader:1231:19)
+      at require (node:internal/modules/helpers:177:18)
+      at requireWithFriendlyError (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:65:10)
+      at Object.<anonymous> (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:92:76)
+      at Module._compile (node:internal/modules/cjs/loader:1364:14)
+      at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+      at Module.load (node:internal/modules/cjs/loader:1203:32)
+      at Module._load (node:internal/modules/cjs/loader:1019:12) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [
+      '/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js'
+    ]
+  }
+}
+
+Node.js v18.20.8
+You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:83
+		throw new Error(
+		      ^
+
+Error: Cannot find module @rollup/rollup-linux-x64-gnu. npm has a bug related to optional dependencies (https://github.com/npm/cli/issues/4828). Please try `npm i` again after removing both package-lock.json and node_modules directory.
+    at requireWithFriendlyError (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:83:9)
+    at Object.<anonymous> (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:92:76)
+    ... 3 lines matching cause stack trace ...
+    at Module._load (node:internal/modules/cjs/loader:1019:12)
+    at ModuleWrap.<anonymous> (node:internal/modules/esm/translators:203:29)
+    at ModuleJob.run (node:internal/modules/esm/module_job:195:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:337:24)
+    at async CAC.<anonymous> (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/cli.js:571:27) {
+  [cause]: Error: Cannot find module '@rollup/rollup-linux-x64-gnu'
+  Require stack:
+  - /root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1140:15)
+      at Module._load (node:internal/modules/cjs/loader:981:27)
+      at Module.require (node:internal/modules/cjs/loader:1231:19)
+      at require (node:internal/modules/helpers:177:18)
+      at requireWithFriendlyError (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:65:10)
+      at Object.<anonymous> (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:92:76)
+      at Module._compile (node:internal/modules/cjs/loader:1364:14)
+      at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+      at Module.load (node:internal/modules/cjs/loader:1203:32)
+      at Module._load (node:internal/modules/cjs/loader:1019:12) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [
+      '/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js'
+    ]
+  }
+}
+
+Node.js v18.20.8
+You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:83
+		throw new Error(
+		      ^
+
+Error: Cannot find module @rollup/rollup-linux-x64-gnu. npm has a bug related to optional dependencies (https://github.com/npm/cli/issues/4828). Please try `npm i` again after removing both package-lock.json and node_modules directory.
+    at requireWithFriendlyError (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:83:9)
+    at Object.<anonymous> (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:92:76)
+    ... 3 lines matching cause stack trace ...
+    at Module._load (node:internal/modules/cjs/loader:1019:12)
+    at ModuleWrap.<anonymous> (node:internal/modules/esm/translators:203:29)
+    at ModuleJob.run (node:internal/modules/esm/module_job:195:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:337:24)
+    at async CAC.<anonymous> (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/cli.js:571:27) {
+  [cause]: Error: Cannot find module '@rollup/rollup-linux-x64-gnu'
+  Require stack:
+  - /root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1140:15)
+      at Module._load (node:internal/modules/cjs/loader:981:27)
+      at Module.require (node:internal/modules/cjs/loader:1231:19)
+      at require (node:internal/modules/helpers:177:18)
+      at requireWithFriendlyError (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:65:10)
+      at Object.<anonymous> (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:92:76)
+      at Module._compile (node:internal/modules/cjs/loader:1364:14)
+      at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+      at Module.load (node:internal/modules/cjs/loader:1203:32)
+      at Module._load (node:internal/modules/cjs/loader:1019:12) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [
+      '/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js'
+    ]
+  }
+}
+
+Node.js v18.20.8
+You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:83
+		throw new Error(
+		      ^
+
+Error: Cannot find module @rollup/rollup-linux-x64-gnu. npm has a bug related to optional dependencies (https://github.com/npm/cli/issues/4828). Please try `npm i` again after removing both package-lock.json and node_modules directory.
+    at requireWithFriendlyError (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:83:9)
+    at Object.<anonymous> (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:92:76)
+    ... 3 lines matching cause stack trace ...
+    at Module._load (node:internal/modules/cjs/loader:1019:12)
+    at ModuleWrap.<anonymous> (node:internal/modules/esm/translators:203:29)
+    at ModuleJob.run (node:internal/modules/esm/module_job:195:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:337:24)
+    at async CAC.<anonymous> (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/cli.js:571:27) {
+  [cause]: Error: Cannot find module '@rollup/rollup-linux-x64-gnu'
+  Require stack:
+  - /root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1140:15)
+      at Module._load (node:internal/modules/cjs/loader:981:27)
+      at Module.require (node:internal/modules/cjs/loader:1231:19)
+      at require (node:internal/modules/helpers:177:18)
+      at requireWithFriendlyError (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:65:10)
+      at Object.<anonymous> (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:92:76)
+      at Module._compile (node:internal/modules/cjs/loader:1364:14)
+      at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+      at Module.load (node:internal/modules/cjs/loader:1203:32)
+      at Module._load (node:internal/modules/cjs/loader:1019:12) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [
+      '/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js'
+    ]
+  }
+}
+
+Node.js v18.20.8
+You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:83
+		throw new Error(
+		      ^
+
+Error: Cannot find module @rollup/rollup-linux-x64-gnu. npm has a bug related to optional dependencies (https://github.com/npm/cli/issues/4828). Please try `npm i` again after removing both package-lock.json and node_modules directory.
+    at requireWithFriendlyError (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:83:9)
+    at Object.<anonymous> (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:92:76)
+    ... 3 lines matching cause stack trace ...
+    at Module._load (node:internal/modules/cjs/loader:1019:12)
+    at ModuleWrap.<anonymous> (node:internal/modules/esm/translators:203:29)
+    at ModuleJob.run (node:internal/modules/esm/module_job:195:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:337:24)
+    at async CAC.<anonymous> (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/cli.js:571:27) {
+  [cause]: Error: Cannot find module '@rollup/rollup-linux-x64-gnu'
+  Require stack:
+  - /root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1140:15)
+      at Module._load (node:internal/modules/cjs/loader:981:27)
+      at Module.require (node:internal/modules/cjs/loader:1231:19)
+      at require (node:internal/modules/helpers:177:18)
+      at requireWithFriendlyError (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:65:10)
+      at Object.<anonymous> (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:92:76)
+      at Module._compile (node:internal/modules/cjs/loader:1364:14)
+      at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+      at Module.load (node:internal/modules/cjs/loader:1203:32)
+      at Module._load (node:internal/modules/cjs/loader:1019:12) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [
+      '/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js'
+    ]
+  }
+}
+
+Node.js v18.20.8
+You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:83
+		throw new Error(
+		      ^
+
+Error: Cannot find module @rollup/rollup-linux-x64-gnu. npm has a bug related to optional dependencies (https://github.com/npm/cli/issues/4828). Please try `npm i` again after removing both package-lock.json and node_modules directory.
+    at requireWithFriendlyError (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:83:9)
+    at Object.<anonymous> (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:92:76)
+    ... 3 lines matching cause stack trace ...
+    at Module._load (node:internal/modules/cjs/loader:1019:12)
+    at ModuleWrap.<anonymous> (node:internal/modules/esm/translators:203:29)
+    at ModuleJob.run (node:internal/modules/esm/module_job:195:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:337:24)
+    at async CAC.<anonymous> (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/cli.js:571:27) {
+  [cause]: Error: Cannot find module '@rollup/rollup-linux-x64-gnu'
+  Require stack:
+  - /root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1140:15)
+      at Module._load (node:internal/modules/cjs/loader:981:27)
+      at Module.require (node:internal/modules/cjs/loader:1231:19)
+      at require (node:internal/modules/helpers:177:18)
+      at requireWithFriendlyError (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:65:10)
+      at Object.<anonymous> (/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js:92:76)
+      at Module._compile (node:internal/modules/cjs/loader:1364:14)
+      at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+      at Module.load (node:internal/modules/cjs/loader:1203:32)
+      at Module._load (node:internal/modules/cjs/loader:1019:12) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [
+      '/root/osrs_flipper_ai/frontend/node_modules/rollup/dist/native.js'
+    ]
+  }
+}
+
+Node.js v18.20.8
+>>>>>>> 98131b6412a8278f97aaca5bb7a77204b1073561
 sh: 1: vite: not found
 sh: 1: vite: not found
 sh: 1: vite: not found
@@ -311,6 +699,7 @@ sh: 1: vite: not found
 You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
 error when starting dev server:
 TypeError: crypto.hash is not a function
+<<<<<<< HEAD
     at getHash (file:///osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:2621:21)
     at getLockfileHash (file:///osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11419:9)
     at getDepHash (file:///osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11422:23)
@@ -1700,3 +2089,338 @@ TypeError: crypto.hash is not a function
     at Object.defaultCreateClientDevEnvironment [as createEnvironment] (file:///osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35566:9)
     at _createServer (file:///osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:28069:132)
     at async CAC.<anonymous> (file:///osrs_flipper_ai/frontend/node_modules/vite/dist/node/cli.js:573:18)
+=======
+    at getHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:2621:21)
+    at getLockfileHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11419:9)
+    at getDepHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11422:23)
+    at initDepsOptimizerMetadata (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:10881:53)
+    at createDepsOptimizer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:34386:17)
+    at new DevEnvironment (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35148:109)
+    at Object.defaultCreateClientDevEnvironment [as createEnvironment] (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35566:9)
+    at _createServer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:28069:132)
+    at async CAC.<anonymous> (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/cli.js:573:18)
+You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+error when starting dev server:
+TypeError: crypto.hash is not a function
+    at getHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:2621:21)
+    at getLockfileHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11419:9)
+    at getDepHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11422:23)
+    at initDepsOptimizerMetadata (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:10881:53)
+    at createDepsOptimizer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:34386:17)
+    at new DevEnvironment (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35148:109)
+    at Object.defaultCreateClientDevEnvironment [as createEnvironment] (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35566:9)
+    at _createServer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:28069:132)
+    at async CAC.<anonymous> (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/cli.js:573:18)
+You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+error when starting dev server:
+TypeError: crypto.hash is not a function
+    at getHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:2621:21)
+    at getLockfileHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11419:9)
+    at getDepHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11422:23)
+    at initDepsOptimizerMetadata (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:10881:53)
+    at createDepsOptimizer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:34386:17)
+    at new DevEnvironment (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35148:109)
+    at Object.defaultCreateClientDevEnvironment [as createEnvironment] (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35566:9)
+    at _createServer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:28069:132)
+    at async CAC.<anonymous> (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/cli.js:573:18)
+You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+error when starting dev server:
+TypeError: crypto.hash is not a function
+    at getHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:2621:21)
+    at getLockfileHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11419:9)
+    at getDepHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11422:23)
+    at initDepsOptimizerMetadata (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:10881:53)
+    at createDepsOptimizer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:34386:17)
+    at new DevEnvironment (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35148:109)
+    at Object.defaultCreateClientDevEnvironment [as createEnvironment] (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35566:9)
+    at _createServer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:28069:132)
+    at async CAC.<anonymous> (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/cli.js:573:18)
+You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+error when starting dev server:
+TypeError: crypto.hash is not a function
+    at getHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:2621:21)
+    at getLockfileHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11419:9)
+    at getDepHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11422:23)
+    at initDepsOptimizerMetadata (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:10881:53)
+    at createDepsOptimizer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:34386:17)
+    at new DevEnvironment (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35148:109)
+    at Object.defaultCreateClientDevEnvironment [as createEnvironment] (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35566:9)
+    at _createServer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:28069:132)
+    at async CAC.<anonymous> (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/cli.js:573:18)
+You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+error when starting dev server:
+TypeError: crypto.hash is not a function
+    at getHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:2621:21)
+    at getLockfileHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11419:9)
+    at getDepHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11422:23)
+    at initDepsOptimizerMetadata (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:10881:53)
+    at createDepsOptimizer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:34386:17)
+    at new DevEnvironment (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35148:109)
+    at Object.defaultCreateClientDevEnvironment [as createEnvironment] (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35566:9)
+    at _createServer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:28069:132)
+    at async CAC.<anonymous> (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/cli.js:573:18)
+You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+error when starting dev server:
+TypeError: crypto.hash is not a function
+    at getHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:2621:21)
+    at getLockfileHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11419:9)
+    at getDepHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11422:23)
+    at initDepsOptimizerMetadata (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:10881:53)
+    at createDepsOptimizer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:34386:17)
+    at new DevEnvironment (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35148:109)
+    at Object.defaultCreateClientDevEnvironment [as createEnvironment] (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35566:9)
+    at _createServer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:28069:132)
+    at async CAC.<anonymous> (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/cli.js:573:18)
+You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+error when starting dev server:
+TypeError: crypto.hash is not a function
+    at getHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:2621:21)
+    at getLockfileHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11419:9)
+    at getDepHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11422:23)
+    at initDepsOptimizerMetadata (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:10881:53)
+    at createDepsOptimizer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:34386:17)
+    at new DevEnvironment (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35148:109)
+    at Object.defaultCreateClientDevEnvironment [as createEnvironment] (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35566:9)
+    at _createServer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:28069:132)
+    at async CAC.<anonymous> (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/cli.js:573:18)
+You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+error when starting dev server:
+TypeError: crypto.hash is not a function
+    at getHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:2621:21)
+    at getLockfileHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11419:9)
+    at getDepHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11422:23)
+    at initDepsOptimizerMetadata (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:10881:53)
+    at createDepsOptimizer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:34386:17)
+    at new DevEnvironment (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35148:109)
+    at Object.defaultCreateClientDevEnvironment [as createEnvironment] (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35566:9)
+    at _createServer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:28069:132)
+    at async CAC.<anonymous> (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/cli.js:573:18)
+You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+error when starting dev server:
+TypeError: crypto.hash is not a function
+    at getHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:2621:21)
+    at getLockfileHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11419:9)
+    at getDepHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11422:23)
+    at initDepsOptimizerMetadata (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:10881:53)
+    at createDepsOptimizer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:34386:17)
+    at new DevEnvironment (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35148:109)
+    at Object.defaultCreateClientDevEnvironment [as createEnvironment] (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35566:9)
+    at _createServer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:28069:132)
+    at async CAC.<anonymous> (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/cli.js:573:18)
+You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+error when starting dev server:
+TypeError: crypto.hash is not a function
+    at getHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:2621:21)
+    at getLockfileHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11419:9)
+    at getDepHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11422:23)
+    at initDepsOptimizerMetadata (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:10881:53)
+    at createDepsOptimizer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:34386:17)
+    at new DevEnvironment (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35148:109)
+    at Object.defaultCreateClientDevEnvironment [as createEnvironment] (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35566:9)
+    at _createServer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:28069:132)
+    at async CAC.<anonymous> (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/cli.js:573:18)
+You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+error when starting dev server:
+TypeError: crypto.hash is not a function
+    at getHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:2621:21)
+    at getLockfileHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11419:9)
+    at getDepHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11422:23)
+    at initDepsOptimizerMetadata (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:10881:53)
+    at createDepsOptimizer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:34386:17)
+    at new DevEnvironment (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35148:109)
+    at Object.defaultCreateClientDevEnvironment [as createEnvironment] (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35566:9)
+    at _createServer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:28069:132)
+    at async CAC.<anonymous> (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/cli.js:573:18)
+You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+error when starting dev server:
+TypeError: crypto.hash is not a function
+    at getHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:2621:21)
+    at getLockfileHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11419:9)
+    at getDepHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11422:23)
+    at initDepsOptimizerMetadata (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:10881:53)
+    at createDepsOptimizer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:34386:17)
+    at new DevEnvironment (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35148:109)
+    at Object.defaultCreateClientDevEnvironment [as createEnvironment] (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35566:9)
+    at _createServer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:28069:132)
+    at async CAC.<anonymous> (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/cli.js:573:18)
+You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+error when starting dev server:
+TypeError: crypto.hash is not a function
+    at getHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:2621:21)
+    at getLockfileHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11419:9)
+    at getDepHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11422:23)
+    at initDepsOptimizerMetadata (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:10881:53)
+    at createDepsOptimizer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:34386:17)
+    at new DevEnvironment (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35148:109)
+    at Object.defaultCreateClientDevEnvironment [as createEnvironment] (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35566:9)
+    at _createServer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:28069:132)
+    at async CAC.<anonymous> (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/cli.js:573:18)
+You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+error when starting dev server:
+TypeError: crypto.hash is not a function
+    at getHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:2621:21)
+    at getLockfileHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11419:9)
+    at getDepHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11422:23)
+    at initDepsOptimizerMetadata (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:10881:53)
+    at createDepsOptimizer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:34386:17)
+    at new DevEnvironment (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35148:109)
+    at Object.defaultCreateClientDevEnvironment [as createEnvironment] (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35566:9)
+    at _createServer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:28069:132)
+    at async CAC.<anonymous> (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/cli.js:573:18)
+You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+error when starting dev server:
+TypeError: crypto.hash is not a function
+    at getHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:2621:21)
+    at getLockfileHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11419:9)
+    at getDepHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11422:23)
+    at initDepsOptimizerMetadata (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:10881:53)
+    at createDepsOptimizer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:34386:17)
+    at new DevEnvironment (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35148:109)
+    at Object.defaultCreateClientDevEnvironment [as createEnvironment] (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35566:9)
+    at _createServer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:28069:132)
+    at async CAC.<anonymous> (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/cli.js:573:18)
+You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+error when starting dev server:
+TypeError: crypto.hash is not a function
+    at getHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:2621:21)
+    at getLockfileHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11419:9)
+    at getDepHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11422:23)
+    at initDepsOptimizerMetadata (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:10881:53)
+    at createDepsOptimizer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:34386:17)
+    at new DevEnvironment (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35148:109)
+    at Object.defaultCreateClientDevEnvironment [as createEnvironment] (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35566:9)
+    at _createServer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:28069:132)
+    at async CAC.<anonymous> (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/cli.js:573:18)
+You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+error when starting dev server:
+TypeError: crypto.hash is not a function
+    at getHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:2621:21)
+    at getLockfileHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11419:9)
+    at getDepHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11422:23)
+    at initDepsOptimizerMetadata (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:10881:53)
+    at createDepsOptimizer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:34386:17)
+    at new DevEnvironment (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35148:109)
+    at Object.defaultCreateClientDevEnvironment [as createEnvironment] (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35566:9)
+    at _createServer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:28069:132)
+    at async CAC.<anonymous> (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/cli.js:573:18)
+You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+error when starting dev server:
+TypeError: crypto.hash is not a function
+    at getHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:2621:21)
+    at getLockfileHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11419:9)
+    at getDepHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11422:23)
+    at initDepsOptimizerMetadata (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:10881:53)
+    at createDepsOptimizer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:34386:17)
+    at new DevEnvironment (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35148:109)
+    at Object.defaultCreateClientDevEnvironment [as createEnvironment] (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35566:9)
+    at _createServer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:28069:132)
+    at async CAC.<anonymous> (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/cli.js:573:18)
+You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+error when starting dev server:
+TypeError: crypto.hash is not a function
+    at getHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:2621:21)
+    at getLockfileHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11419:9)
+    at getDepHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11422:23)
+    at initDepsOptimizerMetadata (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:10881:53)
+    at createDepsOptimizer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:34386:17)
+    at new DevEnvironment (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35148:109)
+    at Object.defaultCreateClientDevEnvironment [as createEnvironment] (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35566:9)
+    at _createServer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:28069:132)
+    at async CAC.<anonymous> (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/cli.js:573:18)
+You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+error when starting dev server:
+TypeError: crypto.hash is not a function
+    at getHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:2621:21)
+    at getLockfileHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11419:9)
+    at getDepHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11422:23)
+    at initDepsOptimizerMetadata (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:10881:53)
+    at createDepsOptimizer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:34386:17)
+    at new DevEnvironment (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35148:109)
+    at Object.defaultCreateClientDevEnvironment [as createEnvironment] (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35566:9)
+    at _createServer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:28069:132)
+    at async CAC.<anonymous> (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/cli.js:573:18)
+You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+error when starting dev server:
+TypeError: crypto.hash is not a function
+    at getHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:2621:21)
+    at getLockfileHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11419:9)
+    at getDepHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11422:23)
+    at initDepsOptimizerMetadata (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:10881:53)
+    at createDepsOptimizer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:34386:17)
+    at new DevEnvironment (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35148:109)
+    at Object.defaultCreateClientDevEnvironment [as createEnvironment] (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35566:9)
+    at _createServer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:28069:132)
+    at async CAC.<anonymous> (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/cli.js:573:18)
+You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+error when starting dev server:
+TypeError: crypto.hash is not a function
+    at getHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:2621:21)
+    at getLockfileHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11419:9)
+    at getDepHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11422:23)
+    at initDepsOptimizerMetadata (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:10881:53)
+    at createDepsOptimizer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:34386:17)
+    at new DevEnvironment (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35148:109)
+    at Object.defaultCreateClientDevEnvironment [as createEnvironment] (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35566:9)
+    at _createServer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:28069:132)
+    at async CAC.<anonymous> (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/cli.js:573:18)
+You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+error when starting dev server:
+TypeError: crypto.hash is not a function
+    at getHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:2621:21)
+    at getLockfileHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11419:9)
+    at getDepHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11422:23)
+    at initDepsOptimizerMetadata (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:10881:53)
+    at createDepsOptimizer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:34386:17)
+    at new DevEnvironment (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35148:109)
+    at Object.defaultCreateClientDevEnvironment [as createEnvironment] (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35566:9)
+    at _createServer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:28069:132)
+    at async CAC.<anonymous> (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/cli.js:573:18)
+You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+error when starting dev server:
+TypeError: crypto.hash is not a function
+    at getHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:2621:21)
+    at getLockfileHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11419:9)
+    at getDepHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11422:23)
+    at initDepsOptimizerMetadata (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:10881:53)
+    at createDepsOptimizer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:34386:17)
+    at new DevEnvironment (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35148:109)
+    at Object.defaultCreateClientDevEnvironment [as createEnvironment] (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35566:9)
+    at _createServer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:28069:132)
+    at async CAC.<anonymous> (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/cli.js:573:18)
+You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+error when starting dev server:
+TypeError: crypto.hash is not a function
+    at getHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:2621:21)
+    at getLockfileHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11419:9)
+    at getDepHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11422:23)
+    at initDepsOptimizerMetadata (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:10881:53)
+    at createDepsOptimizer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:34386:17)
+    at new DevEnvironment (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35148:109)
+    at Object.defaultCreateClientDevEnvironment [as createEnvironment] (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35566:9)
+    at _createServer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:28069:132)
+    at async CAC.<anonymous> (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/cli.js:573:18)
+You are using Node.js 18.20.8. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+error when starting dev server:
+TypeError: crypto.hash is not a function
+    at getHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:2621:21)
+    at getLockfileHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11419:9)
+    at getDepHash (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:11422:23)
+    at initDepsOptimizerMetadata (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:10881:53)
+    at createDepsOptimizer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:34386:17)
+    at new DevEnvironment (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35148:109)
+    at Object.defaultCreateClientDevEnvironment [as createEnvironment] (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:35566:9)
+    at _createServer (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/chunks/dep-Chhhsdoe.js:28069:132)
+    at async CAC.<anonymous> (file:///root/osrs_flipper_ai/frontend/node_modules/vite/dist/node/cli.js:573:18)
+(node:85509) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///root/osrs_flipper_ai/frontend/postcss.config.js?t=1759899535857 is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /root/osrs_flipper_ai/frontend/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:85691) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///root/osrs_flipper_ai/frontend/postcss.config.js?t=1759899592066 is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /root/osrs_flipper_ai/frontend/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:768) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///root/osrs_flipper_ai/frontend/postcss.config.js?t=1759905305007 is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /root/osrs_flipper_ai/frontend/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+>>>>>>> 98131b6412a8278f97aaca5bb7a77204b1073561

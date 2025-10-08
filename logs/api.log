@@ -1,0 +1,41 @@
+nohup: ignoring input
+INFO:     Started server process [6173]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+✅ Model reloaded from models/latest_model.pkl
+✅ Predictions reloaded (50 rows)
+✅ Features reloaded (46123 rows)
+👀 File watcher started — automatic reload active.
+🧠 Background refresh thread running (every 5 min).
+INFO:     58.96.116.254:50675 - "GET /docs HTTP/1.1" 200 OK
+INFO:     58.96.116.254:50675 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     58.96.116.254:50680 - "GET /top_flips?limit=10 HTTP/1.1" 200 OK
+Exception in thread Thread-1:
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "/root/osrs_flipper_ai/.venv/lib/python3.10/site-packages/watchdog/observers/api.py", line 213, in run
+    self.dispatch_events(self.event_queue)
+  File "/root/osrs_flipper_ai/.venv/lib/python3.10/site-packages/watchdog/observers/api.py", line 391, in dispatch_events
+    handler.dispatch(event)
+  File "/root/osrs_flipper_ai/.venv/lib/python3.10/site-packages/watchdog/events.py", line 217, in dispatch
+    getattr(self, f"on_{event.event_type}")(event)
+  File "/root/osrs_flipper_ai/src/api.py", line 85, in on_modified
+    CACHE["model"] = safe_load_model()
+  File "/root/osrs_flipper_ai/src/api.py", line 45, in safe_load_model
+    model_dict = joblib.load(MODEL_PATH)
+  File "/root/osrs_flipper_ai/.venv/lib/python3.10/site-packages/joblib/numpy_pickle.py", line 749, in load
+    obj = _unpickle(
+  File "/root/osrs_flipper_ai/.venv/lib/python3.10/site-packages/joblib/numpy_pickle.py", line 626, in _unpickle
+    obj = unpickler.load()
+  File "/usr/lib/python3.10/pickle.py", line 1211, in load
+    raise EOFError
+EOFError
+INFO:     58.96.116.254:51121 - "GET /docs HTTP/1.1" 200 OK
+INFO:     58.96.116.254:51121 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     58.96.116.254:51127 - "GET /top_flips?limit=10 HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [6173]

@@ -120,3 +120,11 @@ Traceback (most recent call last):
   File "/osrs_flipper_ai/models/predict_flips.py", line 18, in <module>
     from models.recommend_sell import batch_recommend_sell
 ModuleNotFoundError: No module named 'models'
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/osrs_flipper_ai/osrs_flipper_ai/models/predict_flips.py", line 18, in <module>
+    from models.recommend_sell import batch_recommend_sell
+ModuleNotFoundError: No module named 'models'

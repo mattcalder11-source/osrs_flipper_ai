@@ -1,0 +1,8 @@
+README.md
+pyproject.toml
+setup.py
+osrs_flipper_ai.egg-info/PKG-INFO
+osrs_flipper_ai.egg-info/SOURCES.txt
+osrs_flipper_ai.egg-info/dependency_links.txt
+osrs_flipper_ai.egg-info/requires.txt
+osrs_flipper_ai.egg-info/top_level.txt

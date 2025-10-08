@@ -92,3 +92,16 @@
 [2025-10-08 07:48:44] ==============================================
 [2025-10-08 07:48:44] 🧾 [1/4] Ingesting latest market data...
 [2025-10-08 07:48:44] \033[1;31m❌ Ingestion failed! Check /osrs_flipper_ai/logs/ingest.log\033[0m
+[2025-10-08 08:22:02] ==============================================
+[2025-10-08 08:22:02] 🚀 \033[1;32mStarting OSRS Flipper Pipeline (Package Mode)\033[0m
+[2025-10-08 08:22:02] ==============================================
+[2025-10-08 08:22:02] 🧾 [1/4] Ingesting latest market data...
+[2025-10-08 08:22:03] \033[1;31m❌ Ingestion failed! Check /osrs_flipper_ai/logs/ingest.log\033[0m
+[2025-10-08 08:24:40] ==============================================
+[2025-10-08 08:24:40] 🚀 \033[1;32mStarting OSRS Flipper Pipeline (Package Mode)\033[0m
+[2025-10-08 08:24:40] ==============================================
+[2025-10-08 08:24:40] 🧾 [1/4] Ingesting latest market data...
+[2025-10-08 08:25:10] ✅ Ingestion completed successfully.
+[2025-10-08 08:25:10] ⏭️  [2/4] Skipping model training (no 'train' arg provided).
+[2025-10-08 08:25:10] 📊 [3/4] Generating flip predictions...
+[2025-10-08 08:25:11] \033[1;31m❌ Prediction failed! Check /osrs_flipper_ai/logs/predict.log\033[0m

@@ -177,6 +177,7 @@
 [2025-10-07 08:38:50.248651] SUCCESS: ./data\snapshot_1759797529.parquet (4194 items)
 [2025-10-07 08:40:55.387616] SUCCESS: ./data\snapshot_1759797654.parquet (4194 items)
 [2025-10-07 08:40:57.031988] SUCCESS: ./data\snapshot_1759797655.parquet (4194 items)
+<<<<<<< HEAD
 ./run_pipeline.sh: line 22: python: command not found
 ./run_pipeline.sh: line 22: python: command not found
 python: can't open file '/osrs_flipper_ai/src/ingest.py': [Errno 2] No such file or directory
@@ -213,3 +214,892 @@ python: can't open file '/osrs_flipper_ai/src/ingest.py': [Errno 2] No such file
 /osrs_flipper_ai/.venv/bin/python: Error while finding module specification for 'osrs_flipper_ai.data_ingest.ingest' (ModuleNotFoundError: No module named 'osrs_flipper_ai')
 /osrs_flipper_ai/.venv/bin/python: Error while finding module specification for 'osrs_flipper_ai.data_ingest.ingest' (ModuleNotFoundError: No module named 'osrs_flipper_ai')
 /osrs_flipper_ai/.venv/bin/python: Error while finding module specification for 'osrs_flipper_ai.data_ingestion.ingest' (ModuleNotFoundError: No module named 'osrs_flipper_ai')
+=======
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759807502.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759807502.parquet
+📊 Aggregated 52 files → ./data/features/latest_train.parquet (209700 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759807802.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759807802.parquet
+📊 Aggregated 53 files → ./data/features/latest_train.parquet (213894 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759808102.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759808102.parquet
+📊 Aggregated 54 files → ./data/features/latest_train.parquet (218088 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759808401.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759808401.parquet
+📊 Aggregated 55 files → ./data/features/latest_train.parquet (222282 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759808701.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759808701.parquet
+📊 Aggregated 56 files → ./data/features/latest_train.parquet (226476 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759809002.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759809002.parquet
+📊 Aggregated 57 files → ./data/features/latest_train.parquet (230670 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759809301.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759809301.parquet
+📊 Aggregated 58 files → ./data/features/latest_train.parquet (234864 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759809602.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759809602.parquet
+📊 Aggregated 59 files → ./data/features/latest_train.parquet (239058 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759809901.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759809901.parquet
+📊 Aggregated 1 files → ./data/features/latest_train.parquet (4194 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759810202.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759810202.parquet
+📊 Aggregated 4 files → ./data/features/latest_train.parquet (8388 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759810502.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759810502.parquet
+📊 Aggregated 1 files → ./data/features/latest_train.parquet (4194 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759810802.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759810802.parquet
+📊 Aggregated 4 files → ./data/features/latest_train.parquet (8388 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759811102.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759811102.parquet
+📊 Aggregated 5 files → ./data/features/latest_train.parquet (12582 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759811401.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759811401.parquet
+📊 Aggregated 6 files → ./data/features/latest_train.parquet (16776 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759811701.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759811701.parquet
+📊 Aggregated 7 files → ./data/features/latest_train.parquet (20970 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759812002.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759812002.parquet
+📊 Aggregated 8 files → ./data/features/latest_train.parquet (25164 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759812302.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759812302.parquet
+📊 Aggregated 9 files → ./data/features/latest_train.parquet (29358 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759812601.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759812601.parquet
+📊 Aggregated 10 files → ./data/features/latest_train.parquet (33552 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759812902.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759812902.parquet
+📊 Aggregated 11 files → ./data/features/latest_train.parquet (37746 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759813201.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759813201.parquet
+📊 Aggregated 12 files → ./data/features/latest_train.parquet (41940 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759813501.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759813501.parquet
+📊 Aggregated 13 files → ./data/features/latest_train.parquet (46134 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759813801.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759813801.parquet
+📊 Aggregated 14 files → ./data/features/latest_train.parquet (50328 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759814102.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759814102.parquet
+📊 Aggregated 15 files → ./data/features/latest_train.parquet (54522 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759814402.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759814402.parquet
+📊 Aggregated 16 files → ./data/features/latest_train.parquet (58716 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759814702.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759814702.parquet
+📊 Aggregated 17 files → ./data/features/latest_train.parquet (62910 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759815002.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759815002.parquet
+📊 Aggregated 18 files → ./data/features/latest_train.parquet (67104 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759815301.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759815301.parquet
+📊 Aggregated 19 files → ./data/features/latest_train.parquet (71298 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759815601.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759815601.parquet
+📊 Aggregated 20 files → ./data/features/latest_train.parquet (75492 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759815901.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759815901.parquet
+📊 Aggregated 21 files → ./data/features/latest_train.parquet (79686 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759816202.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759816202.parquet
+📊 Aggregated 22 files → ./data/features/latest_train.parquet (83880 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759816502.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759816502.parquet
+📊 Aggregated 23 files → ./data/features/latest_train.parquet (88074 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759816802.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759816802.parquet
+📊 Aggregated 24 files → ./data/features/latest_train.parquet (92268 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759817101.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759817101.parquet
+📊 Aggregated 25 files → ./data/features/latest_train.parquet (96462 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759817402.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759817402.parquet
+📊 Aggregated 26 files → ./data/features/latest_train.parquet (100656 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759817702.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759817702.parquet
+📊 Aggregated 27 files → ./data/features/latest_train.parquet (104850 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759818001.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759818001.parquet
+📊 Aggregated 28 files → ./data/features/latest_train.parquet (109044 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759818302.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759818302.parquet
+📊 Aggregated 29 files → ./data/features/latest_train.parquet (113238 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759818602.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759818602.parquet
+📊 Aggregated 30 files → ./data/features/latest_train.parquet (117432 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759818902.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759818902.parquet
+📊 Aggregated 31 files → ./data/features/latest_train.parquet (121626 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759819202.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759819202.parquet
+📊 Aggregated 32 files → ./data/features/latest_train.parquet (125820 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759819502.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759819502.parquet
+📊 Aggregated 33 files → ./data/features/latest_train.parquet (130014 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759819801.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759819801.parquet
+📊 Aggregated 34 files → ./data/features/latest_train.parquet (134208 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759820102.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759820102.parquet
+📊 Aggregated 35 files → ./data/features/latest_train.parquet (138402 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759820403.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759820403.parquet
+📊 Aggregated 36 files → ./data/features/latest_train.parquet (142596 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759820703.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759820703.parquet
+📊 Aggregated 37 files → ./data/features/latest_train.parquet (146790 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759821002.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759821002.parquet
+📊 Aggregated 38 files → ./data/features/latest_train.parquet (150984 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759821302.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759821302.parquet
+📊 Aggregated 39 files → ./data/features/latest_train.parquet (155178 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759821602.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759821602.parquet
+📊 Aggregated 40 files → ./data/features/latest_train.parquet (159372 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759821901.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759821901.parquet
+📊 Aggregated 41 files → ./data/features/latest_train.parquet (163566 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759822202.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759822202.parquet
+📊 Aggregated 42 files → ./data/features/latest_train.parquet (167760 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759822501.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759822501.parquet
+📊 Aggregated 43 files → ./data/features/latest_train.parquet (171954 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759822802.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759822802.parquet
+📊 Aggregated 44 files → ./data/features/latest_train.parquet (176148 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759823101.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759823101.parquet
+📊 Aggregated 45 files → ./data/features/latest_train.parquet (180342 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759823402.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759823402.parquet
+📊 Aggregated 46 files → ./data/features/latest_train.parquet (184536 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759823702.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759823702.parquet
+📊 Aggregated 47 files → ./data/features/latest_train.parquet (188730 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759824002.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759824002.parquet
+📊 Aggregated 48 files → ./data/features/latest_train.parquet (192924 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759824302.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759824302.parquet
+📊 Aggregated 49 files → ./data/features/latest_train.parquet (197118 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759824602.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759824602.parquet
+📊 Aggregated 50 files → ./data/features/latest_train.parquet (201312 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759824902.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759824902.parquet
+📊 Aggregated 51 files → ./data/features/latest_train.parquet (205506 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759825201.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759825201.parquet
+📊 Aggregated 52 files → ./data/features/latest_train.parquet (209700 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759825502.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759825502.parquet
+📊 Aggregated 53 files → ./data/features/latest_train.parquet (213894 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759825802.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759825802.parquet
+📊 Aggregated 54 files → ./data/features/latest_train.parquet (218088 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759826102.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759826102.parquet
+📊 Aggregated 55 files → ./data/features/latest_train.parquet (222282 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759826402.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759826402.parquet
+📊 Aggregated 56 files → ./data/features/latest_train.parquet (226476 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759826702.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759826702.parquet
+📊 Aggregated 57 files → ./data/features/latest_train.parquet (230670 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759827001.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759827001.parquet
+📊 Aggregated 58 files → ./data/features/latest_train.parquet (234864 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759827302.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759827302.parquet
+📊 Aggregated 59 files → ./data/features/latest_train.parquet (239058 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759827602.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759827602.parquet
+📊 Aggregated 60 files → ./data/features/latest_train.parquet (243252 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759827902.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759827902.parquet
+📊 Aggregated 61 files → ./data/features/latest_train.parquet (247446 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759828201.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759828201.parquet
+📊 Aggregated 62 files → ./data/features/latest_train.parquet (251640 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759828502.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759828502.parquet
+📊 Aggregated 63 files → ./data/features/latest_train.parquet (255834 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759828802.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759828802.parquet
+📊 Aggregated 64 files → ./data/features/latest_train.parquet (260028 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759829101.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759829101.parquet
+📊 Aggregated 65 files → ./data/features/latest_train.parquet (264222 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759829401.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759829401.parquet
+📊 Aggregated 66 files → ./data/features/latest_train.parquet (268416 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759829702.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759829702.parquet
+📊 Aggregated 67 files → ./data/features/latest_train.parquet (272610 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759830001.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759830001.parquet
+📊 Aggregated 68 files → ./data/features/latest_train.parquet (276804 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759830302.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759830302.parquet
+📊 Aggregated 69 files → ./data/features/latest_train.parquet (280998 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759830601.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759830601.parquet
+📊 Aggregated 70 files → ./data/features/latest_train.parquet (285192 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759830901.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759830901.parquet
+📊 Aggregated 71 files → ./data/features/latest_train.parquet (289386 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759831202.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759831202.parquet
+📊 Aggregated 72 files → ./data/features/latest_train.parquet (293580 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759831501.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759831501.parquet
+📊 Aggregated 73 files → ./data/features/latest_train.parquet (297774 rows)
+/root/osrs_flipper_ai/src/features.py:59: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+/root/osrs_flipper_ai/src/features.py:149: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: ./data/snapshot_1759831802.parquet (4194 items)
+✨ Features computed and saved: ./data/features/features_1759831802.parquet
+📊 Aggregated 74 files → ./data/features/latest_train.parquet (301968 rows)
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/data_ingest/ingest.py': [Errno 2] No such file or directory
+Traceback (most recent call last):
+  File "/root/osrs_flipper_ai/data_ingest/ingest.py", line 8, in <module>
+    from osrs_flipper_ai.config import BASE_URL, USER_AGENT, DATA_DIR
+ModuleNotFoundError: No module named 'osrs_flipper_ai'
+Traceback (most recent call last):
+  File "/root/osrs_flipper_ai/data_ingest/ingest.py", line 8, in <module>
+    from osrs_flipper_ai.config import BASE_URL, USER_AGENT, DATA_DIR
+ModuleNotFoundError: No module named 'osrs_flipper_ai'
+Traceback (most recent call last):
+  File "/root/osrs_flipper_ai/data_ingest/ingest.py", line 8, in <module>
+    from osrs_flipper_ai.config import BASE_URL, USER_AGENT, DATA_DIR
+ModuleNotFoundError: No module named 'osrs_flipper_ai'
+Traceback (most recent call last):
+  File "/root/osrs_flipper_ai/data_ingest/ingest.py", line 8, in <module>
+    from osrs_flipper_ai.config import BASE_URL, USER_AGENT, DATA_DIR
+ModuleNotFoundError: No module named 'osrs_flipper_ai'
+Traceback (most recent call last):
+  File "/root/osrs_flipper_ai/data_ingest/ingest.py", line 8, in <module>
+    from osrs_flipper_ai.config import BASE_URL, USER_AGENT, DATA_DIR
+ModuleNotFoundError: No module named 'osrs_flipper_ai'
+>>>>>>> 98131b6412a8278f97aaca5bb7a77204b1073561
+/osrs_flipper_ai/.venv/bin/python: Error while finding module specification for 'osrs_flipper_ai.data_ingestion.ingest' (ModuleNotFoundError: No module named 'osrs_flipper_ai.data_ingestion')
+/osrs_flipper_ai/osrs_flipper_ai/features/features.py:138: FutureWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  .apply(compute_indicators)
+⏳ Fetching OSRS price data...
+✅ Snapshot saved: data/snapshot_1759911880.parquet (4194 items)
+⚠️ No 'volume' column found — filling with zeros.
+✨ Features computed and saved: data/features/features_1759911880.parquet
+📊 Aggregated 77 files → data/features/latest_train.parquet (306162 rows)

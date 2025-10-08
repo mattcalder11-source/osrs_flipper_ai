@@ -1,0 +1,55 @@
+Metadata-Version: 2.4
+Name: osrs-flipper-ai
+Version: 0.1.0
+Summary: Automated OSRS Grand Exchange flipping optimizer powered by AI.
+Author: Matthew Calder
+License: MIT
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+Requires-Dist: pandas>=2.0
+Requires-Dist: numpy>=1.25
+Requires-Dist: requests>=2.31
+Requires-Dist: scikit-learn>=1.3
+Requires-Dist: joblib>=1.3
+Requires-Dist: matplotlib>=3.7
+Requires-Dist: pyarrow>=15.0
+Provides-Extra: dev
+Requires-Dist: black; extra == "dev"
+Requires-Dist: flake8; extra == "dev"
+Requires-Dist: pytest; extra == "dev"
+Dynamic: requires-python
+
+# OSRS Flipper AI
+
+An AI-powered Old School RuneScape flipping assistant using the official price API.
+
+## Setup
+
+1. Create virtual environment:
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+2. Set your environment variables in `.env`:
+```
+USER_AGENT=OSRS-Flipper/1.0 (contact: you@example.com)
+```
+
+3. Run ingestion:
+```bash
+python src/ingest.py
+```
+
+4. Train model:
+```bash
+python src/train_model.py
+```
+
+5. Start API:
+```bash
+uvicorn src.api:app --reload
+```
+
+6. Open dashboard or inspect signals via `/docs`.
