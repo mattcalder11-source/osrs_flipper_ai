@@ -230,4 +230,19 @@ if __name__ == "__main__":
     # Generate multi-tier recommendations
     all_tiers = recommend_flips_by_tier(top_flips)
 
+    # Save the unified output for dashboard use
+    output_dir = Path("data/predictions")
+    output_dir.mkdir(parents=True, exist_ok=True)
+    latest_path = output_dir / "latest_top_flips.csv"
+    all_tiers.to_csv(latest_path, index=False)
+    print(f"💾 Saved unified flips → {latest_path}")
 
+    # -----------------------------------------------------------------
+    # SELL RECOMMENDATION STAGE
+    # -----------------------------------------------------------------
+    latest_prices = fetch_latest_prices_dict()  # e.g. {item_id: mid_price}
+    sell_recs = batch_recommend_sell(all_tiers, latest_prices)
+    sell_recs.to_csv(output_dir / "sell_signals.csv", index=False)
+
+    print("\n💰 === SELL RECOMMENDATIONS ===")
+    print(sell_recs[sell_recs["should_sell"]])
