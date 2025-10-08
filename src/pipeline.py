@@ -3,8 +3,8 @@ import time
 import pandas as pd
 from datetime import datetime, timezone
 from config import DATA_DIR
-from ingest import snapshot
-from features import compute_features
+from data_ingest.ingest import snapshot
+from features.features import compute_features
 
 def run_pipeline():
     """

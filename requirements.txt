@@ -12,3 +12,4 @@ duckdb
 python-dotenv
 plotly
 streamlit
+lxml

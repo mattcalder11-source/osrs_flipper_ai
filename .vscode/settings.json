@@ -1,0 +1,4 @@
+{
+  "python.analysis.extraPaths": ["F:\\"],
+  "python.defaultInterpreterPath": "F:\\osrs_flipper_ai\\.venv\\Scripts\\python.exe"
+}
