@@ -120,7 +120,8 @@ def load_recent_features(days_back=28, decay_rate=0.5):
             print(f"   • {os.path.basename(f)}")
 
     combined = pd.concat(dfs, ignore_index=True)
-    combined = combined.drop_duplicates(subset=["item_id", "ts_utc"], keep="last")
+    subset_cols = [c for c in ["item_id", "timestamp", "ts_utc"] if c in combined.columns]
+    combined = combined.drop_duplicates(subset=subset_cols, keep="last")
 
     # ------------------------------------------------------------------
     # 🧩 Guarantee file_time exists (older feature files may lack it)
