@@ -1,0 +1,24 @@
+Traceback (most recent call last):
+  File "/osrs_flipper_ai/models/train_model.py", line 14, in <module>
+    from osrs_flipper_ai.features.features import compute_features, compute_technical_indicators
+ModuleNotFoundError: No module named 'osrs_flipper_ai'
+Traceback (most recent call last):
+  File "/osrs_flipper_ai/models/train_model.py", line 14, in <module>
+    from osrs_flipper_ai.features.features import compute_features, compute_technical_indicators
+ModuleNotFoundError: No module named 'osrs_flipper_ai'
+Traceback (most recent call last):
+  File "/osrs_flipper_ai/models/train_model.py", line 14, in <module>
+    from osrs_flipper_ai.features.features import compute_features, compute_technical_indicators
+ModuleNotFoundError: No module named 'osrs_flipper_ai'
+Traceback (most recent call last):
+  File "/osrs_flipper_ai/models/train_model.py", line 14, in <module>
+    from osrs_flipper_ai.features.features import compute_features, compute_technical_indicators
+ModuleNotFoundError: No module named 'osrs_flipper_ai'
+Traceback (most recent call last):
+  File "/osrs_flipper_ai/models/train_model.py", line 14, in <module>
+    from osrs_flipper_ai.features.features import compute_features, compute_technical_indicators
+ModuleNotFoundError: No module named 'osrs_flipper_ai'
+Traceback (most recent call last):
+  File "/osrs_flipper_ai/models/train_model.py", line 14, in <module>
+    from osrs_flipper_ai.features.features import compute_features, compute_technical_indicators
+ModuleNotFoundError: No module named 'osrs_flipper_ai'

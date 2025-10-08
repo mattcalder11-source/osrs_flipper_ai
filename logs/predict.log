@@ -1,0 +1,122 @@
+./run_pipeline.sh: line 30: python: command not found
+./run_pipeline.sh: line 30: python: command not found
+Traceback (most recent call last):
+  File "/osrs_flipper_ai/models/predict_flips.py", line 18, in <module>
+    from models.recommend_sell import batch_recommend_sell
+ModuleNotFoundError: No module named 'models'
+Traceback (most recent call last):
+  File "/osrs_flipper_ai/models/predict_flips.py", line 18, in <module>
+    from models.recommend_sell import batch_recommend_sell
+ModuleNotFoundError: No module named 'models'
+Traceback (most recent call last):
+  File "/osrs_flipper_ai/models/predict_flips.py", line 18, in <module>
+    from models.recommend_sell import batch_recommend_sell
+ModuleNotFoundError: No module named 'models'
+Traceback (most recent call last):
+  File "/osrs_flipper_ai/models/predict_flips.py", line 18, in <module>
+    from models.recommend_sell import batch_recommend_sell
+ModuleNotFoundError: No module named 'models'
+Traceback (most recent call last):
+  File "/osrs_flipper_ai/models/predict_flips.py", line 18, in <module>
+    from models.recommend_sell import batch_recommend_sell
+ModuleNotFoundError: No module named 'models'
+Traceback (most recent call last):
+  File "/osrs_flipper_ai/models/predict_flips.py", line 18, in <module>
+    from models.recommend_sell import batch_recommend_sell
+ModuleNotFoundError: No module named 'models'
+Traceback (most recent call last):
+  File "/osrs_flipper_ai/models/predict_flips.py", line 18, in <module>
+    from models.recommend_sell import batch_recommend_sell
+ModuleNotFoundError: No module named 'models'
+Traceback (most recent call last):
+  File "/osrs_flipper_ai/models/predict_flips.py", line 18, in <module>
+    from models.recommend_sell import batch_recommend_sell
+ModuleNotFoundError: No module named 'models'
+Traceback (most recent call last):
+  File "/osrs_flipper_ai/models/predict_flips.py", line 18, in <module>
+    from models.recommend_sell import batch_recommend_sell
+ModuleNotFoundError: No module named 'models'
+Traceback (most recent call last):
+  File "/osrs_flipper_ai/models/predict_flips.py", line 18, in <module>
+    from models.recommend_sell import batch_recommend_sell
+ModuleNotFoundError: No module named 'models'
+Traceback (most recent call last):
+  File "/osrs_flipper_ai/models/predict_flips.py", line 18, in <module>
+    from models.recommend_sell import batch_recommend_sell
+ModuleNotFoundError: No module named 'models'
+Traceback (most recent call last):
+  File "/osrs_flipper_ai/models/predict_flips.py", line 18, in <module>
+    from models.recommend_sell import batch_recommend_sell
+ModuleNotFoundError: No module named 'models'
+Traceback (most recent call last):
+  File "/osrs_flipper_ai/models/predict_flips.py", line 18, in <module>
+    from models.recommend_sell import batch_recommend_sell
+ModuleNotFoundError: No module named 'models'
+Traceback (most recent call last):
+  File "/osrs_flipper_ai/models/predict_flips.py", line 18, in <module>
+    from models.recommend_sell import batch_recommend_sell
+ModuleNotFoundError: No module named 'models'
+Traceback (most recent call last):
+  File "/osrs_flipper_ai/models/predict_flips.py", line 18, in <module>
+    from models.recommend_sell import batch_recommend_sell
+ModuleNotFoundError: No module named 'models'
+Traceback (most recent call last):
+  File "/osrs_flipper_ai/models/predict_flips.py", line 18, in <module>
+    from models.recommend_sell import batch_recommend_sell
+ModuleNotFoundError: No module named 'models'
+Traceback (most recent call last):
+  File "/osrs_flipper_ai/models/predict_flips.py", line 18, in <module>
+    from models.recommend_sell import batch_recommend_sell
+ModuleNotFoundError: No module named 'models'
+Traceback (most recent call last):
+  File "/osrs_flipper_ai/models/predict_flips.py", line 18, in <module>
+    from models.recommend_sell import batch_recommend_sell
+ModuleNotFoundError: No module named 'models'
+Traceback (most recent call last):
+  File "/osrs_flipper_ai/models/predict_flips.py", line 18, in <module>
+    from models.recommend_sell import batch_recommend_sell
+ModuleNotFoundError: No module named 'models'
+Traceback (most recent call last):
+  File "/osrs_flipper_ai/models/predict_flips.py", line 18, in <module>
+    from models.recommend_sell import batch_recommend_sell
+ModuleNotFoundError: No module named 'models'
+Traceback (most recent call last):
+  File "/osrs_flipper_ai/models/predict_flips.py", line 18, in <module>
+    from models.recommend_sell import batch_recommend_sell
+ModuleNotFoundError: No module named 'models'
+Traceback (most recent call last):
+  File "/osrs_flipper_ai/models/predict_flips.py", line 18, in <module>
+    from models.recommend_sell import batch_recommend_sell
+ModuleNotFoundError: No module named 'models'
+Traceback (most recent call last):
+  File "/osrs_flipper_ai/models/predict_flips.py", line 18, in <module>
+    from models.recommend_sell import batch_recommend_sell
+ModuleNotFoundError: No module named 'models'
+Traceback (most recent call last):
+  File "/osrs_flipper_ai/models/predict_flips.py", line 18, in <module>
+    from models.recommend_sell import batch_recommend_sell
+ModuleNotFoundError: No module named 'models'
+Traceback (most recent call last):
+  File "/osrs_flipper_ai/models/predict_flips.py", line 18, in <module>
+    from models.recommend_sell import batch_recommend_sell
+ModuleNotFoundError: No module named 'models'
+Traceback (most recent call last):
+  File "/osrs_flipper_ai/models/predict_flips.py", line 18, in <module>
+    from models.recommend_sell import batch_recommend_sell
+ModuleNotFoundError: No module named 'models'
+Traceback (most recent call last):
+  File "/osrs_flipper_ai/models/predict_flips.py", line 18, in <module>
+    from models.recommend_sell import batch_recommend_sell
+ModuleNotFoundError: No module named 'models'
+Traceback (most recent call last):
+  File "/osrs_flipper_ai/models/predict_flips.py", line 18, in <module>
+    from models.recommend_sell import batch_recommend_sell
+ModuleNotFoundError: No module named 'models'
+Traceback (most recent call last):
+  File "/osrs_flipper_ai/models/predict_flips.py", line 18, in <module>
+    from models.recommend_sell import batch_recommend_sell
+ModuleNotFoundError: No module named 'models'
+Traceback (most recent call last):
+  File "/osrs_flipper_ai/models/predict_flips.py", line 18, in <module>
+    from models.recommend_sell import batch_recommend_sell
+ModuleNotFoundError: No module named 'models'
