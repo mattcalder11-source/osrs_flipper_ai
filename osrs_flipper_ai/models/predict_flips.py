@@ -216,6 +216,14 @@ if __name__ == "__main__":
     df = load_latest_features()
     top_flips = predict_flips(model_dict, df, top_n=100)  # broader selection
 
+    print(f"🔍 DEBUG: predict_flips() returned {len(top_flips)} rows")
+
+    if len(top_flips) > 0:
+        print(top_flips.head(10))
+    else:
+        print("⚠️ DEBUG: top_flips is empty — investigating why.")
+
+
     # Load GE buy limits
     try:
         limits = pd.read_html("https://oldschool.runescape.wiki/w/Grand_Exchange/Buying_limits")[0]
