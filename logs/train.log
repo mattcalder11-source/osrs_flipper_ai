@@ -1,0 +1,12 @@
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/models/train_model.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/models/train_model.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/models/train_model.py': [Errno 2] No such file or directory
+.venv/bin/python: can't open file '/root/osrs_flipper_ai/models/train_model.py': [Errno 2] No such file or directory
+Traceback (most recent call last):
+  File "/root/osrs_flipper_ai/models/train_model.py", line 14, in <module>
+    from osrs_flipper_ai.features.features import compute_features, compute_technical_indicators
+ModuleNotFoundError: No module named 'osrs_flipper_ai'
+Traceback (most recent call last):
+  File "/root/osrs_flipper_ai/models/train_model.py", line 14, in <module>
+    from osrs_flipper_ai.features.features import compute_features, compute_technical_indicators
+ModuleNotFoundError: No module named 'osrs_flipper_ai'

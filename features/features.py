@@ -1,137 +1,125 @@
-# src/features.py
+import os
+import glob
 import pandas as pd
 import numpy as np
+from datetime import datetime, timezone
 
-def compute_features(df: pd.DataFrame) -> pd.DataFrame:
+
+# ---------------------------------------------------------------
+# Feature Engineering Utilities for OSRS Flipping AI
+# ---------------------------------------------------------------
+
+def normalize_schema(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Compute engineered features for each item:
-    - Spread, mid_price, momentum, margin, volatility
-    - Liquidity proxy (liquidity_1h): count of price updates in the last hour
-    - Dynamic slippage based on liquidity
+    Ensure all required columns exist with standardized names and safe defaults.
+    This prevents KeyErrors across different data versions.
     """
 
-    # Ensure expected columns exist (so code doesn't KeyError)
-    for col in ['avg_5m_high', 'avg_5m_low', 'avg_1h_high', 'avg_1h_low', 'high', 'low', 'ts_utc', 'item_id', 'name']:
-        if col not in df.columns:
-            df[col] = np.nan
+    df = df.copy()
 
-    # Sort and prepare timestamp column
-    df = df.sort_values(['item_id', 'ts_utc']).copy()
-    df['timestamp'] = pd.to_datetime(df['ts_utc'], unit='s', errors='coerce')
-    df = df.dropna(subset=['timestamp'])  # drop rows with bad timestamps
+    # --- item_id ---
+    if 'item_id' not in df.columns and 'item_id' in df.index.names:
+        df = df.reset_index()
+    if 'item_id' not in df.columns:
+        raise KeyError("Missing required 'item_id' column.")
 
-    # Basic price features
-    df['spread'] = df['high'] - df['low']
-    df['mid_price'] = (df['high'] + df['low']) / 2
-    # avoid division by zero
-    df['spread_ratio'] = np.where(df['mid_price'] != 0, df['spread'] / df['mid_price'], 0.0)
-    # momentum and potential profit (guard against NaN)
-    df['momentum'] = (df['avg_5m_low'] - df['avg_1h_low']) / df['avg_1h_low'].replace({0: np.nan})
-    df['potential_profit'] = df['avg_5m_high'] - df['avg_5m_low']
-    df['margin_pct'] = np.where(df['avg_5m_low'] != 0, df['potential_profit'] / df['avg_5m_low'], 0.0)
-    df['hour'] = df['timestamp'].dt.hour
+    # --- timestamp ---
+    if 'timestamp' not in df.columns:
+        for alt in ['ts_utc', 'time', 'datetime']:
+            if alt in df.columns:
+                df = df.rename(columns={alt: 'timestamp'})
+                break
+        else:
+            raise KeyError("No timestamp-like column found (expected 'timestamp' or 'ts_utc').")
 
-    # Liquidity: count of price changes within a rolling 1-hour window for each item
-    def calc_liquidity(group):
-        # group may or may not contain the grouping column in future pandas versions;
-        # get group key via group.name, and ensure item_id column exists
-        group = group.sort_values('timestamp').copy()
-        group_item_id = group.name
-        if 'item_id' not in group.columns:
-            group['item_id'] = group_item_id
+    # --- high / low price ---
+    if 'high' not in df.columns:
+        for alt in ['high_price', 'avg_high_price']:
+            if alt in df.columns:
+                df = df.rename(columns={alt: 'high'})
+                break
+        else:
+            print("⚠️ Missing 'high' column — filling with zeros.")
+            df['high'] = 0.0
 
-        # set timestamp as index for time-aware rolling
-        group = group.set_index('timestamp')
+    if 'low' not in df.columns:
+        for alt in ['low_price', 'avg_low_price']:
+            if alt in df.columns:
+                df = df.rename(columns={alt: 'low'})
+                break
+        else:
+            print("⚠️ Missing 'low' column — filling with zeros.")
+            df['low'] = 0.0
 
-        # price change indicator (1 if low changed compared to prev snapshot)
-        group['price_change'] = (group['low'] != group['low'].shift(1)).astype(int)
+    # --- avg_high_price / avg_low_price ---
+    if 'avg_high_price' not in df.columns:
+        if 'high' in df.columns:
+            df['avg_high_price'] = df['high'].rolling(6, min_periods=1).mean()
+        else:
+            df['avg_high_price'] = 0.0
 
-        # rolling 1-hour sum of price changes => liquidity proxy
-        # this requires a DatetimeIndex
-        group['liquidity_1h'] = group['price_change'].rolling('1h').sum().fillna(0)
+    if 'avg_low_price' not in df.columns:
+        if 'low' in df.columns:
+            df['avg_low_price'] = df['low'].rolling(6, min_periods=1).mean()
+        else:
+            df['avg_low_price'] = 0.0
 
-        # reset index to restore timestamp column
-        group = group.reset_index()
-        return group
+    # --- volume ---
+    if 'volume' not in df.columns:
+        for alt in ['trade_volume', 'buy_volume', 'sell_volume', 'total_volume', 'qty']:
+            if alt in df.columns:
+                df = df.rename(columns={alt: 'volume'})
+                break
+        else:
+            print("⚠️ No 'volume' column found — filling with zeros.")
+            df['volume'] = 0.0
 
-    # Use groupby.apply WITHOUT include_groups (works on older pandas).
-    # calc_liquidity is written to be robust whether item_id is present or not.
-    df = df.groupby('item_id', group_keys=False).apply(calc_liquidity)
+    # Fill NaNs with 0 for numeric stability
+    df = df.fillna(0)
 
-    # Volatility: 1h rolling std of low prices (approx 12 * 5-min samples)
-    df['volatility_1h'] = (
-        df.groupby('item_id')['low']
-        .transform(lambda x: x.rolling(12, min_periods=3).std())
-        .fillna(0)
-    )
+    return df
 
-    # Dynamic slippage: map liquidity -> slippage factor (higher liquidity => lower slippage)
-    # This is a simple monotonic transform; tune coefficients to taste.
-    # We clip to keep values sensible.
-    df['slippage_factor'] = np.clip(1 - (1 / (1 + df['liquidity_1h'])) * 0.03, 0.90, 1.00)
-
-    # Adjusted profit and margin
-    df['adj_profit'] = df['potential_profit'] * df['slippage_factor']
-    df['adj_margin_pct'] = np.where(df['avg_5m_low'] != 0, df['adj_profit'] / df['avg_5m_low'], 0.0)
-
-    # Replace any remaining inf/-inf and fill NaNs with 0 for downstream compatibility
-    df.replace([np.inf, -np.inf], np.nan, inplace=True)
-    df.fillna(0, inplace=True)
-
-    # Add technical indicators
-    df = compute_technical_indicators(df)
-
-    # Columns to keep for model/analysis
-    cols_to_keep = [
-        'ts_utc', 'item_id', 'name', 'high', 'low',
-        'spread', 'mid_price', 'spread_ratio', 'momentum',
-        'potential_profit', 'margin_pct', 'hour',
-        'liquidity_1h', 'volatility_1h',
-        'slippage_factor', 'adj_profit', 'adj_margin_pct'
-    ]
-
-    # Some columns may not exist if filled earlier, so intersect with df.columns
-    cols_to_keep = [c for c in cols_to_keep if c in df.columns]
-    return df[cols_to_keep].reset_index(drop=True)
 
 def compute_technical_indicators(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Computes technical indicators and assigns a composite technical score (0–5).
+    Compute RSI, ROC, MACD, contrarian flags, and composite technical_score.
     """
 
-    df = df.sort_values(['item_id', 'ts_utc']).copy()
+    df = normalize_schema(df)
+    df = df.reset_index(drop=True).copy()
 
-    def compute_indicators(group):
-        # Compute RSI
-        delta = group['mid_price'].diff()
-        gain = np.where(delta > 0, delta, 0)
-        loss = np.where(delta < 0, -delta, 0)
+    def compute_indicators(group: pd.DataFrame) -> pd.DataFrame:
+        price = group['avg_high_price'].astype(float)
+        delta = price.diff()
 
-        roll_up = pd.Series(gain).rolling(14, min_periods=3).mean()
-        roll_down = pd.Series(loss).rolling(14, min_periods=3).mean()
-
+        # RSI
+        up = delta.clip(lower=0)
+        down = -1 * delta.clip(upper=0)
+        roll_up = up.ewm(span=14, adjust=False).mean()
+        roll_down = down.ewm(span=14, adjust=False).mean()
         rs = roll_up / (roll_down + 1e-9)
         group['rsi'] = 100 - (100 / (1 + rs))
 
-        # Rate of Change (ROC)
-        group['roc'] = group['mid_price'].pct_change(periods=6) * 100  # 6 * 5min ≈ 30min lookback
+        # ROC
+        group['roc'] = (price / price.shift(12) - 1) * 100
 
         # MACD
-        ema_short = group['mid_price'].ewm(span=12, adjust=False).mean()
-        ema_long = group['mid_price'].ewm(span=26, adjust=False).mean()
+        ema_short = price.ewm(span=12, adjust=False).mean()
+        ema_long = price.ewm(span=26, adjust=False).mean()
         group['macd'] = ema_short - ema_long
         group['macd_signal'] = group['macd'].ewm(span=9, adjust=False).mean()
 
-        # Contrarian signal: detect extremes
+        # Contrarian signal
         group['contrarian_flag'] = 0
-        group.loc[group['rsi'] > 70, 'contrarian_flag'] = -1  # overbought
-        group.loc[group['rsi'] < 30, 'contrarian_flag'] = +1  # oversold
+        group.loc[group['rsi'] > 70, 'contrarian_flag'] = -1
+        group.loc[group['rsi'] < 30, 'contrarian_flag'] = +1
 
-        # Normalize indicators to 0–1
+        # Normalize indicators
         for col in ['rsi', 'roc', 'macd']:
-            group[f'{col}_norm'] = (group[col] - group[col].min()) / (group[col].max() - group[col].min() + 1e-9)
+            denom = group[col].max() - group[col].min() + 1e-9
+            group[f'{col}_norm'] = (group[col] - group[col].min()) / denom
 
-        # Combine indicators into 0–5 technical score
+        # Technical score
         group['technical_score'] = (
             2.0 * group['rsi_norm']
             + 1.0 * group['roc_norm']
@@ -140,11 +128,100 @@ def compute_technical_indicators(df: pd.DataFrame) -> pd.DataFrame:
             + 0.5 * (1 - group['volatility_1h'] / (group['volatility_1h'].max() + 1e-9))
         )
 
-        # Adjust by contrarian signal
         group['technical_score'] += group['contrarian_flag'] * 0.5
         group['technical_score'] = group['technical_score'].clip(0, 5)
 
         return group
 
-    df = df.groupby('item_id', group_keys=False).apply(compute_indicators)
+    df = (
+        df.groupby('item_id', group_keys=False, sort=False)
+          .apply(compute_indicators)
+          .reset_index(drop=True)
+    )
+
     return df
+
+
+def compute_features(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Compute all base and technical features from OSRS wiki data.
+    Auto-detects and normalizes missing schema components.
+    """
+
+    df = normalize_schema(df)
+    df = df.sort_values(['item_id', 'timestamp'])
+
+    # --- Derived base features ---
+    df['mid_price'] = (df['high'] + df['low']) / 2
+    df['spread'] = df['high'] - df['low']
+
+    # Volatility
+    df['volatility_1h'] = (
+        df.groupby('item_id')['mid_price']
+          .transform(lambda x: x.pct_change(fill_method=None)
+          .rolling(12, min_periods=3).std())
+    )
+
+    # Liquidity
+    df['liquidity_1h'] = (
+        df.groupby('item_id')['volume']
+          .transform(lambda x: x.rolling(12, min_periods=3).mean())
+    )
+
+    # Spread ratio
+    df['spread_ratio'] = df['spread'] / (df['mid_price'] + 1e-9)
+
+    # Technical indicators
+    df = compute_technical_indicators(df)
+
+    return df
+
+
+def load_recent_features(
+    folder: str = "data/features",
+    days_back: int = 30,
+    decay_rate: float = 0.5
+) -> pd.DataFrame:
+    """
+    Load all recent feature parquet files and combine with metadata.
+    """
+
+    files = sorted(glob.glob(os.path.join(folder, "features_*.parquet")))
+    if not files:
+        raise FileNotFoundError(f"No feature files found in {folder}")
+
+    dfs = []
+    for f in files:
+        try:
+            df = pd.read_parquet(f)
+            if df.empty:
+                continue
+            file_time = datetime.fromtimestamp(os.path.getmtime(f), tz=timezone.utc)
+            df["file_time"] = file_time
+            df["source_file"] = os.path.basename(f)
+            dfs.append(df)
+        except Exception as e:
+            print(f"⚠️ Skipping {f}: {e}")
+
+    if not dfs:
+        raise ValueError("No valid feature files loaded.")
+
+    combined = pd.concat(dfs, ignore_index=True)
+    combined = normalize_schema(combined)
+
+    if "file_time" not in combined.columns:
+        combined["file_time"] = datetime.utcnow()
+
+    now = datetime.now(timezone.utc)
+    combined["age_days"] = (now - combined["file_time"]).dt.total_seconds() / 86400
+    combined["weight"] = np.exp(-decay_rate * combined["age_days"])
+
+    combined = combined.sort_values("file_time", ascending=False)
+    combined = combined.drop_duplicates(subset=["item_id", "timestamp"], keep="first")
+
+    return combined
+
+
+if __name__ == "__main__":
+    df = load_recent_features()
+    print(f"✅ Loaded {len(df)} rows across {df['item_id'].nunique()} items")

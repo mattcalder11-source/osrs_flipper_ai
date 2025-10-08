@@ -1,0 +1,5 @@
+INFO:     127.0.0.1:40286 - "GET / HTTP/1.1" 200 OK
+INFO:     165.154.112.41:52996 - "GET /api/v2/heartbeat HTTP/1.1" 404 Not Found
+INFO:     165.154.112.41:53310 - "GET / HTTP/1.1" 200 OK
+INFO:     165.154.112.41:54252 - "GET / HTTP/1.1" 200 OK
+INFO:     165.154.112.41:54454 - "GET /favicon.ico HTTP/1.1" 404 Not Found
