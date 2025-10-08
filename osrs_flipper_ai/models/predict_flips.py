@@ -32,12 +32,32 @@ PRED_DIR.mkdir(parents=True, exist_ok=True)
 # LOADERS
 # ---------------------------------------------------------------------
 def load_latest_model():
-    latest_model_path = MODEL_DIR / "latest_model.pkl"
-    if not latest_model_path.exists():
-        raise FileNotFoundError("❌ No trained model found in /models.")
+    """
+    Load the most recent trained model.
+    Automatically detects whether the model is stored in /models
+    or inside /osrs_flipper_ai/models (for backward compatibility).
+    """
+    primary_path = MODEL_DIR / "latest_model.pkl"
+    fallback_path = MODEL_DIR.parent / "osrs_flipper_ai" / "models" / "latest_model.pkl"
+
+    if primary_path.exists():
+        latest_model_path = primary_path
+    elif fallback_path.exists():
+        latest_model_path = fallback_path
+        print(f"⚠️ Using fallback model at {latest_model_path}")
+    else:
+        raise FileNotFoundError(
+            f"❌ No trained model found.\nChecked:\n - {primary_path}\n - {fallback_path}"
+        )
+
     model_dict = joblib.load(latest_model_path)
-    print(f"📦 Loaded model trained on {model_dict['timestamp']} (R²={model_dict['r2']:.4f})")
+
+    timestamp = model_dict.get("timestamp", "unknown")
+    r2 = model_dict.get("r2", 0.0)
+    print(f"📦 Loaded model from {latest_model_path} (trained {timestamp}, R²={r2:.4f})")
+
     return model_dict
+
 
 
 def load_latest_features():
