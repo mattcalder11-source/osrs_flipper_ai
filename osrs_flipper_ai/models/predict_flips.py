@@ -192,7 +192,12 @@ def recommend_flips_by_tier(df, capital_tiers=CAPITAL_TIERS, flips_per_tier=FLIP
     return full
 
 # Load active flips (your buy recommendations or holdings)
-active = pd.read_csv("data/predictions/latest_top_flips.csv")
+pred_path = os.path.join("data", "predictions", "latest_top_flips.csv")
+if not os.path.exists(pred_path):
+    print(f"⚠️ No predictions found at {pred_path}. Skipping post-prediction steps.")
+    exit(0)
+
+active = pd.read_csv(pred_path)
 
 # Fetch current prices from API or cache
 latest_prices = fetch_latest_prices_dict()  # e.g. {item_id: mid_price}
