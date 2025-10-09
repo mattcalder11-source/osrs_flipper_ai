@@ -21,7 +21,7 @@ print(f"\n=== 🧠 TRAIN MODEL RUN START: {datetime.now().strftime('%Y-%m-%d %H:
 FEATURE_COLS = [
     "spread", "mid_price", "spread_ratio", "momentum",
     "potential_profit", "hour",
-    "liquidity_1h", "volatility_1h",
+    "daily_volume", "volatility_1h",
     "rsi", "roc", "macd", "macd_signal",
     "contrarian_flag", "technical_score"
 ]
@@ -120,10 +120,10 @@ def load_recent_features(days_back=28, decay_rate=0.5, batch_limit=20):
         combined.loc[combined["ge_tax"] > 5_000_000, "ge_tax"] = 5_000_000
         combined.loc[combined["high"] < 50, "ge_tax"] = 0
 
-        if "liquidity_1h" in combined.columns:
+        if "daily_volume" in combined.columns:
             combined["slippage_rate"] = np.where(
-                combined["liquidity_1h"] > 100, 0.002,
-                np.where(combined["liquidity_1h"] > 10, 0.005, 0.01)
+                combined["daily_volume"] > 100, 0.002,
+                np.where(combined["daily_volume"] > 10, 0.005, 0.01)
             )
         else:
             combined["slippage_rate"] = 0.005

@@ -108,17 +108,17 @@ def compute_technical_indicators(df: pd.DataFrame) -> pd.DataFrame:
             denom = (col_max - col_min) if (col_max - col_min) > EPS else EPS
             g[f"{col}_norm"] = (g[col] - col_min) / denom
 
-        g["liquidity_1h"] = g.get("liquidity_1h", 0.0)
+        g["daily_volume"] = g.get("daily_volume", 0.0)
         g["volatility_1h"] = g.get("volatility_1h", 0.0)
 
         # Composite technical score (0–5)
-        liq_den = g["liquidity_1h"].max() + EPS
+        liq_den = g["daily_volume"].max() + EPS
         vol_den = g["volatility_1h"].max() + EPS
         g["technical_score"] = (
             2 * g["rsi_norm"]
             + 1 * g["roc_norm"]
             + 1 * g["macd_norm"]
-            + 0.5 * (g["liquidity_1h"] / liq_den)
+            + 0.5 * (g["daily_volume"] / liq_den)
             + 0.5 * (1 - (g["volatility_1h"] / vol_den))
             + g["contrarian_flag"] * 0.5
         ).clip(0, 5)
@@ -157,7 +157,7 @@ def compute_features(df: pd.DataFrame) -> pd.DataFrame:
         .fillna(0.0)
     ).astype(np.float32)
 
-    df["liquidity_1h"] = (
+    df["daily_volume"] = (
         df.groupby("item_id")["volume"].transform(lambda x: x.rolling(12, min_periods=1).mean())
     ).fillna(0.0).astype(np.float32)
 

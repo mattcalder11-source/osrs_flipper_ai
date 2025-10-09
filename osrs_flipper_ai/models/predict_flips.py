@@ -88,20 +88,20 @@ def predict_flips(model_dict, df, top_n=100):
     df["predicted_margin"] = model.predict(X)
     df["predicted_profit_gp"] = df["predicted_margin"] * df.get("mid_price", 0)
 
-    # ✅ Filter by minimum 1h liquidity
-    MIN_LIQUIDITY = 5  # adjust as desired
-    if "liquidity_1h" in df.columns:
+    # ✅ Filter by minimum 24 hour volume
+    MIN_LIQUIDITY = 10  # adjust as desired
+    if "daily_volume" in df.columns:
         before = len(df)
-        df = df[df["liquidity_1h"] >= MIN_LIQUIDITY]
-        print(f"💧 Filtered by liquidity_1h ≥ {MIN_LIQUIDITY}: {before} → {len(df)} rows")
+        df = df[df["daily_volume"] >= MIN_LIQUIDITY]
+        print(f"💧 Filtered by daily_volume ≥ {MIN_LIQUIDITY}: {before} → {len(df)} rows")
     else:
-        print("⚠️ No liquidity_1h column found — skipping liquidity filter.")
+        print("⚠️ No daily_volume column found — skipping liquidity filter.")
 
     ranked = (
         df.sort_values("predicted_profit_gp", ascending=False)
           .head(top_n)
           .loc[:, ["item_id", "name", "predicted_profit_gp", "predicted_margin",
-                   "mid_price", "liquidity_1h", "volatility_1h", "technical_score"]]
+                   "mid_price", "daily_volume", "volatility_1h", "technical_score"]]
     )
 
     ts = datetime.now().strftime("%Y%m%d_%H%M")

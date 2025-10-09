@@ -98,15 +98,15 @@ def build_snapshot():
     df = df.merge(five, on="item_id", how="left", suffixes=("", "_5m"))
     df = df.merge(one_hour, on="item_id", how="left", suffixes=("", "_1h"))
 
-    # --- Add daily volumes + liquidity ---
+    # --- Merge daily volume data ---
     if not volumes.empty:
         df = df.merge(volumes, on="item_id", how="left")
-        df["liquidity_1h"] = df["daily_volume"] / 24.0
-        df["liquidity_1h"] = df["liquidity_1h"].fillna(0)
-        print("💧 Added liquidity_1h from daily volume data.")
+        df["daily_volume"] = df["daily_volume"].fillna(0)
+        print("💧 Added daily_volume from OSRS Wiki.")
     else:
-        df["liquidity_1h"] = 0
-        print("⚠️ No volume data available — liquidity_1h set to 0.")
+        df["daily_volume"] = 0
+        print("⚠️ No volume data available — daily_volume set to 0.")
+
 
     # --- Metadata + Save ---
     df["timestamp"] = datetime.utcnow()
