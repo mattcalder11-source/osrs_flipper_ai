@@ -207,3 +207,36 @@ def load_recent_features(folder: str = "data/features", days_back: int = 30, max
     combined = compute_features(combined)
     gc.collect()
     return combined
+
+# ----------------------------
+# MAIN EXECUTION
+# ----------------------------
+if __name__ == "__main__":
+    import time
+
+    RAW_DIR = Path("/root/osrs_flipper_ai/osrs_flipper_ai/data/raw")
+    OUT_DIR = Path("/root/osrs_flipper_ai/data/features")
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+
+    # Find latest snapshot
+    snapshots = sorted(RAW_DIR.glob("snapshot_*.parquet"), key=lambda p: p.stat().st_mtime, reverse=True)
+    if not snapshots:
+        raise FileNotFoundError(f"No snapshot parquet files found in {RAW_DIR}")
+    latest_snapshot = snapshots[0]
+
+    print(f"🚀 Loading latest snapshot: {latest_snapshot}")
+    df_raw = pd.read_parquet(latest_snapshot)
+
+    print(f"🧠 Computing features for {len(df_raw):,} rows...")
+    df_features = compute_features(df_raw)
+
+    if df_features.empty:
+        print("⚠️ No features generated — nothing to save.")
+    else:
+        ts = int(time.time())
+        out_path = OUT_DIR / f"features_{ts}.parquet"
+        latest_path = OUT_DIR / "features_latest.parquet"
+
+        df_features.to_parquet(out_path, index=False)
+        df_features.to_parquet(latest_path, index=False)
+        print(f"✅ Saved {len(df_features):,} features → {out_path}")
