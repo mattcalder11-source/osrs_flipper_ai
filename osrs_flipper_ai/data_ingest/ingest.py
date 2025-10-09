@@ -31,17 +31,27 @@ def fetch(endpoint: str) -> pd.DataFrame:
     try:
         r = requests.get(url, headers=HEADERS, timeout=30)
         r.raise_for_status()
-        data = r.json().get("data", {})
+        data = r.json().get("data", None)
 
+        # /mapping endpoint returns a list, not dict
+        if data is None and isinstance(r.json(), list):
+            df = pd.DataFrame(r.json())
+            if "id" in df.columns:
+                df.rename(columns={"id": "item_id"}, inplace=True)
+            df["item_id"] = df["item_id"].astype(int)
+            print(f"✅ Fetched {len(df)} mapping rows from /mapping")
+            return df
+
+        # Normal endpoints (latest, 5m, 1h)
         if isinstance(data, dict):
             df = pd.DataFrame.from_dict(data, orient="index").reset_index()
             df.rename(columns={"index": "item_id"}, inplace=True)
-        else:
-            df = pd.DataFrame(data)
+            df["item_id"] = df["item_id"].astype(int)
+            print(f"✅ Fetched {len(df)} rows from /{endpoint}")
+            return df
 
-        df["item_id"] = df["item_id"].astype(int)
-        print(f"✅ Fetched {len(df)} rows from /{endpoint}")
-        return df
+        print(f"⚠️ Unexpected response structure for /{endpoint}")
+        return pd.DataFrame(columns=["item_id"])
 
     except Exception as e:
         print(f"⚠️ Failed to fetch /{endpoint}: {e}")
