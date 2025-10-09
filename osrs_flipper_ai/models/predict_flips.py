@@ -200,4 +200,7 @@ if __name__ == "__main__":
     sell_recs = batch_recommend_sell(all_tiers, latest_prices)
     sell_recs.to_csv(PRED_DIR / "sell_signals.csv", index=False)
     print("\n💰 === SELL RECOMMENDATIONS ===")
-    print(sell_recs[sell_recs["should_sell"]])
+    if "should_sell" in sell_recs.columns:
+        print(sell_recs[sell_recs["should_sell"]])
+    else:
+        print("⚠️ No 'should_sell' column found in sell_recs.")

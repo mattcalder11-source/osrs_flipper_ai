@@ -1,153 +1,115 @@
-# src/ingest.py
+#!/usr/bin/env python3
+"""
+OSRS Flipper AI - Data Ingest Script
+
+Fetches item mapping, latest price data, short-term price history,
+and daily volume from the OSRS Wiki API. Produces a unified parquet
+snapshot for downstream feature generation and model training.
+"""
 
 import os
 import time
 import requests
 import pandas as pd
-from datetime import datetime, timezone, timedelta
-from osrs_flipper_ai.config import BASE_URL, USER_AGENT, DATA_DIR
-from osrs_flipper_ai.features.features import compute_features 
+from datetime import datetime
+from pathlib import Path
 
-# --- Ensure folders exist ---
-os.makedirs(DATA_DIR, exist_ok=True)
-FEATURE_DIR = os.path.join(DATA_DIR, "features")
-LOG_DIR = "logs"
-os.makedirs(FEATURE_DIR, exist_ok=True)
-os.makedirs(LOG_DIR, exist_ok=True)
+# -----------------------------------------------------------
+# Configuration
+# -----------------------------------------------------------
+BASE_URL = "https://prices.runescape.wiki/api/v1/osrs"
+HEADERS = {"User-Agent": "osrs-flipper-ai (contact: matthew@example.com)"}
+DATA_DIR = Path("/root/osrs_flipper_ai/data/raw")
+DATA_DIR.mkdir(parents=True, exist_ok=True)
 
-HEADERS = {"User-Agent": USER_AGENT}
-
-
-# --- Fetch helper ---
-def fetch(endpoint):
-    """Fetch data from the OSRS Wiki API, handling both dict and list responses."""
+# -----------------------------------------------------------
+# Helpers
+# -----------------------------------------------------------
+def fetch(endpoint: str) -> pd.DataFrame:
+    """Generic helper to fetch and parse JSON data from the Wiki API."""
     url = f"{BASE_URL}/{endpoint}"
-    r = requests.get(url, headers=HEADERS, timeout=30)
-    r.raise_for_status()
-    data = r.json()
-
-    # /mapping returns a list
-    if isinstance(data, list):
-        return data
-
-    # /latest, /5m, /1h return dicts with 'data' key
-    if isinstance(data, dict) and "data" in data:
-        return data["data"]
-
-    # Fallback
-    return data
-
-
-# --- Main snapshot job ---
-def snapshot():
-    ts = int(datetime.now(timezone.utc).timestamp())
-
     try:
-        print("⏳ Fetching OSRS price data...")
-        mapping = fetch("mapping")
-        latest = fetch("latest")
-        five = fetch("5m")
-        one_hour = fetch("1h")
+        r = requests.get(url, headers=HEADERS, timeout=30)
+        r.raise_for_status()
+        data = r.json().get("data", {})
+
+        if isinstance(data, dict):
+            df = pd.DataFrame.from_dict(data, orient="index").reset_index()
+            df.rename(columns={"index": "item_id"}, inplace=True)
+        else:
+            df = pd.DataFrame(data)
+
+        df["item_id"] = df["item_id"].astype(int)
+        print(f"✅ Fetched {len(df)} rows from /{endpoint}")
+        return df
+
     except Exception as e:
-        log(f"❌ Fetch failed: {e}")
-        return
+        print(f"⚠️ Failed to fetch /{endpoint}: {e}")
+        return pd.DataFrame(columns=["item_id"])
 
-    # Convert mapping list → dictionary
-    mapping_dict = {str(item["id"]): item for item in mapping}
 
-    rows = []
-    for item_id, d in latest.items():
-        name = mapping_dict.get(str(item_id), {}).get("name", "")
-        row = {
-            "timestamp": ts,
-            "item_id": int(item_id),
-            "name": name,
-            "high": d.get("high"),
-            "low": d.get("low"),
-            "highTime": d.get("highTime"),
-            "lowTime": d.get("lowTime"),
-        }
-
-        # Merge 5m and 1h data
-        if str(item_id) in five:
-            row["avg_5m_high"] = five[str(item_id)].get("high")
-            row["avg_5m_low"] = five[str(item_id)].get("low")
-        if str(item_id) in one_hour:
-            row["avg_1h_high"] = one_hour[str(item_id)].get("high")
-            row["avg_1h_low"] = one_hour[str(item_id)].get("low")
-
-        rows.append(row)
-
-    # --- Save snapshot ---
-    df = pd.DataFrame(rows)
-    snapshot_file = os.path.join(DATA_DIR, f"snapshot_{ts}.parquet")
-    df.to_parquet(snapshot_file, index=False)
-    print(f"✅ Snapshot saved: {snapshot_file} ({len(df)} items)")
-    log(f"Snapshot saved: {snapshot_file} ({len(df)} items)")
-
-    # --- Compute features ---
+def fetch_volumes() -> pd.DataFrame:
+    """Fetch 24h trade volume data from OSRS Wiki API."""
+    url = f"{BASE_URL}/volumes"
     try:
-        features = compute_features(df)
-        feature_file = os.path.join(FEATURE_DIR, f"features_{ts}.parquet")
-        features.to_parquet(feature_file, index=False)
-        print(f"✨ Features computed and saved: {feature_file}")
-        log(f"Features computed: {feature_file} ({len(features)} rows)")
+        r = requests.get(url, headers=HEADERS, timeout=30)
+        r.raise_for_status()
+        data = r.json().get("data", {})
+        df = pd.DataFrame(list(data.items()), columns=["item_id", "daily_volume"])
+        df["item_id"] = df["item_id"].astype(int)
+        print(f"✅ Fetched {len(df)} daily volume entries from /volumes")
+        return df
     except Exception as e:
-        print(f"❌ Error computing features: {e}")
-        log(f"❌ Error computing features: {e}")
-        return
-
-    # --- Aggregate features ---
-    try:
-        aggregate_recent_features(FEATURE_DIR, days=7)
-    except Exception as e:
-        print(f"⚠ Error aggregating features: {e}")
-        log(f"⚠ Error aggregating features: {e}")
+        print(f"⚠️ Failed to fetch /volumes: {e}")
+        return pd.DataFrame(columns=["item_id", "daily_volume"])
 
 
-# --- Aggregation helper ---
-def aggregate_recent_features(feature_dir: str, days: int = 7):
-    """Combine recent feature files into one rolling dataset."""
-    files = sorted(
-        [os.path.join(feature_dir, f) for f in os.listdir(feature_dir) if f.endswith(".parquet")],
-        key=os.path.getmtime,
-        reverse=True,
-    )
+# -----------------------------------------------------------
+# Snapshot builder
+# -----------------------------------------------------------
+def build_snapshot():
+    """Fetch latest OSRS price + volume data and save parquet snapshot."""
+    print("⏳ Fetching OSRS price data...")
 
-    cutoff = datetime.now() - timedelta(days=days)
-    valid_files = [f for f in files if datetime.fromtimestamp(os.path.getmtime(f)) > cutoff]
+    mapping = fetch("mapping")
+    latest = fetch("latest")
+    five = fetch("5m")
+    one_hour = fetch("1h")
+    volumes = fetch_volumes()
 
-    if not valid_files:
-        print("⚠ No recent feature files to aggregate.")
-        return
+    # Merge all dataframes
+    df = mapping.merge(latest, on="item_id", how="left", suffixes=("", "_latest"))
+    df = df.merge(five, on="item_id", how="left", suffixes=("", "_5m"))
+    df = df.merge(one_hour, on="item_id", how="left", suffixes=("", "_1h"))
 
-    dfs = []
-    for f in valid_files:
-        try:
-            dfs.append(pd.read_parquet(f))
-        except Exception as e:
-            print(f"⚠ Skipping corrupt file {f}: {e}")
+    # Merge daily volumes → derive liquidity_1h
+    if not volumes.empty:
+        df = df.merge(volumes, on="item_id", how="left")
+        df["liquidity_1h"] = df["daily_volume"] / 24.0
+        df["liquidity_1h"] = df["liquidity_1h"].fillna(0)
+        print("💧 Added liquidity_1h from daily volume data.")
+    else:
+        df["liquidity_1h"] = 0
+        print("⚠️ No volume data available — liquidity_1h set to 0.")
 
-    if not dfs:
-        print("⚠ No valid feature data to aggregate.")
-        return
+    # Add timestamp
+    df["timestamp"] = datetime.utcnow()
 
-    combined = pd.concat(dfs, ignore_index=True).drop_duplicates(subset=["timestamp", "item_id"])
-    combined = combined.sort_values(["item_id", "timestamp"])
+    # Save snapshot
+    ts = int(time.time())
+    out_path = DATA_DIR / f"snapshot_{ts}.parquet"
+    df.to_parquet(out_path, index=False)
+    latest_path = DATA_DIR / "snapshot_latest.parquet"
+    df.to_parquet(latest_path, index=False)
 
-    output_file = os.path.join(feature_dir, "latest_train.parquet")
-    combined.to_parquet(output_file, index=False)
-    print(f"📊 Aggregated {len(valid_files)} files → {output_file} ({len(combined)} rows)")
-    log(f"Aggregated {len(valid_files)} → {output_file} ({len(combined)} rows)")
-
-
-# --- Logging helper ---
-def log(message: str):
-    """Append timestamped messages to logs/runtime.log"""
-    with open(os.path.join(LOG_DIR, "runtime.log"), "a", encoding="utf-8") as f:
-        f.write(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] {message}\n")
+    print(f"✅ Snapshot saved to {out_path}")
+    print(f"🕓 Records: {len(df):,}  Columns: {len(df.columns)}")
 
 
-# --- Entry point ---
+# -----------------------------------------------------------
+# Entry point
+# -----------------------------------------------------------
 if __name__ == "__main__":
-    snapshot()
+    print("🚀 Starting OSRS Wiki data ingestion...")
+    build_snapshot()
+    print("✅ Data ingestion complete.")
