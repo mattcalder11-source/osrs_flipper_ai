@@ -9,7 +9,7 @@ set -e
 set -o pipefail
 
 PROJECT_DIR="/root/osrs_flipper_ai"
-VENV="$PROJECT_DIR/.venv/bin/activate"
+VENV="$PROJECT_DIR/venv/bin/activate"
 LOG_DIR="$PROJECT_DIR/logs"
 PIPELINE_LOG="$LOG_DIR/pipeline.log"
 
