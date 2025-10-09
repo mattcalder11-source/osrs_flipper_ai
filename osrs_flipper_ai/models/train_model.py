@@ -1,4 +1,4 @@
-# src/train_model.py
+# models/train_model.py
 import os
 import glob
 import time
