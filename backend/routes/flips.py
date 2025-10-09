@@ -9,58 +9,13 @@ from osrs_flipper_ai.src.fetch_latest_prices import fetch_latest_prices_dict
 router = APIRouter(prefix="/flips", tags=["flips"])
 
 # ----------------------------------------------------
-# Path discovery
+# Path configuration
 # ----------------------------------------------------
-def get_data_dir():
-    """Find the correct data directory (handles both repo layouts)."""
-    base_dir = Path(__file__).resolve().parents[2]
-    candidates = [
-        base_dir / "data",
-        base_dir / "osrs_flipper_ai" / "data",
-    ]
-    for d in candidates:
-        if (d / "predictions").exists():
-            print(f"📂 Using data directory: {d}")
-            return d
-    raise FileNotFoundError("No valid data directory found.")
-
-DATA_DIR = get_data_dir()
+DATA_DIR = Path("/root/osrs_flipper_ai/data")
 
 # ----------------------------------------------------
 # CSV helpers
 # ----------------------------------------------------
-def load_latest_predictions():
-    """Load the main predictions file directly."""
-    latest = Path("/root/osrs_flipper_ai/data/predictions/latest_top_flips.csv")
-    print(f"✅ Loading predictions from: {latest}")
-
-    if not latest.exists():
-        print(f"⚠️ File not found: {latest}")
-        return pd.DataFrame()
-
-    df = pd.read_csv(latest)
-
-    rename_map = {
-        "avg_low_price": "low",
-        "avg_high_price": "high",
-        "predicted_profit": "potential_profit",
-        "predicted_profit_pct": "potential_profit",
-        "item_name": "name",
-    }
-    df = df.rename(columns=rename_map)
-
-    # Replace invalid values
-    import numpy as np
-    df = df.replace([np.inf, -np.inf], np.nan).fillna(0)
-
-    # Ensure all required columns exist
-    for col in ["low", "high", "potential_profit", "name"]:
-        if col not in df.columns:
-            df[col] = 0
-
-    return df
-
-
 def load_csv(path, cols=None):
     if not path.exists():
         return pd.DataFrame(columns=cols or [])
@@ -70,32 +25,68 @@ def load_csv(path, cols=None):
         print(f"⚠️ Error reading {path}: {e}")
         return pd.DataFrame(columns=cols or [])
 
-
 def save_csv(df, path):
     path.parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(path, index=False)
 
+# ----------------------------------------------------
+# Predictions loader (main dashboard source)
+# ----------------------------------------------------
+def load_latest_predictions():
+    """Load latest_top_flips.csv and normalize for the frontend."""
+    latest = DATA_DIR / "predictions" / "latest_top_flips.csv"
+    print(f"✅ Loading predictions from: {latest}")
+
+    if not latest.exists():
+        print(f"⚠️ File not found: {latest}")
+        return pd.DataFrame()
+
+    df = pd.read_csv(latest)
+
+    # Compute columns expected by frontend
+    df["low"] = df["mid_price"]
+    df["high"] = df["mid_price"] * df["predicted_margin"]
+    df["potential_profit"] = df["predicted_profit_gp"] / df["investment_gp"]
+    df["potential_profit"] = df["potential_profit"].fillna(0)
+
+    # Keep relevant columns
+    keep_cols = [
+        "item_id",
+        "name",
+        "low",
+        "high",
+        "potential_profit",
+        "predicted_profit_gp",
+        "investment_gp",
+        "predicted_margin",
+        "expected_profit_gp_total",
+    ]
+    df = df[keep_cols]
+
+    # Sanitize invalid values
+    df = df.replace([np.inf, -np.inf], np.nan).fillna(0)
+
+    print(f"✅ Prepared {len(df)} flip rows for dashboard.")
+    return df
 
 # ----------------------------------------------------
 # API routes
 # ----------------------------------------------------
 @router.get("/buy-recommendations")
 def get_buy_recommendations():
-    """Return latest model-predicted flips."""
     df = load_latest_predictions()
     return df.to_dict(orient="records")
-
 
 @router.get("/active")
 def get_active_flips():
     active_file = DATA_DIR / "active_flips.csv"
     return load_csv(active_file).to_dict(orient="records")
 
-
 @router.post("/add/{item_id}")
 def add_active_flip(item_id: int):
     pred_file = DATA_DIR / "predictions" / "latest_top_flips.csv"
     active_file = DATA_DIR / "active_flips.csv"
+
     buys = load_csv(pred_file)
     active = load_csv(active_file)
 
@@ -104,12 +95,11 @@ def add_active_flip(item_id: int):
         return {"error": "Item not found"}
 
     row = row.copy()
-    row["entry_price"] = row["low"]
+    row["entry_price"] = row["mid_price"]
     row["entry_time"] = datetime.utcnow()
     active = pd.concat([active, row], ignore_index=True).drop_duplicates("item_id", keep="last")
     save_csv(active, active_file)
     return {"status": "added", "item_id": item_id}
-
 
 @router.delete("/remove/{item_id}")
 def remove_active_flip(item_id: int):
@@ -118,7 +108,6 @@ def remove_active_flip(item_id: int):
     active = active[active["item_id"] != item_id]
     save_csv(active, active_file)
     return {"status": "removed", "item_id": item_id}
-
 
 @router.get("/sell-signals")
 def get_sell_signals():
@@ -129,4 +118,8 @@ def get_sell_signals():
 
     latest_prices = fetch_latest_prices_dict()
     sell_recs = batch_recommend_sell(active, latest_prices)
-    return sell_recs.replace([np.inf, -np.inf], np.nan).fillna(0).to_dict(orient="records")
+    return (
+        sell_recs.replace([np.inf, -np.inf], np.nan)
+        .fillna(0)
+        .to_dict(orient="records")
+    )
