@@ -10,7 +10,7 @@ from osrs_flipper_ai.src.fetch_latest_prices import fetch_latest_prices_dict
 router = APIRouter(prefix="/flips", tags=["flips"])
 
 DATA_DIR = Path(__file__).resolve().parents[2] / "data"
-PRED_FILE = DATA_DIR / "predictions" / "top_flips_latest.csv"
+PRED_FILE = DATA_DIR / "predictions" / "latest_top_flips.csv"
 ACTIVE_FILE = DATA_DIR / "active_flips.csv"
 
 # ----------------------------------------------------
