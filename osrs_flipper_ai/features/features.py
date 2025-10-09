@@ -128,17 +128,17 @@ def compute_technical_indicators(df: pd.DataFrame) -> pd.DataFrame:
             + 0.5 * (1 - group['volatility_1h'] / (group['volatility_1h'].max() + 1e-9))
         )
 
-        # Adjust by contrarian signal
         group['technical_score'] += group['contrarian_flag'] * 0.5
         group['technical_score'] = pd.to_numeric(group['technical_score'], errors='coerce').fillna(0)
         group['technical_score'] = group['technical_score'].clip(0, 5)
         return group
 
-
-    df = (
-    df.groupby('item_id', group_keys=False, sort=False, include_groups=False)
-      .progress_apply(compute_indicators)
-      .reset_index(drop=True)
+    # ✅ Compatible groupby: removes include_groups and suppresses warnings
+    with pd.option_context('mode.copy_on_write', False):
+        df = (
+            df.groupby('item_id', group_keys=False, sort=False)
+              .apply(lambda g: compute_indicators(g))
+              .reset_index(drop=True)
         )
 
     return df
