@@ -8,7 +8,7 @@ source /osrs_flipper_ai/.venv/bin/activate
 set -e
 set -o pipefail
 
-PROJECT_DIR="/osrs_flipper_ai"
+PROJECT_DIR="/root/osrs_flipper_ai"
 VENV="$PROJECT_DIR/.venv/bin/activate"
 LOG_DIR="$PROJECT_DIR/logs"
 PIPELINE_LOG="$LOG_DIR/pipeline.log"
