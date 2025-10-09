@@ -19,7 +19,7 @@ from pathlib import Path
 # -----------------------------------------------------------
 BASE_URL = "https://prices.runescape.wiki/api/v1/osrs"
 HEADERS = {"User-Agent": "osrs-flipper-ai (contact: matthew@example.com)"}
-DATA_DIR = Path("/root/osrs_flipper_ai/data/raw")
+DATA_DIR = Path("/root/osrs_flipper_ai/osrs_flipper_ai/data/raw")
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 # -----------------------------------------------------------
