@@ -3,6 +3,7 @@ from pathlib import Path
 import pandas as pd
 from datetime import datetime
 from glob import glob
+import numpy as np
 
 # Import your core model logic
 from osrs_flipper_ai.models.recommend_sell import batch_recommend_sell
@@ -60,12 +61,12 @@ def save_csv(df, path):
 def get_buy_recommendations():
     """Return the latest model-predicted buy flips."""
     df = load_latest_predictions()
-    return df.to_dict(orient="records")
+    return df.replace([np.inf, -np.inf], np.nan).fillna(0).to_dict(orient="records")
 
 @router.get("/active")
 def get_active_flips():
     df = load_csv(ACTIVE_FILE)
-    return df.to_dict(orient="records")
+    return df.replace([np.inf, -np.inf], np.nan).fillna(0).to_dict(orient="records")
 
 @router.post("/add/{item_id}")
 def add_active_flip(item_id: int):
@@ -99,4 +100,5 @@ def get_sell_signals():
         return []
     latest_prices = fetch_latest_prices_dict()
     sell_recs = batch_recommend_sell(active, latest_prices)
+    df = df.replace([np.inf, -np.inf], np.nan).fillna(0)
     return sell_recs.to_dict(orient="records")
