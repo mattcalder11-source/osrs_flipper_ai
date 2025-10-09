@@ -30,38 +30,33 @@ DATA_DIR = get_data_dir()
 # CSV helpers
 # ----------------------------------------------------
 def load_latest_predictions():
-    """Load the newest CSV in /data/predictions/, normalize columns."""
-    pred_dir = DATA_DIR / "predictions"
-    files = sorted(pred_dir.glob("*.csv"), key=lambda f: f.stat().st_mtime, reverse=True)
-    if not files:
-        print("⚠️ No predictions CSV found.")
-        return pd.DataFrame()
-
-    latest = files[0]
+    """Load the main predictions file directly."""
+    latest = Path("/root/osrs_flipper_ai/data/predictions/latest_top_flips.csv")
     print(f"✅ Loading predictions from: {latest}")
 
-    try:
-        df = pd.read_csv(latest)
-    except Exception as e:
-        print(f"⚠️ Failed to read {latest}: {e}")
+    if not latest.exists():
+        print(f"⚠️ File not found: {latest}")
         return pd.DataFrame()
 
-    # --- Normalize column names for frontend ---
+    df = pd.read_csv(latest)
+
     rename_map = {
         "avg_low_price": "low",
         "avg_high_price": "high",
         "predicted_profit": "potential_profit",
         "predicted_profit_pct": "potential_profit",
+        "item_name": "name",
     }
     df = df.rename(columns=rename_map)
 
-    # --- Ensure required columns exist ---
-    for col in ["low", "high", "potential_profit", "name", "item_id"]:
+    # Replace invalid values
+    import numpy as np
+    df = df.replace([np.inf, -np.inf], np.nan).fillna(0)
+
+    # Ensure all required columns exist
+    for col in ["low", "high", "potential_profit", "name"]:
         if col not in df.columns:
             df[col] = 0
-
-    # --- Clean numeric values ---
-    df = df.replace([np.inf, -np.inf], np.nan).fillna(0)
 
     return df
 
