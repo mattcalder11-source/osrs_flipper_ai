@@ -22,7 +22,7 @@ from osrs_flipper_ai.features.features import compute_features, compute_technica
 # ---------------------------------------------------------------------
 # CONFIG
 # ---------------------------------------------------------------------
-BASE_DIR = Path(__file__).resolve().parents[2]
+BASE_DIR = Path(__file__).resolve().parents[1]
 MODEL_DIR = BASE_DIR / "models"
 FEATURE_DIR = BASE_DIR / "data" / "features"
 PRED_DIR = BASE_DIR / "data" / "predictions"
