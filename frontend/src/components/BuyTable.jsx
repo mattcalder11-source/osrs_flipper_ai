@@ -15,19 +15,19 @@ onRefresh();
 return (
 <div>
 <h2 className="text-xl font-semibold mb-2">Buy Recommendations</h2>
-<table className="w-full text-sm">
+<table className="w-full text-sm text-center">
 <thead>
 <tr className="text-gray-400">
-<th>Item</th>
-<th>Buy</th>
-<th>Sell</th>
-<th>Profit %</th>
-<th>Action</th>
+<th className="text-center">Item</th>
+<th className="text-center">Buy</th>
+<th className="text-center">Sell</th>
+<th className="text-center">Profit %</th>
+<th className="text-center">Action</th>
 </tr>
 </thead>
 <tbody>
 {buys.slice(0, 20).map((b) => (
-<tr key={b.item_id} className="border-b border-gray-800">
+<tr key={b.item_id} className="border-b border-gray-800 text-center">
 <td>{b.name}</td>
 <td>{b.low?.toLocaleString("en-US")} gp</td>
 <td>{b.high?.toLocaleString("en-US")} gp</td>
