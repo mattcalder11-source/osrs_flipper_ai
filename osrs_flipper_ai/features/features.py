@@ -74,7 +74,7 @@ def compute_technical_indicators(df: pd.DataFrame) -> pd.DataFrame:
             continue
 
         price = (
-            g["avg_high_price"].fillna(method="ffill").fillna(g["high"])
+            g["avg_high_price"].ffill().fillna(g["high"])
             if "avg_high_price" in g.columns
             else g["high"]
         )
