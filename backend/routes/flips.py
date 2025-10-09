@@ -10,7 +10,7 @@ from osrs_flipper_ai.src.fetch_latest_prices import fetch_latest_prices_dict
 
 router = APIRouter(prefix="/flips", tags=["flips"])
 
-DATA_DIR = Path(__file__).resolve().parents[2] / "data"
+DATA_DIR = Path(__file__).resolve().parents[2] / "osrs_flipper_ai" / "data"
 
 def get_latest_prediction_file() -> Path:
     """Find the most recent predictions CSV in /data/predictions/."""
