@@ -108,7 +108,6 @@ def compute_technical_indicators(df: pd.DataFrame) -> pd.DataFrame:
             denom = (col_max - col_min) if (col_max - col_min) > EPS else EPS
             g[f"{col}_norm"] = (g[col] - col_min) / denom
 
-        g["daily_volume"] = g.get("daily_volume", 0.0)
         g["volatility_1h"] = g.get("volatility_1h", 0.0)
 
         # Composite technical score (0–5)
@@ -157,9 +156,16 @@ def compute_features(df: pd.DataFrame) -> pd.DataFrame:
         .fillna(0.0)
     ).astype(np.float32)
 
-    df["daily_volume"] = (
-        df.groupby("item_id")["volume"].transform(lambda x: x.rolling(12, min_periods=1).mean())
-    ).fillna(0.0).astype(np.float32)
+    # ✅ Preserve real daily_volume from ingest.py if present
+    if "daily_volume" not in df.columns:
+        df["daily_volume"] = (
+            df.groupby("item_id")["volume"]
+            .transform(lambda x: x.rolling(12, min_periods=1).mean())
+            .fillna(0.0)
+        ).astype(np.float32)
+    else:
+        df["daily_volume"] = pd.to_numeric(df["daily_volume"], errors="coerce").fillna(0.0).astype(np.float32)
+
 
     df = compute_technical_indicators(df)
     gc.collect()
