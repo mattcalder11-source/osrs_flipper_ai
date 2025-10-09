@@ -89,11 +89,11 @@ def predict_flips(model_dict, df, top_n=100):
     df["predicted_profit_gp"] = df["predicted_margin"] * df.get("mid_price", 0)
 
     # ✅ Filter by minimum 24 hour volume
-    MIN_LIQUIDITY = 10  # adjust as desired
+    MIN_DAILY_VOLUME = 10  # adjust as desired
     if "daily_volume" in df.columns:
         before = len(df)
-        df = df[df["daily_volume"] >= MIN_LIQUIDITY]
-        print(f"💧 Filtered by daily_volume ≥ {MIN_LIQUIDITY}: {before} → {len(df)} rows")
+        df = df[df["daily_volume"] >= MIN_DAILY_VOLUME]
+        print(f"💧 Filtered by daily_volume ≥ {MIN_DAILY_VOLUME}: {before} → {len(df)} rows")
     else:
         print("⚠️ No daily_volume column found — skipping liquidity filter.")
 
