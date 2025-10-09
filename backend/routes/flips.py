@@ -1,44 +1,71 @@
 from fastapi import APIRouter
 from pathlib import Path
 import pandas as pd
-from datetime import datetime
-from glob import glob
 import numpy as np
-
-# Import your core model logic
+from datetime import datetime
 from osrs_flipper_ai.models.recommend_sell import batch_recommend_sell
 from osrs_flipper_ai.src.fetch_latest_prices import fetch_latest_prices_dict
 
 router = APIRouter(prefix="/flips", tags=["flips"])
 
-DATA_DIR = Path(__file__).resolve().parents[2] / "data"
+# ----------------------------------------------------
+# Path discovery
+# ----------------------------------------------------
+def get_data_dir():
+    """Find the correct data directory (handles both repo layouts)."""
+    base_dir = Path(__file__).resolve().parents[2]
+    candidates = [
+        base_dir / "data",
+        base_dir / "osrs_flipper_ai" / "data",
+    ]
+    for d in candidates:
+        if (d / "predictions").exists():
+            print(f"📂 Using data directory: {d}")
+            return d
+    raise FileNotFoundError("No valid data directory found.")
 
-def get_latest_prediction_file() -> Path:
-    """Find the most recent predictions CSV in /data/predictions/."""
-    pred_dir = DATA_DIR / "predictions"
-    if not pred_dir.exists():
-        return None
-    files = sorted(
-        pred_dir.glob("*.csv"),
-        key=lambda f: f.stat().st_mtime,
-        reverse=True,
-    )
-    return files[0] if files else None
+DATA_DIR = get_data_dir()
 
+# ----------------------------------------------------
+# CSV helpers
+# ----------------------------------------------------
 def load_latest_predictions():
-    latest_file = get_latest_prediction_file()
-    if latest_file is None:
-        print("⚠️ No prediction files found in /data/predictions/")
+    """Load the newest CSV in /data/predictions/, normalize columns."""
+    pred_dir = DATA_DIR / "predictions"
+    files = sorted(pred_dir.glob("*.csv"), key=lambda f: f.stat().st_mtime, reverse=True)
+    if not files:
+        print("⚠️ No predictions CSV found.")
         return pd.DataFrame()
-    print(f"📂 Loading predictions from: {latest_file.name}")
-    return load_csv(latest_file)
 
-ACTIVE_FILE = DATA_DIR / "active_flips.csv"
-PRED_FILE = get_latest_prediction_file()
+    latest = files[0]
+    print(f"✅ Loading predictions from: {latest}")
 
-# ----------------------------------------------------
-# Helpers
-# ----------------------------------------------------
+    try:
+        df = pd.read_csv(latest)
+    except Exception as e:
+        print(f"⚠️ Failed to read {latest}: {e}")
+        return pd.DataFrame()
+
+    # --- Normalize column names for frontend ---
+    rename_map = {
+        "avg_low_price": "low",
+        "avg_high_price": "high",
+        "predicted_profit": "potential_profit",
+        "predicted_profit_pct": "potential_profit",
+    }
+    df = df.rename(columns=rename_map)
+
+    # --- Ensure required columns exist ---
+    for col in ["low", "high", "potential_profit", "name", "item_id"]:
+        if col not in df.columns:
+            df[col] = 0
+
+    # --- Clean numeric values ---
+    df = df.replace([np.inf, -np.inf], np.nan).fillna(0)
+
+    return df
+
+
 def load_csv(path, cols=None):
     if not path.exists():
         return pd.DataFrame(columns=cols or [])
@@ -53,26 +80,30 @@ def save_csv(df, path):
     path.parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(path, index=False)
 
-# ----------------------------------------------------
-# API Routes
-# ----------------------------------------------------
 
+# ----------------------------------------------------
+# API routes
+# ----------------------------------------------------
 @router.get("/buy-recommendations")
 def get_buy_recommendations():
-    """Return the latest model-predicted buy flips."""
+    """Return latest model-predicted flips."""
     df = load_latest_predictions()
-    return df.replace([np.inf, -np.inf], np.nan).fillna(0).to_dict(orient="records")
+    return df.to_dict(orient="records")
+
 
 @router.get("/active")
 def get_active_flips():
-    df = load_csv(ACTIVE_FILE)
-    return df.replace([np.inf, -np.inf], np.nan).fillna(0).to_dict(orient="records")
+    active_file = DATA_DIR / "active_flips.csv"
+    return load_csv(active_file).to_dict(orient="records")
+
 
 @router.post("/add/{item_id}")
 def add_active_flip(item_id: int):
-    """Mark a recommended flip as implemented (bought)."""
-    buys = load_csv(PRED_FILE)
-    active = load_csv(ACTIVE_FILE)
+    pred_file = DATA_DIR / "predictions" / "latest_top_flips.csv"
+    active_file = DATA_DIR / "active_flips.csv"
+    buys = load_csv(pred_file)
+    active = load_csv(active_file)
+
     row = buys[buys["item_id"] == item_id]
     if row.empty:
         return {"error": "Item not found"}
@@ -81,24 +112,26 @@ def add_active_flip(item_id: int):
     row["entry_price"] = row["low"]
     row["entry_time"] = datetime.utcnow()
     active = pd.concat([active, row], ignore_index=True).drop_duplicates("item_id", keep="last")
-    save_csv(active, ACTIVE_FILE)
+    save_csv(active, active_file)
     return {"status": "added", "item_id": item_id}
+
 
 @router.delete("/remove/{item_id}")
 def remove_active_flip(item_id: int):
-    """Mark an active flip as sold."""
-    active = load_csv(ACTIVE_FILE)
+    active_file = DATA_DIR / "active_flips.csv"
+    active = load_csv(active_file)
     active = active[active["item_id"] != item_id]
-    save_csv(active, ACTIVE_FILE)
+    save_csv(active, active_file)
     return {"status": "removed", "item_id": item_id}
+
 
 @router.get("/sell-signals")
 def get_sell_signals():
-    """Return sell recommendations for active flips."""
-    active = load_csv(ACTIVE_FILE)
+    active_file = DATA_DIR / "active_flips.csv"
+    active = load_csv(active_file)
     if active.empty:
         return []
+
     latest_prices = fetch_latest_prices_dict()
     sell_recs = batch_recommend_sell(active, latest_prices)
-    df = df.replace([np.inf, -np.inf], np.nan).fillna(0)
-    return sell_recs.to_dict(orient="records")
+    return sell_recs.replace([np.inf, -np.inf], np.nan).fillna(0).to_dict(orient="records")
