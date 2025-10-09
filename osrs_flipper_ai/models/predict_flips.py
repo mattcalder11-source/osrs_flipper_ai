@@ -183,6 +183,11 @@ if __name__ == "__main__":
 
     # SELL RECOMMENDATIONS
     latest_prices = fetch_latest_prices_dict()
+
+    # Ensure required columns exist
+    if "entry_price" not in all_tiers.columns:
+        all_tiers["entry_price"] = all_tiers["mid_price"]
+
     sell_recs = batch_recommend_sell(all_tiers, latest_prices)
     sell_recs.to_csv(PRED_DIR / "sell_signals.csv", index=False)
     print("\n💰 === SELL RECOMMENDATIONS ===")
