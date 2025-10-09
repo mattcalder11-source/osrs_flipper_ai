@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from osrs_flipper_ai.backend.routes import flips, prices
+from backend.routes import flips, prices
 
 app = FastAPI(title="OSRS AI Flipper API", version="1.0")
 
