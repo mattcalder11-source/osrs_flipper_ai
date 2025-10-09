@@ -1,4 +1,4 @@
-const API = "http://localhost:8000";
+const API = "http://209.38.91.166:8000";
 
 export async function getBuys() {
   const res = await fetch(`${API}/flips/buy-recommendations`);
