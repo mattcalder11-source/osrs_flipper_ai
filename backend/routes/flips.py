@@ -2,6 +2,7 @@ from fastapi import APIRouter
 from pathlib import Path
 import pandas as pd
 from datetime import datetime
+from glob import glob
 
 # Import your core model logic
 from osrs_flipper_ai.models.recommend_sell import batch_recommend_sell
@@ -10,8 +11,29 @@ from osrs_flipper_ai.src.fetch_latest_prices import fetch_latest_prices_dict
 router = APIRouter(prefix="/flips", tags=["flips"])
 
 DATA_DIR = Path(__file__).resolve().parents[2] / "data"
-PRED_FILE = DATA_DIR / "predictions" / "latest_top_flips.csv"
+
+def get_latest_prediction_file() -> Path:
+    """Find the most recent predictions CSV in /data/predictions/."""
+    pred_dir = DATA_DIR / "predictions"
+    if not pred_dir.exists():
+        return None
+    files = sorted(
+        pred_dir.glob("*.csv"),
+        key=lambda f: f.stat().st_mtime,
+        reverse=True,
+    )
+    return files[0] if files else None
+
+def load_latest_predictions():
+    latest_file = get_latest_prediction_file()
+    if latest_file is None:
+        print("⚠️ No prediction files found in /data/predictions/")
+        return pd.DataFrame()
+    print(f"📂 Loading predictions from: {latest_file.name}")
+    return load_csv(latest_file)
+
 ACTIVE_FILE = DATA_DIR / "active_flips.csv"
+PRED_FILE = get_latest_prediction_file()
 
 # ----------------------------------------------------
 # Helpers
@@ -37,7 +59,7 @@ def save_csv(df, path):
 @router.get("/buy-recommendations")
 def get_buy_recommendations():
     """Return the latest model-predicted buy flips."""
-    df = load_csv(PRED_FILE)
+    df = load_latest_predictions()
     return df.to_dict(orient="records")
 
 @router.get("/active")
