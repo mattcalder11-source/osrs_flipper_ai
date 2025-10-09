@@ -59,7 +59,7 @@ def snapshot():
     for item_id, d in latest.items():
         name = mapping_dict.get(str(item_id), {}).get("name", "")
         row = {
-            "ts_utc": ts,
+            "timestamp": ts,
             "item_id": int(item_id),
             "name": name,
             "high": d.get("high"),
@@ -132,8 +132,8 @@ def aggregate_recent_features(feature_dir: str, days: int = 7):
         print("⚠ No valid feature data to aggregate.")
         return
 
-    combined = pd.concat(dfs, ignore_index=True).drop_duplicates(subset=["ts_utc", "item_id"])
-    combined = combined.sort_values(["item_id", "ts_utc"])
+    combined = pd.concat(dfs, ignore_index=True).drop_duplicates(subset=["timestamp", "item_id"])
+    combined = combined.sort_values(["item_id", "timestamp"])
 
     output_file = os.path.join(feature_dir, "latest_train.parquet")
     combined.to_parquet(output_file, index=False)
