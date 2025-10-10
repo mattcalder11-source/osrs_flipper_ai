@@ -180,3 +180,24 @@ def batch_recommend_sell(active_flips_df, latest_prices_dict=None):
         df = df.sort_values("urgency_score", ascending=False).reset_index(drop=True)
 
     return df
+
+if __name__ == "__main__":
+    import pathlib
+
+    DATA_DIR = pathlib.Path("/root/osrs_flipper_ai/osrs_flipper_ai/data")
+    active_flips_path = DATA_DIR / "processed" / "predicted_flips.csv"
+    output_path = DATA_DIR / "processed" / "recommendations.json"
+
+    if not active_flips_path.exists():
+        print(f"⚠️ No active flips found at {active_flips_path}")
+    else:
+        df = pd.read_csv(active_flips_path)
+        latest = load_latest_prices()
+        recs = batch_recommend_sell(df, latest)
+
+        if recs.empty:
+            print("⚠️ No sell recommendations generated.")
+        else:
+            recs.to_json(output_path, orient="records", indent=2)
+            print(f"✅ Wrote {len(recs)} sell recommendations → {output_path}")
+
