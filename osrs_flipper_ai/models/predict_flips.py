@@ -148,13 +148,16 @@ def predict_flips(model_dict, df, top_n=100):
     # ------------------------------------------------------------------
     before = len(df)
 
-    # Load mapping to resolve item names to IDs if available
+        # Load mapping to resolve item names to IDs if available
     mapping_path = Path(f"{BASE_DIR}/data/item_mapping.json")
     mapping_df = None
     if mapping_path.exists():
         try:
-            mapping_df = pd.read_json(mapping_path)
-            mapping_df = mapping_df.rename(columns={"id": "item_id"})
+            # item_mapping.json is a nested dict keyed by item_id, so normalize it
+            with open(mapping_path, "r") as f:
+                raw_mapping = json.load(f)
+            mapping_df = pd.DataFrame.from_dict(raw_mapping, orient="index")
+            mapping_df["item_id"] = mapping_df["id"].astype(int)
             mapping_df["name"] = mapping_df["name"].astype(str).str.lower()
         except Exception as e:
             print(f"⚠️ Failed to load item_mapping.json for blacklist: {e}")
