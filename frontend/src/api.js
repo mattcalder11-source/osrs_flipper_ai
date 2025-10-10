@@ -22,3 +22,17 @@ export async function getSellSignals() {
   const res = await fetch(`${API}/flips/sell-signals`);
   return res.json();
 }
+
+export async function closeFlip(item_id) {
+  try {
+    const res = await fetch(`${API_BASE}/flips/close/${item_id}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+    });
+    if (!res.ok) throw new Error(`Failed to close flip: ${res.statusText}`);
+    return await res.json();
+  } catch (err) {
+    console.error("❌ closeFlip error:", err);
+    return null;
+  }
+}
