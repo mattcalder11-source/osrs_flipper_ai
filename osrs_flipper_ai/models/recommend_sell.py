@@ -197,8 +197,9 @@ if __name__ == "__main__":
     import pathlib
 
     DATA_DIR = pathlib.Path("/root/osrs_flipper_ai/osrs_flipper_ai/data")
-    active_flips_path = DATA_DIR / "predictions" / "latest_top_flips.csv"
+    active_flips_path = DATA_DIR / "predictions" / "open_positions.csv"
     output_path = DATA_DIR / "predictions" / "sell_signals.csv"
+
 
     if not active_flips_path.exists():
         print(f"⚠️ No active flips found at {active_flips_path}")

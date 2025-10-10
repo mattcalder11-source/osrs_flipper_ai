@@ -106,13 +106,13 @@ def get_buy_recommendations():
 
 @router.get("/active")
 def get_active_flips():
-    active_file = DATA_DIR / "active_flips.csv"
+    active_file = DATA_DIR / "predictions" / "open_positions.csv"
     return load_csv(active_file).to_dict(orient="records")
 
 @router.post("/add/{item_id}")
 def add_active_flip(item_id: int):
     pred_file = DATA_DIR / "predictions" / "latest_top_flips.csv"
-    active_file = DATA_DIR / "active_flips.csv"
+    active_file = DATA_DIR / "predictions" / "open_positions.csv"
 
     buys = load_csv(pred_file)
     active = load_csv(active_file)
@@ -130,7 +130,7 @@ def add_active_flip(item_id: int):
 
 @router.delete("/remove/{item_id}")
 def remove_active_flip(item_id: int):
-    active_file = DATA_DIR / "active_flips.csv"
+    active_file = DATA_DIR / "predictions" / "open_positions.csv"
     active = load_csv(active_file)
     active = active[active["item_id"] != item_id]
     save_csv(active, active_file)
@@ -138,7 +138,7 @@ def remove_active_flip(item_id: int):
 
 @router.get("/sell-signals")
 def get_sell_signals():
-    active_file = DATA_DIR / "active_flips.csv"
+    active_file = DATA_DIR / "predictions" / "open_positions.csv"
     active = load_csv(active_file)
     if active.empty:
         return []
