@@ -39,6 +39,17 @@ def train_model(df: pd.DataFrame):
     df = df.replace([np.inf, -np.inf], np.nan)
     df = df.dropna(subset=["mid_price"], how="any")
 
+    # -----------------------------------------------------------------
+    # Define target: expected relative return (future sell vs buy)
+    # -----------------------------------------------------------------
+    if "high" in df.columns and "low" in df.columns:
+        df["target_profit_ratio"] = (df["high"] / df["low"]) - 1
+        # Clip extremes to remove outliers
+        df["target_profit_ratio"] = df["target_profit_ratio"].clip(-0.2, 2.0)
+    else:
+        raise ValueError("❌ Missing 'high'/'low' columns — cannot compute target_profit_ratio.")
+
+
     # Preferred features (but optional)
     preferred_cols = [
         "spread_ratio",
@@ -65,7 +76,14 @@ def train_model(df: pd.DataFrame):
         raise ValueError(f"❌ Too few rows for training ({len(df)}). Check your feature generation step.")
 
     X = df[available]
-    y = df["spread_ratio"]
+
+    # Log-scale heavy-tailed numeric features
+    for col in X.columns:
+        if (X[col] > 0).all():
+            X[col] = np.log1p(X[col])
+
+
+    y = df["target_profit_ratio"]
 
     # Use 80/20 split if data allows
     if len(df) > 20:
