@@ -12,49 +12,63 @@ EPS = 1e-9
 # SCHEMA NORMALIZATION
 # ----------------------------
 def normalize_schema(df: pd.DataFrame) -> pd.DataFrame:
-    df = df.copy()
-
-    # Ensure item_id present
-    if "item_id" not in df.columns:
-        if "item_id" in df.index.names:
-            df = df.reset_index()
-        else:
-            raise KeyError("Missing 'item_id' column")
-
-    # Normalize timestamp
-    if "timestamp" not in df.columns:
-        for alt in ("ts_utc", "time", "datetime"):
-            if alt in df.columns:
-                df = df.rename(columns={alt: "timestamp"})
-                break
-        else:
-            raise KeyError("Missing timestamp column")
-
-    df["timestamp"] = pd.to_datetime(df["timestamp"], utc=True, errors="coerce")
-
-    # Price + volume columns
+    """
+    Normalize raw snapshot columns from historical or live data into a standard format
+    expected by compute_features().
+    Ensures presence of: high, low, volume, timestamp, item_id.
+    """
     rename_map = {
-        "high_price": "high",
-        "avg_high_price": "avg_high_price",
-        "low_price": "low",
-        "avg_low_price": "avg_low_price",
+        # Possible API variations
+        "avgHighPrice": "avg_high_price",
+        "avgLowPrice": "avg_low_price",
+        "highPrice": "high",
+        "lowPrice": "low",
+        "avgHigh": "avg_high_price",
+        "avgLow": "avg_low_price",
+        "high": "high",
+        "low": "low",
+        "timestamp": "timestamp",
+        "volume": "volume",
+        "tradeVolume": "volume",
+        "id": "item_id",
+        "itemId": "item_id"
     }
-    for old, new in rename_map.items():
-        if old in df.columns and new not in df.columns:
-            df = df.rename(columns={old: new})
 
-    if "volume" not in df.columns:
-        for alt in ("trade_volume", "buy_volume", "sell_volume", "qty"):
-            if alt in df.columns:
-                df = df.rename(columns={alt: "volume"})
-                break
+    # Rename if present
+    df = df.rename(columns={k: v for k, v in rename_map.items() if k in df.columns})
+
+    # Derive missing price columns
+    if "high" not in df.columns:
+        if "avg_high_price" in df.columns:
+            df["high"] = df["avg_high_price"]
         else:
-            df["volume"] = 0.0
+            df["high"] = np.nan
 
-    for c in ("high", "low", "volume"):
-        if c in df.columns:
-            df[c] = pd.to_numeric(df[c], errors="coerce").fillna(0.0).astype(np.float32)
+    if "low" not in df.columns:
+        if "avg_low_price" in df.columns:
+            df["low"] = df["avg_low_price"]
+        else:
+            df["low"] = np.nan
 
+    # Derive missing volume
+    if "volume" not in df.columns:
+        df["volume"] = np.nan
+
+    # Convert timestamp if necessary
+    if "timestamp" in df.columns:
+        if np.issubdtype(df["timestamp"].dtype, np.number):
+            df["timestamp"] = pd.to_datetime(df["timestamp"], unit="s", errors="coerce")
+        else:
+            df["timestamp"] = pd.to_datetime(df["timestamp"], errors="coerce")
+
+    # Ensure item_id exists
+    if "item_id" not in df.columns:
+        raise KeyError("❌ Missing 'item_id' column in snapshot — cannot continue.")
+
+    # Drop rows without timestamp or item_id
+    df = df.dropna(subset=["timestamp", "item_id"])
+
+    print(f"✅ Normalized schema: {list(df.columns)}")
     return df
 
 
