@@ -17,8 +17,9 @@ FEATURE_DIR = BASE_DIR / "data" / "features"
 MODEL_DIR = BASE_DIR / "osrs_flipper_ai" / "models" / "trained_models"
 MODEL_DIR.mkdir(parents=True, exist_ok=True)
 
+
 # ---------------------------------------------------------------------
-# LOAD FEATURES (no recomputation)
+# LOAD FEATURES
 # ---------------------------------------------------------------------
 def load_latest_features():
     """Load the latest feature snapshot (historical or live)."""
@@ -29,57 +30,66 @@ def load_latest_features():
     print(f"📊 Using feature file: {latest_file}")
     return pd.read_parquet(latest_file)
 
+
 # ---------------------------------------------------------------------
 # TRAIN MODEL
 # ---------------------------------------------------------------------
 def train_model(df: pd.DataFrame):
-    """Train a GradientBoostingRegressor using precomputed features only."""
+    """Train GradientBoostingRegressor using whatever valid features are available."""
     df = df.replace([np.inf, -np.inf], np.nan)
     df = df.dropna(subset=["mid_price"], how="any")
 
-    # Feature columns used for model input
-    feature_cols = [
-    "spread_ratio",
-    "volatility_1h",
-    "rsi_norm",
-    "roc_norm",
-    "macd_norm",
-    "technical_score",
-]
+    # Preferred features (but optional)
+    preferred_cols = [
+        "spread_ratio",
+        "volatility_1h",
+        "rsi_norm",
+        "roc_norm",
+        "macd_norm",
+        "technical_score",
+    ]
 
-    # keep only columns that exist and have >0 non-null values
-    available = [c for c in feature_cols if c in df.columns and df[c].notna().sum() > 0]
+    # Select available + non-empty
+    available = [c for c in preferred_cols if c in df.columns and df[c].notna().sum() > 0]
+
+    if not available:
+        raise ValueError("❌ No usable feature columns found for training (all missing/empty).")
+
     if len(available) < 2:
-        raise ValueError(
-            f"❌ Not enough valid feature columns for training. "
-            f"Found: {available}, Expected: {feature_cols}"
-        )
-
+        print(f"⚠️ Only one valid feature found: {available}. Training with a single predictor.")
+    
     df = df.dropna(subset=available)
     print(f"✅ Using {len(df):,} rows with features: {available}")
+
+    if len(df) < 10:
+        raise ValueError(f"❌ Too few rows for training ({len(df)}). Check your feature generation step.")
 
     X = df[available]
     y = df["spread_ratio"]
 
-    # Train/test split
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    # Use 80/20 split if data allows
+    if len(df) > 20:
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    else:
+        X_train, X_test, y_train, y_test = X, X, y, y
 
-    # Model training
+    # Train model
     model = GradientBoostingRegressor(
-        n_estimators=300,
+        n_estimators=200,
         learning_rate=0.05,
-        max_depth=4,
-        random_state=42
+        max_depth=3,
+        random_state=42,
     )
     model.fit(X_train, y_train)
 
     # Evaluate
     preds = model.predict(X_test)
-    r2 = r2_score(y_test, preds)
-    mae = mean_absolute_error(y_test, preds)
+    r2 = r2_score(y_test, preds) if len(y_test) > 1 else 0.0
+    mae = mean_absolute_error(y_test, preds) if len(y_test) > 1 else 0.0
 
     print(f"✅ Training complete — R²={r2:.4f}, MAE={mae:.6f}")
     return model, available, r2, mae
+
 
 # ---------------------------------------------------------------------
 # MAIN
@@ -89,7 +99,11 @@ if __name__ == "__main__":
     df = load_latest_features()
     print(f"📦 Loaded {len(df):,} rows of precomputed features")
 
-    model, features, r2, mae = train_model(df)
+    try:
+        model, features, r2, mae = train_model(df)
+    except ValueError as e:
+        print(f"❌ Training aborted: {e}")
+        exit(1)
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M")
     model_dict = {
