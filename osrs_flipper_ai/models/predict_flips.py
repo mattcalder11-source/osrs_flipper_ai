@@ -143,11 +143,29 @@ def predict_flips(model_dict, df, top_n=100):
     df["predicted_profit_gp"] = profit_gp
     df["profit_pct"] = profit_pct
 
-    # Apply blacklist (note: expects a 'name' column in features; if absent, skip)
+# ------------------------------------------------------------------
+# Apply blacklist — support both item names and IDs
+# ------------------------------------------------------------------
     before = len(df)
+
+    # Normalize blacklist: may contain names or numeric IDs
+    blacklist_normalized = set()
+    for entry in ITEM_BLACKLIST:
+        entry = entry.strip()
+        if entry.isdigit():
+            blacklist_normalized.add(int(entry))
+        else:
+            blacklist_normalized.add(entry.lower())
+
     if "name" in df.columns:
-        df = df[~df["name"].isin(ITEM_BLACKLIST)]
-    print(f"🚫 Blacklist filter: {before} → {len(df)} rows")
+        df = df[~df["name"].str.lower().isin(blacklist_normalized)]
+    elif "item_id" in df.columns:
+        df = df[~df["item_id"].isin([x for x in blacklist_normalized if isinstance(x, int)])]
+    else:
+        print("⚠️ No name/item_id column found — skipping blacklist filter.")
+
+    print(f"🚫 Blacklist filter: {before} → {len(df)} rows (filtered {before - len(df)})")
+
 
     # Load buy limits
     if os.path.exists(LIMITS_FILE):
