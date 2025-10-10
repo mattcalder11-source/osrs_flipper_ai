@@ -63,7 +63,19 @@ def recommend_sell(entry_price, current_price, features, entry_time=None, now=No
     profit_pct = (current_price - entry_price) / entry_price
     hold_hours = None
     if entry_time:
+        # --- Defensive patch for tz-aware / tz-naive mismatches ---
+        if hasattr(entry_time, "tzinfo"):
+            if entry_time.tzinfo is None:
+                entry_time = entry_time.tz_localize("UTC")
+            else:
+                entry_time = entry_time.tz_convert("UTC")
+
+        # Ensure 'now' is also UTC-aware
+        if now.tzinfo is None:
+            now = now.replace(tzinfo=pd.Timestamp.now(tz="UTC").tzinfo)
+
         hold_hours = (now - entry_time).total_seconds() / 3600.0
+
 
     reason, confidence, urgency = None, 0.0, 0.0
     sell = False

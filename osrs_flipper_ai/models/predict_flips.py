@@ -178,7 +178,8 @@ def predict_flips(model_dict, df, top_n=100):
     if "entry_price" not in top_flips.columns:
         top_flips["entry_price"] = top_flips["buy_price"]
     if "entry_time" not in top_flips.columns:
-        top_flips["entry_time"] = pd.Timestamp.utcnow()
+        top_flips["entry_time"] = pd.Timestamp.now(tz="UTC")
+
 
 
     # Run sell recommendation (once is sufficient)
