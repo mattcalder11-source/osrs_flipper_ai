@@ -164,25 +164,23 @@ def compute_features_in_chunks(df, batch_size=1000, out_path=None):
         if g.empty:
             continue
 
-        # ---- Same feature logic ----
+        # ---- Feature logic ----
         g["mid_price"] = ((g["high"] + g["low"]) / 2).astype(np.float32)
         g["spread"] = (g["high"] - g["low"]).astype(np.float32)
         g["spread_ratio"] = (g["spread"] / g["mid_price"]).astype(np.float32)
+
+        # ✅ FIXED: compute per-item volatility properly
         g["volatility_1h"] = (
-            g["mid_price"].pct_change(fill_method=None).rolling(12, min_periods=1).std()
+            g["mid_price"].pct_change(fill_method=None)
+            .rolling(12, min_periods=1)
+            .std()
             / g["mid_price"].rolling(12, min_periods=1).mean()
-        )
+        ).fillna(0)
+
         g["timestamp"] = pd.to_datetime(g["timestamp"], errors="coerce")
         g["target_profit_ratio"] = (g["high"] / g["low"] - 1).clip(-0.2, 2.0)
 
         results.append(g)
-
-        # Ensure volatility_1h is present and filled safely
-        if "volatility_1h" not in df.columns:
-            df["volatility_1h"] = np.nan
-
-        # Fill NaN with 0 (optional but safer for training)
-        df["volatility_1h"] = df["volatility_1h"].fillna(0)
 
         # periodic write to disk
         if (i + 1) % batch_size == 0:
@@ -190,12 +188,13 @@ def compute_features_in_chunks(df, batch_size=1000, out_path=None):
             if out_path:
                 mode = "a" if out_path.exists() else "w"
                 batch_df.to_parquet(out_path, index=False)
-            results = []  # clear from memory
+            results = []
             print(f"✅ Processed {i+1:,}/{total:,} items...")
 
     # final write
-    if results and out_path:
+    if results:
         batch_df = pd.concat(results, ignore_index=True)
+        batch_df["volatility_1h"] = batch_df["volatility_1h"].fillna(0)
         batch_df.to_parquet(out_path, index=False)
         print(f"💾 Final batch written ({len(batch_df):,} rows).")
     elif results:
