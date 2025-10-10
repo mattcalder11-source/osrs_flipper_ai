@@ -170,11 +170,19 @@ def compute_features_in_chunks(df, batch_size=1000, out_path=None):
         g["spread_ratio"] = (g["spread"] / g["mid_price"]).astype(np.float32)
         g["volatility_1h"] = (
             g["mid_price"].pct_change(fill_method=None).rolling(12, min_periods=1).std()
-        ).astype(np.float32)
+            / g["mid_price"].rolling(12, min_periods=1).mean()
+        )
         g["timestamp"] = pd.to_datetime(g["timestamp"], errors="coerce")
         g["target_profit_ratio"] = (g["high"] / g["low"] - 1).clip(-0.2, 2.0)
 
         results.append(g)
+
+        # Ensure volatility_1h is present and filled safely
+        if "volatility_1h" not in df.columns:
+            df["volatility_1h"] = np.nan
+
+        # Fill NaN with 0 (optional but safer for training)
+        df["volatility_1h"] = df["volatility_1h"].fillna(0)
 
         # periodic write to disk
         if (i + 1) % batch_size == 0:
