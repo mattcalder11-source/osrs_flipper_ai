@@ -25,6 +25,14 @@ def enrich_with_metadata(df: pd.DataFrame) -> pd.DataFrame:
     """Attach item name, icon, and buy limit using item_mapping.json."""
     mapping_path = DATA_DIR / "item_mapping.json"
 
+    if "item_id" not in df.columns:
+        # Try to auto-detect similar column
+        for alt in ["id", "itemID", "item"]:
+            if alt in df.columns:
+                df = df.rename(columns={alt: "item_id"})
+                break
+
+
     if not mapping_path.exists():
         print(f"⚠️ {mapping_path} not found — enrichment skipped.")
         df["name"] = df["item_id"].astype(str)
