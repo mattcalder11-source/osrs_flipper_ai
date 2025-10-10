@@ -11,7 +11,7 @@ router = APIRouter(prefix="/flips", tags=["flips"])
 # ----------------------------------------------------
 # Path configuration
 # ----------------------------------------------------
-DATA_DIR = Path("/root/osrs_flipper_ai/data")
+DATA_DIR = Path("/root/osrs_flipper_ai/osrs_flipper_ai/data")
 
 # ----------------------------------------------------
 # CSV helpers
