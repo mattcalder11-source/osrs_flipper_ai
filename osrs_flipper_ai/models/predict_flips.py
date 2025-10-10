@@ -1,6 +1,6 @@
 """
 predict_flips.py - Uses the latest trained model to generate OSRS flip predictions.
-Loads the newest feature snapshot (already precomputed), applies the model, and saves ranked recommendations.
+Loads precomputed features (no recomputation), applies model, filters by 24h volume, and saves ranked flips.
 """
 
 import os
@@ -12,7 +12,7 @@ import numpy as np
 from datetime import datetime
 from pathlib import Path
 
-# Ensure local imports resolve correctly
+# Ensure relative imports work
 sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 from osrs_flipper_ai.models.recommend_sell import batch_recommend_sell
@@ -59,17 +59,23 @@ def load_latest_features():
 def predict_flips(model_dict, df, top_n=100):
     """Apply model to precomputed features and generate flip rankings."""
     model = model_dict["model"]
-    feature_cols = model_dict["features"]
+    expected_features = model_dict["features"]
 
-    for col in feature_cols:
-        if col not in df.columns:
-            df[col] = 0
+    # Handle missing columns
+    missing_cols = [c for c in expected_features if c not in df.columns]
+    if missing_cols:
+        print(f"⚠️ Missing columns in feature data: {missing_cols}")
+        for c in missing_cols:
+            df[c] = 0.0
 
-    X = df[feature_cols].replace([np.inf, -np.inf], np.nan).fillna(0)
+    # Align feature columns and fill missing values
+    X = df[expected_features].replace([np.inf, -np.inf], np.nan).fillna(0.0)
+
+    # Predictions
     df["predicted_margin"] = model.predict(X)
     df["predicted_profit_gp"] = df["predicted_margin"] * df.get("mid_price", 0)
 
-    # ✅ Filter by minimum 24-hour trade volume
+    # Filter by minimum 24h trade volume
     MIN_DAILY_VOLUME = 150
     if "daily_volume" in df.columns:
         before = len(df)
@@ -78,15 +84,23 @@ def predict_flips(model_dict, df, top_n=100):
     else:
         print("⚠️ No daily_volume column found — skipping liquidity filter.")
 
+    # Rank by profit
+    keep_cols = [
+        "item_id", "name", "predicted_profit_gp", "predicted_margin",
+        "mid_price", "daily_volume", "volatility_1h"
+    ]
+    for col in ["technical_score"]:
+        if col not in df.columns:
+            df[col] = 0.0
+            keep_cols.append(col)
+
     ranked = (
         df.sort_values("predicted_profit_gp", ascending=False)
           .head(top_n)
-          .loc[:, [
-              "item_id", "name", "predicted_profit_gp", "predicted_margin",
-              "mid_price", "daily_volume", "volatility_1h", "technical_score"
-          ]]
+          .loc[:, keep_cols]
     )
 
+    # Save results
     ts = datetime.now().strftime("%Y%m%d_%H%M")
     timestamped_path = PRED_DIR / f"top_flips_{ts}.csv"
     latest_path = PRED_DIR / "latest_top_flips.csv"
@@ -116,8 +130,7 @@ def recommend_flips_by_tier(df, capital_tiers=CAPITAL_TIERS, flips_per_tier=FLIP
     results = []
     for capital in capital_tiers:
         sub = df[(df["mid_price"] > 0) & (df["predicted_profit_gp"] > 0)].copy()
-        if "limit" not in sub.columns:
-            sub["limit"] = 100
+        sub["limit"] = sub.get("limit", 100)
 
         sub["max_affordable_qty"] = np.floor(capital / sub["mid_price"]).astype(int)
         sub["suggested_qty"] = np.minimum(sub["limit"], sub["max_affordable_qty"])
@@ -154,7 +167,7 @@ if __name__ == "__main__":
     top_flips = predict_flips(model_dict, df, top_n=100)
     print(f"🔍 DEBUG: predict_flips() returned {len(top_flips)} rows")
 
-    # Load GE buy limits
+    # Load GE buying limits
     try:
         limits = pd.read_html("https://oldschool.runescape.wiki/w/Grand_Exchange/Buying_limits")[0]
         limits = limits.rename(columns=lambda c: c.lower().strip())
@@ -165,20 +178,17 @@ if __name__ == "__main__":
         print(f"⚠️ Could not fetch GE limits: {e}")
         top_flips["limit"] = 100
 
-    # Generate multi-tier recommendations
+    # Generate tiered recommendations
     all_tiers = recommend_flips_by_tier(top_flips)
 
-    # Save unified predictions
+    # Save unified output
     latest_path = PRED_DIR / "latest_top_flips.csv"
     all_tiers.to_csv(latest_path, index=False)
     print(f"💾 Saved unified flips → {latest_path}")
 
     # SELL RECOMMENDATIONS
     latest_prices = fetch_latest_prices_dict()
-
-    if "entry_price" not in all_tiers.columns:
-        all_tiers["entry_price"] = all_tiers["mid_price"]
-
+    all_tiers["entry_price"] = all_tiers.get("entry_price", all_tiers["mid_price"])
     sell_recs = batch_recommend_sell(all_tiers, latest_prices)
     sell_recs.to_csv(PRED_DIR / "sell_signals.csv", index=False)
 
