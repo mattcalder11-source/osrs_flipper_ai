@@ -9,13 +9,12 @@ from pathlib import Path
 OUT_PATH = Path("/root/osrs_flipper_ai/osrs_flipper_ai/data/ge_limits.json")
 
 def fetch_ge_limits():
-    headers = {"User-Agent": "osrs-flipper-ai (contact: matthew@example.com)"}
-    url_limits = "https://prices.runescape.wiki/api/v1/osrs/limits"
+    headers = {"User-Agent": "osrs-flipper-ai (contact: matt.calder11@gmail.com)"}
     url_mapping = "https://prices.runescape.wiki/api/v1/osrs/mapping"
 
     print("📦 Fetching OSRS GE buy limits...")
     try:
-        limits_resp = requests.get(url_limits, headers=headers, timeout=30)
+        limits_resp = requests.get(url_mapping, headers=headers, timeout=30)
         limits_resp.raise_for_status()
         limits_data = limits_resp.json().get("data", {})
         print(f"✅ Retrieved {len(limits_data):,} raw limit entries from /limits.")
