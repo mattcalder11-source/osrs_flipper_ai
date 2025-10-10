@@ -22,8 +22,6 @@ from osrs_flipper_ai.features.features import compute_features, compute_technica
 # ---------------------------------------------------------------------
 # CONFIG
 # ---------------------------------------------------------------------
-from pathlib import Path
-
 BASE_DIR = Path(__file__).resolve().parents[1]
 MODEL_DIR = BASE_DIR / "models" / "trained_models"
 FEATURE_DIR = BASE_DIR / "data" / "features"
@@ -34,24 +32,18 @@ PRED_DIR.mkdir(parents=True, exist_ok=True)
 # LOADERS
 # ---------------------------------------------------------------------
 def load_latest_model():
-    """
-    Load the most recent trained model.
-    Automatically detects whether the model is stored in /models
-    or inside /osrs_flipper_ai/models (for backward compatibility).
-    """
+    """Load the most recent trained model from /models/trained_models."""
     model_path = MODEL_DIR / "latest_model.pkl"
     if not model_path.exists():
         raise FileNotFoundError(f"❌ No trained model found at {model_path}")
     print(f"📦 Loaded model from {model_path}")
 
     model_dict = joblib.load(model_path)
-
     timestamp = model_dict.get("timestamp", "unknown")
     r2 = model_dict.get("r2", 0.0)
-    print(f"📦 Loaded model from {model_path} (trained {timestamp}, R²={r2:.4f})")
+    print(f"📦 Loaded model (trained {timestamp}, R²={r2:.4f})")
 
     return model_dict
-
 
 
 def load_latest_features():
@@ -82,7 +74,7 @@ def predict_flips(model_dict, df, top_n=100):
     df["predicted_margin"] = model.predict(X)
     df["predicted_profit_gp"] = df["predicted_margin"] * df.get("mid_price", 0)
 
-    # ✅ Filter by minimum 24 hour volume
+    # ✅ Filter by minimum 24-hour trade volume
     MIN_DAILY_VOLUME = 60
     if "daily_volume" in df.columns:
         before = len(df)
@@ -110,7 +102,7 @@ def predict_flips(model_dict, df, top_n=100):
         print(f"💰 Saved top {top_n} flips → {timestamped_path}")
     else:
         print("⚠️ No flips to save — writing placeholder CSV for dashboard.")
-        pd.DataFrame(columns=["item_id","name","predicted_profit_gp","roi"]).to_csv(latest_path, index=False)
+        pd.DataFrame(columns=["item_id", "name", "predicted_profit_gp", "roi"]).to_csv(latest_path, index=False)
 
     return ranked
 
@@ -189,7 +181,6 @@ if __name__ == "__main__":
     # SELL RECOMMENDATIONS
     latest_prices = fetch_latest_prices_dict()
 
-    # Ensure required columns exist
     if "entry_price" not in all_tiers.columns:
         all_tiers["entry_price"] = all_tiers["mid_price"]
 
