@@ -243,7 +243,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     RAW_DIR = Path("/root/osrs_flipper_ai/osrs_flipper_ai/data/raw")
-    OUT_DIR = Path("/root/osrs_flipper_ai/data/features")
+    OUT_DIR = Path("/root/osrs_flipper_ai/osrs_flipper_ai/data/features")
     OUT_DIR.mkdir(parents=True, exist_ok=True)
 
     if args.input:
