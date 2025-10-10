@@ -39,19 +39,24 @@ def train_model(df: pd.DataFrame):
 
     # Feature columns used for model input
     feature_cols = [
-        "spread_ratio",
-        "volatility_1h",
-        "rsi_norm",
-        "roc_norm",
-        "macd_norm",
-        "technical_score",
-    ]
-    available = [c for c in feature_cols if c in df.columns]
+    "spread_ratio",
+    "volatility_1h",
+    "rsi_norm",
+    "roc_norm",
+    "macd_norm",
+    "technical_score",
+]
 
-    if not available:
-        raise ValueError("❌ No required feature columns found in dataset.")
+    # keep only columns that exist and have >0 non-null values
+    available = [c for c in feature_cols if c in df.columns and df[c].notna().sum() > 0]
+    if len(available) < 2:
+        raise ValueError(
+            f"❌ Not enough valid feature columns for training. "
+            f"Found: {available}, Expected: {feature_cols}"
+        )
 
     df = df.dropna(subset=available)
+    print(f"✅ Using {len(df):,} rows with features: {available}")
 
     X = df[available]
     y = df["spread_ratio"]
