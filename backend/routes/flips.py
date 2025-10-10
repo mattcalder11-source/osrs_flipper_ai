@@ -157,3 +157,73 @@ def get_sell_recommendations():
 
     data = df_to_safe_json(df)
     return JSONResponse({"count": len(data), "data": data})
+
+# ---------------------------------------------------------------------
+# ACTIVE FLIPS MANAGEMENT
+# ---------------------------------------------------------------------
+
+ACTIVE_FLIPS_PATH = DATA_DIR / "active_flips.csv"
+
+
+def load_active_flips() -> pd.DataFrame:
+    if not ACTIVE_FLIPS_PATH.exists() or ACTIVE_FLIPS_PATH.stat().st_size == 0:
+        return pd.DataFrame(
+            columns=[
+                "item_id", "name", "icon_url", "entry_price",
+                "entry_time", "current_price", "profit_pct", "profit_gp",
+                "hold_hours"
+            ]
+        )
+    return pd.read_csv(ACTIVE_FLIPS_PATH)
+
+
+def save_active_flips(df: pd.DataFrame):
+    df.to_csv(ACTIVE_FLIPS_PATH, index=False)
+    print(f"💾 Saved {len(df)} active flips → {ACTIVE_FLIPS_PATH}")
+
+
+@router.get("/flips/active")
+def get_active_flips():
+    df = load_active_flips()
+    df = enrich_with_metadata(df)
+    data = df_to_safe_json(df)
+    return JSONResponse({"count": len(data), "data": data})
+
+
+@router.post("/flips/add/{item_id}")
+def add_active_flip(item_id: int):
+    """Called when 'Implement' is clicked in the dashboard."""
+    buys = load_latest_predictions()
+    match = buys.loc[buys["item_id"] == item_id]
+    if match.empty:
+        return JSONResponse({"error": f"Item {item_id} not found in latest recommendations"}, status_code=404)
+
+    entry = match.iloc[0].to_dict()
+    entry["entry_price"] = float(entry.get("buy_price", 0))
+    entry["entry_time"] = datetime.utcnow().isoformat()
+    entry["current_price"] = entry.get("entry_price", 0)
+    entry["profit_pct"] = 0.0
+    entry["profit_gp"] = 0.0
+    entry["hold_hours"] = 0.0
+
+    df = load_active_flips()
+
+    # Prevent duplicates
+    if not df[df["item_id"] == item_id].empty:
+        return JSONResponse({"status": "exists", "item_id": item_id})
+
+    df = pd.concat([df, pd.DataFrame([entry])], ignore_index=True)
+    save_active_flips(df)
+    return JSONResponse({"status": "added", "item_id": item_id})
+
+
+@router.post("/flips/close/{item_id}")
+def close_flip(item_id: int):
+    """Called when 'Sell' is clicked in the dashboard."""
+    df = load_active_flips()
+    if df.empty or item_id not in df["item_id"].values:
+        return JSONResponse({"status": "not_found", "item_id": item_id})
+
+    df = df[df["item_id"] != item_id]
+    save_active_flips(df)
+    return JSONResponse({"status": "closed", "item_id": item_id})
