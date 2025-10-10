@@ -35,7 +35,7 @@ START_TIME=$(date +%s)
 #---------------------------------------------
 
 log "💾 [0/5] Fetching latest prices..."
-if python -m osrs_flipper_ai.data_ingest.fetch_latest_prices >> "$LOG_DIR/fetch.log" 2>&1; then
+if python -m osrs_flipper_ai.src.fetch_latest_prices >> "$LOG_DIR/fetch.log" 2>&1; then
   log "✅ Latest prices fetched."
 else
   log "${RED}❌ Fetch latest prices failed! Check $LOG_DIR/fetch.log${RESET}"
