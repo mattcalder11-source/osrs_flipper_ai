@@ -1,65 +1,59 @@
 #!/usr/bin/env python3
 """
-fetch_ge_limits.py — robust OSRS GE buy-limit fetcher (filters untradeables)
+fetch_ge_limits.py — Download and cache OSRS GE buy limits
+(fully based on /mapping endpoint, filters untradeable/unavailable items)
 """
 
 import requests, json
 from pathlib import Path
 
 OUT_PATH = Path("/root/osrs_flipper_ai/osrs_flipper_ai/data/ge_limits.json")
+URL_MAPPING = "https://prices.runescape.wiki/api/v1/osrs/mapping"
 
 def fetch_ge_limits():
-    headers = {"User-Agent": "osrs-flipper-ai (contact: matt.calder11@gmail.com)"}
-    url_mapping = "https://prices.runescape.wiki/api/v1/osrs/mapping"
+    headers = {"User-Agent": "osrs-flipper-ai (contact: matthew@example.com)"}
 
-    print("📦 Fetching OSRS GE buy limits...")
+    print("📦 Fetching item mapping (buy limits + tradeable flags)...")
     try:
-        limits_resp = requests.get(url_mapping, headers=headers, timeout=30)
-        limits_resp.raise_for_status()
-        limits_data = limits_resp.json().get("data", {})
-        print(f"✅ Retrieved {len(limits_data):,} raw limit entries from /limits.")
+        resp = requests.get(URL_MAPPING, headers=headers, timeout=45)
+        resp.raise_for_status()
+        mapping = resp.json()
+        print(f"✅ Retrieved {len(mapping):,} total mapping entries.")
     except Exception as e:
-        print(f"❌ Failed to fetch /limits: {e}")
-        limits_data = {}
+        print(f"❌ Failed to fetch mapping: {e}")
+        mapping = []
 
-    print("🗺️  Fetching item mapping (tradeable flags)...")
-    try:
-        mapping_resp = requests.get(url_mapping, headers=headers, timeout=30)
-        mapping_resp.raise_for_status()
-        mapping_data = mapping_resp.json()
-        print(f"✅ Retrieved {len(mapping_data):,} items from /mapping.")
-    except Exception as e:
-        print(f"❌ Failed to fetch /mapping: {e}")
-        mapping_data = []
-
-    # Determine which items are tradeable
-    tradeable_ids = {
-        int(item["id"])
-        for item in mapping_data
-        if item.get("tradeable", False) or item.get("tradeable_on_ge", False)
-    }
-
-    # Build dictionary of item_id → limit
+    # Build dictionary: item_id → buy_limit (for tradeable items only)
     limits = {}
-    missing = 0
-    for item_id_str, info in limits_data.items():
-        item_id = int(item_id_str)
-        if item_id not in tradeable_ids:
-            continue  # skip untradeables / unavailable items
-        limit = info.get("limit")
-        if limit is None:
-            missing += 1
-            limit = 100  # fallback default
-        limits[item_id] = limit
+    missing_limit = 0
+    skipped_untradeable = 0
 
-    # Save results
+    for item in mapping:
+        try:
+            item_id = int(item["id"])
+            # Skip untradeable or unavailable items
+            if not (item.get("tradeable") or item.get("tradeable_on_ge")):
+                skipped_untradeable += 1
+                continue
+
+            limit = item.get("buy_limit")
+            # Skip invalid limits (null, 0, etc.)
+            if limit is None or limit == 0:
+                missing_limit += 1
+                limit = 100  # default fallback to avoid NaNs
+
+            limits[item_id] = limit
+        except Exception:
+            continue
+
+    # Write file
     OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     with open(OUT_PATH, "w") as f:
         json.dump(limits, f, indent=2)
 
     print(f"✅ Wrote {len(limits):,} tradeable item limits → {OUT_PATH}")
-    print(f"🧹 Filtered out {len(limits_data) - len(limits):,} untradeable items.")
-    print(f"⚠️ {missing:,} items missing explicit limits (defaulted to 100).")
+    print(f"🧹 Skipped {skipped_untradeable:,} untradeable/unavailable items.")
+    print(f"⚠️ {missing_limit:,} items had no explicit limit (defaulted to 100).")
 
 if __name__ == "__main__":
     fetch_ge_limits()
