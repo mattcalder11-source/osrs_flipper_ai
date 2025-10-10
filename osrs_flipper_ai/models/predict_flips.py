@@ -75,7 +75,7 @@ def predict_flips(model_dict, df, top_n=100):
     df["predicted_profit_gp"] = df["predicted_margin"] * df.get("mid_price", 0)
 
     # ✅ Filter by minimum 24-hour trade volume
-    MIN_DAILY_VOLUME = 60
+    MIN_DAILY_VOLUME = 150
     if "daily_volume" in df.columns:
         before = len(df)
         nonzero = (df["daily_volume"] > 0).sum()
