@@ -212,20 +212,29 @@ def load_recent_features(folder: str = "data/features", days_back: int = 30, max
 # MAIN EXECUTION
 # ----------------------------
 if __name__ == "__main__":
-    import time
+    import argparse, time
+
+    parser = argparse.ArgumentParser(description="Compute OSRS item features from raw snapshot(s)")
+    parser.add_argument("--input", type=str, default=None, help="Input .parquet path (or folder)")
+    parser.add_argument("--output", type=str, default=None, help="Output .parquet path")
+    args = parser.parse_args()
 
     RAW_DIR = Path("/root/osrs_flipper_ai/osrs_flipper_ai/data/raw")
     OUT_DIR = Path("/root/osrs_flipper_ai/data/features")
     OUT_DIR.mkdir(parents=True, exist_ok=True)
 
-    # Find latest snapshot
-    snapshots = sorted(RAW_DIR.glob("snapshot_*.parquet"), key=lambda p: p.stat().st_mtime, reverse=True)
-    if not snapshots:
-        raise FileNotFoundError(f"No snapshot parquet files found in {RAW_DIR}")
-    latest_snapshot = snapshots[0]
+    if args.input:
+        input_path = Path(args.input)
+    else:
+        # Default: use latest snapshot
+        snapshots = sorted(RAW_DIR.glob("snapshot_*.parquet"), key=lambda p: p.stat().st_mtime, reverse=True)
+        if not snapshots:
+            raise FileNotFoundError(f"No snapshot parquet files found in {RAW_DIR}")
+        input_path = snapshots[0]
 
-    print(f"🚀 Loading latest snapshot: {latest_snapshot}")
-    df_raw = pd.read_parquet(latest_snapshot)
+    print(f"🚀 Loading snapshot: {input_path}")
+    df_raw = pd.read_parquet(input_path)
+    df_raw = normalize_schema(df_raw)
 
     print(f"🧠 Computing features for {len(df_raw):,} rows...")
     df_features = compute_features(df_raw)
@@ -234,7 +243,7 @@ if __name__ == "__main__":
         print("⚠️ No features generated — nothing to save.")
     else:
         ts = int(time.time())
-        out_path = OUT_DIR / f"features_{ts}.parquet"
+        out_path = Path(args.output) if args.output else OUT_DIR / f"features_{ts}.parquet"
         latest_path = OUT_DIR / "features_latest.parquet"
 
         df_features.to_parquet(out_path, index=False)
