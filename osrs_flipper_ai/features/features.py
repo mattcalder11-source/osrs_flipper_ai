@@ -260,7 +260,7 @@ if __name__ == "__main__":
 
     print(f"🧠 Computing features for {len(df_raw):,} rows...")
     out_path = Path(args.output) if args.output else Path("/root/osrs_flipper_ai/data/features/features_historical.parquet")
-    df_features = compute_features_in_chunks(df_raw, batch_size=500, out_path=out_path)
+    df_features = compute_features_in_chunks(df_raw, batch_size=500)
 
     if df_features.empty:
         print("⚠️ No features generated — nothing to save.")
