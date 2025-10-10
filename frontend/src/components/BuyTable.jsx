@@ -4,10 +4,12 @@ import React from "react";
 export default function BuyTable({ buys, onRefresh }) {
   if (!buys?.length) return <p className="text-gray-400">No buy recommendations yet.</p>;
 
-  async function handleBuy(item_id) {
-    await addActive(item_id);
-    onRefresh();
-  }
+  async function handleImplement(itemId) {
+    setImplementing(true);
+    await addActive(itemId);
+    await refreshActive(); // 🔁 trigger refresh on Active Flips table
+    setImplementing(false);
+}
 
   return (
     <div className="overflow-x-auto bg-gray-900 rounded-2xl shadow p-4 mt-4">

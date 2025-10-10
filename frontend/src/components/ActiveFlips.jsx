@@ -1,71 +1,85 @@
-import React from "react";
-import { closeFlip } from "../api";
+// src/components/ActiveFlips.jsx
+import React, { useEffect, useState } from "react";
+import { getActive, closeFlip } from "../api";
+import Loading from "./Loading";
 
-export default function ActiveFlips({ flips, onRefresh }) {
-  if (!flips?.length) return <p className="text-gray-400">No active flips.</p>;
+export default function ActiveFlips() {
+  const [flips, setFlips] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
-  async function handleSell(item_id) {
-    await closeFlip(item_id);
-    onRefresh();
+  // Fetch on mount
+  useEffect(() => {
+    loadFlips();
+    const interval = setInterval(loadFlips, 60000); // refresh every 60s
+    return () => clearInterval(interval);
+  }, []);
+
+  async function loadFlips() {
+    setLoading(true);
+    const data = await getActive();
+    setFlips(data);
+    setLoading(false);
   }
 
+  async function handleSell(itemId) {
+    setRefreshing(true);
+    await closeFlip(itemId);
+    await loadFlips(); // 🔁 auto-refresh after selling
+    setRefreshing(false);
+  }
+
+  if (loading) return <Loading text="Loading active flips..." />;
+
+  if (!flips.length)
+    return (
+      <div className="text-center text-gray-400 mt-8">
+        No active flips currently being tracked.
+      </div>
+    );
+
   return (
-    <div className="overflow-x-auto bg-gray-900 rounded-2xl shadow p-4 mt-4">
-      <h2 className="text-xl font-semibold mb-2 text-blue-400">Active Flips</h2>
-      <table className="min-w-full text-sm text-center">
-        <thead>
-          <tr className="border-b border-gray-700 text-gray-300">
-            <th className="py-2 px-2 text-left">Item</th>
-            <th>Buy Price</th>
-            <th>Current Price</th>
-            <th>Profit %</th>
-            <th>Profit (GP)</th>
-            <th>Hold (hrs)</th>
-            <th></th>
+    <div className="p-4">
+      <h2 className="text-lg font-bold mb-3 flex justify-between items-center">
+        Active Flips
+        {refreshing && (
+          <span className="text-sm text-blue-400 animate-pulse">Refreshing…</span>
+        )}
+      </h2>
+      <table className="min-w-full border border-gray-700 rounded-md text-sm">
+        <thead className="bg-gray-800 text-gray-300">
+          <tr>
+            <th className="px-3 py-2 text-left">Item</th>
+            <th className="px-3 py-2">Buy Price</th>
+            <th className="px-3 py-2">Current</th>
+            <th className="px-3 py-2">Profit (GP)</th>
+            <th className="px-3 py-2">%</th>
+            <th className="px-3 py-2"></th>
           </tr>
         </thead>
-        <tbody>
-          {flips.map((f) => (
-            <tr key={f.item_id} className="border-b border-gray-800 hover:bg-gray-800/50">
-              <td className="py-2 px-2 flex items-center gap-2 text-left">
-                {f.icon_url && (
-                  <img
-                    src={f.icon_url}
-                    alt={f.name}
-                    className="w-5 h-5 inline-block rounded"
-                  />
-                )}
-                {f.name || f.item_id}
+        <tbody className="divide-y divide-gray-700">
+          {flips.map((flip) => (
+            <tr key={flip.item_id} className="hover:bg-gray-800">
+              <td className="px-3 py-2 flex items-center space-x-2">
+                <img
+                  src={flip.icon_url}
+                  alt={flip.name}
+                  className="w-6 h-6 rounded"
+                />
+                <span>{flip.name}</span>
               </td>
-              <td>{f.entry_price?.toLocaleString("en-US") ?? "—"} gp</td>
-              <td>{f.current_price?.toLocaleString("en-US") ?? "—"} gp</td>
-              <td
-                className={
-                  f.profit_pct > 0
-                    ? "text-green-400"
-                    : f.profit_pct < 0
-                    ? "text-red-400"
-                    : "text-gray-400"
-                }
-              >
-                {f.profit_pct ? f.profit_pct.toFixed(2) + "%" : "—"}
+              <td className="px-3 py-2 text-right">{flip.entry_price?.toLocaleString()}</td>
+              <td className="px-3 py-2 text-right">{flip.current_price?.toLocaleString()}</td>
+              <td className="px-3 py-2 text-right">
+                {flip.profit_gp?.toLocaleString() ?? "-"}
               </td>
-              <td
-                className={
-                  f.profit_gp > 0
-                    ? "text-green-400"
-                    : f.profit_gp < 0
-                    ? "text-red-400"
-                    : "text-gray-400"
-                }
-              >
-                {f.profit_gp?.toLocaleString("en-US") ?? "—"}
+              <td className="px-3 py-2 text-right">
+                {flip.profit_pct ? flip.profit_pct.toFixed(1) + "%" : "-"}
               </td>
-              <td>{f.hold_hours?.toFixed(1) ?? "—"}</td>
-              <td>
+              <td className="px-3 py-2 text-right">
                 <button
-                  onClick={() => handleSell(f.item_id)}
-                  className="text-red-400 hover:text-red-200"
+                  onClick={() => handleSell(flip.item_id)}
+                  className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-white text-xs"
                 >
                   Sell
                 </button>
