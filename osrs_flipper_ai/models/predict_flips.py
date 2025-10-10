@@ -1,14 +1,19 @@
+#!/usr/bin/env python3
 """
 predict_flips.py
 Predict profitable OSRS flips using a trained ML model and precomputed features.
+
+Saves:
+ - data/predictions/latest_top_flips.csv  -> BUY recommendations (raw predictions)
+ - data/predictions/sell_signals.csv      -> SELL recommendations (evaluation)
 """
 
 import os
-import sys
 import json
 import joblib
 import numpy as np
 import pandas as pd
+from pathlib import Path
 from datetime import datetime
 from osrs_flipper_ai.models.recommend_sell import batch_recommend_sell
 from osrs_flipper_ai.src.fetch_latest_prices import save_latest_prices
@@ -19,19 +24,18 @@ from osrs_flipper_ai.src.fetch_latest_prices import save_latest_prices
 BASE_DIR = "/root/osrs_flipper_ai/osrs_flipper_ai"
 FEATURES_DIR = "/root/osrs_flipper_ai/data/features"
 MODEL_DIR = f"{BASE_DIR}/models/trained_models"
-PREDICTIONS_DIR = f"{BASE_DIR}/data/predictions"
+PREDICTIONS_DIR = Path(f"{BASE_DIR}/data/predictions")
 LIMITS_FILE = f"{BASE_DIR}/data/ge_limits.json"
 ITEM_BLACKLIST_FILE = f"{BASE_DIR}/data/blacklist.txt"
-MIN_VOLUME_RATIO = 2 #dily_volume-to-buy_limit ratio threshold
+MIN_VOLUME_RATIO = 2  # daily_volume-to-buy_limit ratio threshold
 
-os.makedirs(PREDICTIONS_DIR, exist_ok=True)
+PREDICTIONS_DIR.mkdir(parents=True, exist_ok=True)
 
 
 # ---------------------------------------------------------------------
 # LOAD MODEL & FEATURES
 # ---------------------------------------------------------------------
 def load_latest_model():
-    """Load the most recent trained model from MODEL_DIR."""
     if not os.path.exists(MODEL_DIR):
         raise FileNotFoundError(f"❌ Model directory not found: {MODEL_DIR}")
 
@@ -57,7 +61,6 @@ def load_latest_model():
 
 
 def load_latest_features():
-    """Load the most recent features parquet file from FEATURES_DIR."""
     if not os.path.exists(FEATURES_DIR):
         raise FileNotFoundError(f"❌ Feature directory not found: {FEATURES_DIR}")
 
@@ -92,12 +95,10 @@ print(f"🧱 Loaded blacklist ({len(ITEM_BLACKLIST)} items): {sorted(list(ITEM_B
 # ADAPTIVE PRICE INTERPRETATION
 # ---------------------------------------------------------------------
 def _compute_sane_prices(preds: np.ndarray, mid: np.ndarray):
-    """Interpret model predictions robustly, converting to realistic sell prices."""
     preds = np.nan_to_num(np.array(preds, dtype=float))
     mid = np.nan_to_num(np.array(mid, dtype=float))
     mid[mid <= 0] = np.nan  # avoid divide by zero
 
-    # Detect type of model output
     if np.nanmax(np.abs(preds)) > 10:
         interpretation = "percent"
         profit_pct = preds
@@ -125,8 +126,11 @@ def _compute_sane_prices(preds: np.ndarray, mid: np.ndarray):
 # MAIN FLIP PREDICTION FUNCTION
 # ---------------------------------------------------------------------
 def predict_flips(model_dict, df, top_n=100):
-    """Generate flip predictions and filter by blacklist and liquidity."""
-
+    """
+    Generate flip predictions and filter by blacklist and liquidity.
+    This function returns the BUY recommendations dataframe (raw predictions).
+    It also computes and writes sell_signals.csv separately for evaluations.
+    """
     model = model_dict["model"]
     features = model_dict["features"]
 
@@ -139,9 +143,10 @@ def predict_flips(model_dict, df, top_n=100):
     df["predicted_profit_gp"] = profit_gp
     df["profit_pct"] = profit_pct
 
-    # Apply blacklist
+    # Apply blacklist (note: expects a 'name' column in features; if absent, skip)
     before = len(df)
-    df = df[~df["name"].isin(ITEM_BLACKLIST)]
+    if "name" in df.columns:
+        df = df[~df["name"].isin(ITEM_BLACKLIST)]
     print(f"🚫 Blacklist filter: {before} → {len(df)} rows")
 
     # Load buy limits
@@ -155,11 +160,17 @@ def predict_flips(model_dict, df, top_n=100):
         df["buy_limit"] = np.nan
         print("⚠️ No GE limit file found!")
 
-    # Volume-to-limit ratio filter
+    # Volume-to-limit ratio filter (defensive)
     if "daily_volume" in df.columns:
         before = len(df)
-        df["vol_to_limit_ratio"] = df["daily_volume"] / df["buy_limit"].replace(0, np.nan)
-        df = df[df["vol_to_limit_ratio"] >= MIN_VOLUME_RATIO]
+        # Avoid division by zero / NaN by filling buy_limit with large default where missing
+        df["buy_limit"] = df["buy_limit"].replace(0, np.nan).fillna(1000)
+        df["vol_to_limit_ratio"] = df["daily_volume"] / df["buy_limit"]
+        df["vol_to_limit_ratio"] = df["vol_to_limit_ratio"].replace([np.inf, -np.inf], np.nan)
+        if df["vol_to_limit_ratio"].notna().sum() > 0:
+            df = df[df["vol_to_limit_ratio"] >= MIN_VOLUME_RATIO]
+        else:
+            print("⚠️ Skipping volume_limit_ratio filter — invalid data.")
         print(f"💧 Volume-to-limit ratio ≥ {MIN_VOLUME_RATIO}: {before} → {len(df)} rows")
     else:
         print("⚠️ No daily_volume column found — skipping liquidity filter.")
@@ -167,26 +178,38 @@ def predict_flips(model_dict, df, top_n=100):
     # Drop unrealistic predictions
     df = df[df["profit_pct"].between(-50, 1000)]
 
-    # Rank and select top flips
+    # Rank and select top flips (BUY recommendations)
     df = df.sort_values("predicted_profit_gp", ascending=False)
-    top_flips = df.head(top_n).copy()
+    raw_top_flips = df.head(top_n).copy()
 
-        # Apply sell recommendation logic
-    latest_prices_dict = save_latest_prices()  # fetch + persist
+    # --- Save BUY recommendations (raw predictions) ---
+    buy_path = PREDICTIONS_DIR / "latest_top_flips.csv"
+    raw_top_flips.to_csv(buy_path, index=False)
+    print(f"💾 Saved BUY recommendations → {buy_path} ({len(raw_top_flips)} rows)")
+
+    # Fetch latest prices for sell evaluation and persist
+    latest_prices_dict = save_latest_prices()  # this should save latest_prices.json and return dict
+
+    # Prepare a copy to evaluate sell signals (if you want to treat buys as open positions)
+    eval_df = raw_top_flips.copy()
 
     # Ensure compatibility with recommend_sell.py
-    if "entry_price" not in top_flips.columns:
-        top_flips["entry_price"] = top_flips["buy_price"]
-    if "entry_time" not in top_flips.columns:
-        top_flips["entry_time"] = pd.Timestamp.now(tz="UTC")
+    if "entry_price" not in eval_df.columns:
+        eval_df["entry_price"] = eval_df["buy_price"]
+    if "entry_time" not in eval_df.columns:
+        # timezone-aware UTC timestamp
+        eval_df["entry_time"] = pd.Timestamp.now(tz="UTC")
 
+    # Run sell recommendation logic on eval_df
+    sell_recs = batch_recommend_sell(eval_df, latest_prices_dict)
 
+    # Save SELL evaluations (these are evaluations of the buy candidates)
+    sell_path = PREDICTIONS_DIR / "sell_signals.csv"
+    sell_recs.to_csv(sell_path, index=False)
+    print(f"💾 Saved SELL evaluations → {sell_path} ({len(sell_recs)} rows)")
 
-    # Run sell recommendation (once is sufficient)
-    top_flips = batch_recommend_sell(top_flips, latest_prices_dict)
-
-
-    return top_flips
+    # Return raw buy recommendations for further use
+    return raw_top_flips
 
 
 # ---------------------------------------------------------------------
@@ -200,7 +223,8 @@ if __name__ == "__main__":
 
     top_flips = predict_flips(model_dict, df, top_n=100)
 
-    latest_csv = os.path.join(PREDICTIONS_DIR, "latest_top_flips.csv")
+    # For backward compatibility the script still writes latest_top_flips.csv
+    latest_csv = PREDICTIONS_DIR / "latest_top_flips.csv"
     top_flips.to_csv(latest_csv, index=False)
-    print(f"💾 Saved predictions → {latest_csv}")
-    print(f"✅ {len(top_flips)} flips ready for dashboard.")
+    print(f"💾 Saved final BUY predictions → {latest_csv}")
+    print(f"✅ {len(top_flips)} buy flips ready for dashboard.")
