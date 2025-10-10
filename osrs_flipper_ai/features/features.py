@@ -196,7 +196,7 @@ def compute_features_in_chunks(df, batch_size=1000, out_path=None):
 # ----------------------------
 # FEATURE LOADING
 # ----------------------------
-def load_recent_features(folder: str = "data/features", days_back: int = 30, max_files: int = 100) -> pd.DataFrame:
+def load_recent_features(folder: str = "osrs_flipper_ai/data/features", days_back: int = 30, max_files: int = 100) -> pd.DataFrame:
     folder = Path(folder)
     if not folder.exists():
         raise FileNotFoundError(f"No such folder: {folder}")
@@ -243,7 +243,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     RAW_DIR = Path("/root/osrs_flipper_ai/osrs_flipper_ai/data/raw")
-    OUT_DIR = Path("/root/osrs_flipper_ai/osrs_flipper_ai/data/features")
+    OUT_DIR = Path("/root/osrs_flipper_ai/osrs_flipper_ai/osrs_flipper_ai/data/features")
     OUT_DIR.mkdir(parents=True, exist_ok=True)
 
     if args.input:
@@ -260,7 +260,7 @@ if __name__ == "__main__":
     df_raw = normalize_schema(df_raw)
 
     print(f"🧠 Computing features for {len(df_raw):,} rows...")
-    out_path = Path(args.output) if args.output else Path("/root/osrs_flipper_ai/data/features/features_historical.parquet")
+    out_path = Path(args.output) if args.output else Path("/root/osrs_flipper_ai/osrs_flipper_ai/data/features/features_historical.parquet")
     df_features = compute_features_in_chunks(df_raw, batch_size=500)
 
     if df_features.empty:
