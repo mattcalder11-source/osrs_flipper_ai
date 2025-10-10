@@ -1,6 +1,5 @@
 """
-backfill_all.py - Fetches /timeseries data for *all* tradeable items from the OSRS Wiki API.
-Stable version: retry logic, backoff, random jitter, and polite cooldowns.
+backfill.py - Fetches full historical OSRS GE data + daily volumes, matching ingest.py structure.
 """
 
 import os
@@ -11,57 +10,64 @@ import requests
 import pandas as pd
 from pathlib import Path
 from dotenv import load_dotenv
-from osrs_flipper_ai.config import BASE_URL, USER_AGENT, DATA_DIR
+from osrs_flipper_ai.config import BASE_URL, USER_AGENT
 
 # --- Setup ---
 load_dotenv()
 HEADERS = {"User-Agent": f"{USER_AGENT}"}
 
+# Base output directories
+BASE_DIR = Path(__file__).resolve().parents[1]  # /root/osrs_flipper_ai/osrs_flipper_ai
+RAW_DIR = BASE_DIR / "data" / "raw"
+ITEM_DIR = RAW_DIR / "all_items"
+RAW_DIR.mkdir(parents=True, exist_ok=True)
+ITEM_DIR.mkdir(parents=True, exist_ok=True)
+
 
 # -----------------------------------------
-# Safe GET with retries and exponential backoff
+# Safe GET with retries
 # -----------------------------------------
-def safe_get(url, params=None, retries=1, backoff_factor=1.0, max_sleep=0.15):
+def safe_get(url, params=None, retries=3, backoff_factor=1.5, max_sleep=2.0):
     for attempt in range(1, retries + 1):
         try:
             r = requests.get(url, headers=HEADERS, params=params, timeout=60)
-
-            # Handle common error codes gracefully
             if r.status_code == 200:
                 return r
-            elif r.status_code == 400:
-                # Permanent — skip item
-                print(f"❌ 400 Bad Request for {params} — skipping.")
-                return None
             elif r.status_code in (429, 502, 503):
-                # Temporary (rate limit or timeout)
-                wait = min(backoff_factor ** attempt + random.uniform(0.1, 0.15), max_sleep)
+                wait = min(backoff_factor**attempt + random.uniform(0.2, 0.5), max_sleep)
                 print(f"⚠️ [{r.status_code}] Retry {attempt}/{retries}, sleeping {wait:.1f}s...")
                 time.sleep(wait)
-                continue
             else:
-                print(f"⚠️ Unexpected {r.status_code} from {url}: {r.text[:120]}")
+                print(f"⚠️ Unexpected {r.status_code} from {url}")
                 return None
-
         except requests.exceptions.RequestException as e:
-            wait = min(backoff_factor ** attempt + random.uniform(0.1, 0.15), max_sleep)
-            print(f"⚠️ Network error on attempt {attempt}: {e}. Retrying in {wait:.1f}s...")
+            wait = min(backoff_factor**attempt + random.uniform(0.2, 0.5), max_sleep)
+            print(f"⚠️ Network error: {e}. Retrying in {wait:.1f}s...")
             time.sleep(wait)
-
     print(f"❌ Failed after {retries} attempts: {url}")
     return None
 
 
 # -----------------------------------------
-# API Wrappers
+# API wrappers
 # -----------------------------------------
 def get_mapping():
     r = safe_get(f"{BASE_URL}/mapping")
     return r.json() if r else []
 
 
+def get_volumes():
+    """Fetch 24h trade volumes."""
+    r = safe_get(f"{BASE_URL}/volumes")
+    if not r:
+        return {}
+    try:
+        return r.json().get("data", {})
+    except Exception:
+        return {}
+
+
 def get_timeseries(item_id, timeframe="5m"):
-    """Fetch historical price data for one item (updated for new API format)."""
     url = f"{BASE_URL}/timeseries"
     params = {"id": item_id, "timestep": timeframe}
     r = safe_get(url, params=params)
@@ -69,43 +75,34 @@ def get_timeseries(item_id, timeframe="5m"):
         return []
     try:
         data = r.json().get("data", [])
-        if not isinstance(data, list):
-            print(f"⚠️ Unexpected data format for item {item_id}")
-            return []
-        return data
+        return data if isinstance(data, list) else []
     except Exception as e:
         print(f"⚠️ Failed to parse JSON for item {item_id}: {e}")
         return []
 
 
 # -----------------------------------------
-# Main backfill routine
+# Backfill all items
 # -----------------------------------------
-def backfill_all_items(timeframe="5m", out_dir="data/raw/all_items", batch_size=10):
-    Path(out_dir).mkdir(parents=True, exist_ok=True)
-
-    print("Fetching item mapping…")
+def backfill_all_items(timeframe="5m", batch_size=10):
+    print("📦 Fetching item mapping…")
     mapping = get_mapping()
     df_map = pd.DataFrame(mapping)
 
-    # Handle schema changes
-    tradable_field = None
-    for field in ["tradeable_on_ge", "tradeable"]:
-        if field in df_map.columns:
-            tradable_field = field
-            break
-
+    tradable_field = next((f for f in ["tradeable_on_ge", "tradeable"] if f in df_map.columns), None)
     if tradable_field:
         df_map = df_map[df_map[tradable_field] == True]
-    else:
-        print("⚠️ No tradability column found — proceeding with all items.")
 
-    print(f"Found {len(df_map)} items to fetch.")
+    print(f"🧩 Found {len(df_map)} tradeable items.")
+
+    print("📊 Fetching 24h volumes…")
+    volumes = get_volumes()
+    print(f"✅ Retrieved {len(volumes)} volume entries.")
 
     for i, row in enumerate(df_map.itertuples(), 1):
         item_id = row.id
         name = getattr(row, "name", f"item_{item_id}")
-        outfile = Path(out_dir) / f"{item_id}_{timeframe}.json"
+        outfile = ITEM_DIR / f"{item_id}_{timeframe}.json"
 
         if outfile.exists():
             continue
@@ -114,12 +111,17 @@ def backfill_all_items(timeframe="5m", out_dir="data/raw/all_items", batch_size=
         if not data:
             print(f"[{i}/{len(df_map)}] ⚠️ No data for {name} ({item_id})")
         else:
+            for d in data:
+                d["item_id"] = item_id
+                d["name"] = name
+                d["daily_volume"] = volumes.get(str(item_id), 0)
+
             with open(outfile, "w") as f:
                 json.dump(data, f)
+
             print(f"[{i}/{len(df_map)}] ✅ {name} ({item_id}) — {len(data)} points")
 
-        # Polite pacing
-        time.sleep(random.uniform(0.1, 0.15))
+        time.sleep(random.uniform(0.1, 0.2))
         if i % batch_size == 0:
             cooldown = random.uniform(1, 3)
             print(f"🕐 Cooling down for {cooldown:.1f}s...")
@@ -131,29 +133,40 @@ def backfill_all_items(timeframe="5m", out_dir="data/raw/all_items", batch_size=
 # -----------------------------------------
 # Merge all JSON → Parquet
 # -----------------------------------------
-def merge_to_parquet(in_dir="data/raw/all_items", timeframe="5m", out_path="data/osrs_all_timeseries_5m.parquet"):
+def merge_to_parquet(timeframe="5m"):
+    files = list(ITEM_DIR.glob(f"*_{timeframe}.json"))
     rows = []
-    for file in Path(in_dir).glob(f"*_{timeframe}.json"):
-        item_id = int(file.stem.split("_")[0])
+    for file in files:
         with open(file) as f:
-            data = json.load(f)
-        for d in data:
-            d["item_id"] = item_id
-        rows.extend(data)
+            try:
+                data = json.load(f)
+                rows.extend(data)
+            except Exception as e:
+                print(f"⚠️ Failed to read {file}: {e}")
 
     if not rows:
         print("⚠️ No data found to merge.")
         return None
 
     df = pd.DataFrame(rows)
-    df["timestamp"] = pd.to_datetime(df["timestamp"], unit="s")
+    df["timestamp"] = pd.to_datetime(df["timestamp"], unit="s", errors="coerce")
+    df = df.dropna(subset=["timestamp"])
     df.sort_values(["item_id", "timestamp"], inplace=True)
-    Path(out_path).parent.mkdir(parents=True, exist_ok=True)
+
+    ts = int(time.time())
+    out_path = RAW_DIR / f"snapshot_{ts}.parquet"
+    latest_path = RAW_DIR / "snapshot_latest.parquet"
+
     df.to_parquet(out_path, compression="snappy")
+    df.to_parquet(latest_path, compression="snappy")
+
     print(f"✅ Wrote {len(df):,} rows to {out_path}")
     return df
 
 
+# -----------------------------------------
+# Entry point
+# -----------------------------------------
 if __name__ == "__main__":
     backfill_all_items(timeframe="5m")
-    merge_to_parquet(in_dir="data/raw/all_items", timeframe="5m", out_path="data/osrs_all_timeseries_5m.parquet")
+    merge_to_parquet(timeframe="5m")
