@@ -8,9 +8,15 @@ dictionary {item_id: mid_price}.
 import requests
 import pandas as pd
 import time
+import os
+import json
+
+RAW_DIR = "/root/osrs_flipper_ai/osrs_flipper_ai/data/raw"
+LATEST_PRICES_FILE = os.path.join(RAW_DIR, "latest_prices.json")
+os.makedirs(RAW_DIR, exist_ok=True)
 
 WIKI_API = "https://prices.runescape.wiki/api/v1/osrs/latest"
-USER_AGENT = "osrs-flipper-ai/1.0 (contact: youremail@example.com)"
+USER_AGENT = "osrs-flipper-ai/1.0 (contact: matt.calder11@gmail.com"
 
 
 def fetch_latest_prices_dict(retries=3, sleep_sec=1):
@@ -72,3 +78,14 @@ def fetch_latest_prices_df():
                 "mid_price": (high + low) / 2
             })
     return pd.DataFrame(records)
+
+def save_latest_prices():
+    """Fetch live prices and save to JSON for later reuse."""
+    prices = fetch_latest_prices_dict()
+    with open(LATEST_PRICES_FILE, "w") as f:
+        json.dump(prices, f)
+    print(f"💾 Saved {len(prices):,} latest prices → {LATEST_PRICES_FILE}")
+    return prices
+
+if __name__ == "__main__":
+    save_latest_prices()

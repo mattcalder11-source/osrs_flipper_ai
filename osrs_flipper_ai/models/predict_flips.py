@@ -11,6 +11,7 @@ import numpy as np
 import pandas as pd
 from datetime import datetime
 from osrs_flipper_ai.models.recommend_sell import batch_recommend_sell
+from osrs_flipper_ai.src.fetch_latest_prices import save_latest_prices
 
 # ---------------------------------------------------------------------
 # CONFIGURATION
@@ -20,7 +21,7 @@ FEATURES_DIR = "/root/osrs_flipper_ai/data/features"
 MODEL_DIR = f"{BASE_DIR}/models/trained_models"
 PREDICTIONS_DIR = f"{BASE_DIR}/data/predictions"
 LIMITS_FILE = f"{BASE_DIR}/data/ge_limits.json"
-ITEM_BLACKLIST_FILE = f"{BASE_DIR}/models/item_blacklist.txt"
+ITEM_BLACKLIST_FILE = f"{BASE_DIR}/data/blacklist.txt"
 MIN_VOLUME_RATIO = 2.5 #dily_volume-to-buy_limit ratio threshold
 
 os.makedirs(PREDICTIONS_DIR, exist_ok=True)
@@ -171,6 +172,8 @@ def predict_flips(model_dict, df, top_n=100):
     top_flips = df.head(top_n).copy()
 
     # Apply sell recommendation logic
+    latest_prices_dict = save_latest_prices()  # fetch + persist
+    top_flips = batch_recommend_sell(top_flips, latest_prices_dict)
     top_flips = batch_recommend_sell(top_flips)
 
     return top_flips

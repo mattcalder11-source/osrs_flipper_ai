@@ -8,7 +8,18 @@ so dashboards can prioritize which flips to sell first.
 import numpy as np
 import pandas as pd
 from datetime import datetime
+import json, os
 
+LATEST_PRICES_FILE = "/root/osrs_flipper_ai/osrs_flipper_ai/data/raw/latest_prices.json"
+
+def load_latest_prices():
+    if os.path.exists(LATEST_PRICES_FILE):
+        with open(LATEST_PRICES_FILE, "r") as f:
+            prices = json.load(f)
+        print(f"✅ Loaded {len(prices):,} latest prices from JSON.")
+        return {int(k): v for k, v in prices.items()}
+    print("⚠️ No latest_prices.json found — returning empty dict.")
+    return {}
 
 # ---------------------------------------------------------------------
 # CONFIGURATION
@@ -126,7 +137,9 @@ def compute_urgency_score(profit_pct, confidence, momentum, rsi, hold_hours):
 # ---------------------------------------------------------------------
 # BATCH INTERFACE
 # ---------------------------------------------------------------------
-def batch_recommend_sell(active_flips_df, latest_prices_dict):
+def batch_recommend_sell(active_flips_df, latest_prices_dict=None):
+    if latest_prices_dict is None:
+        latest_prices_dict = load_latest_prices()
     """
     Given active flips + live prices, produce SELL recommendations.
 
