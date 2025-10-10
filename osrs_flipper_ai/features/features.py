@@ -149,40 +149,48 @@ def compute_technical_indicators(df: pd.DataFrame) -> pd.DataFrame:
 # ----------------------------
 # FEATURE COMPUTATION
 # ----------------------------
-def compute_features(df: pd.DataFrame) -> pd.DataFrame:
-    df = normalize_schema(df)
-    df = df.sort_values(["item_id", "timestamp"]).reset_index(drop=True)
+def compute_features_in_chunks(df, batch_size=1000, out_path=None):
+    """
+    Compute features in small chunks to prevent OOM kills.
+    Writes incremental parquet batches if out_path is provided.
+    """
+    results = []
+    item_ids = df["item_id"].unique()
+    total = len(item_ids)
+    print(f"🧩 Processing {total:,} unique items...")
 
-    df["mid_price"] = ((df["high"] + df["low"]) / 2).astype(np.float32)
-    df["spread"] = (df["high"] - df["low"]).astype(np.float32)
-    df["spread_ratio"] = (df["spread"] / (df["mid_price"].abs() + EPS)).astype(np.float32)
+    for i, item_id in enumerate(item_ids):
+        g = df[df["item_id"] == item_id].copy()
+        if g.empty:
+            continue
 
-    df["avg_high_price"] = (
-        df.groupby("item_id")["high"].transform(lambda x: x.rolling(6, min_periods=1).mean())
-    ).astype(np.float32)
-    df["avg_low_price"] = (
-        df.groupby("item_id")["low"].transform(lambda x: x.rolling(6, min_periods=1).mean())
-    ).astype(np.float32)
+        # ---- Same feature logic ----
+        g["mid_price"] = ((g["high"] + g["low"]) / 2).astype(np.float32)
+        g["spread"] = (g["high"] - g["low"]).astype(np.float32)
+        g["spread_ratio"] = (g["spread"] / g["mid_price"]).astype(np.float32)
+        g["volatility_1h"] = (
+            g["mid_price"].pct_change().rolling(12, min_periods=1).std()
+        ).astype(np.float32)
+        g["timestamp"] = pd.to_datetime(g["timestamp"], errors="coerce")
 
-    df["volatility_1h"] = (
-        df.groupby("item_id")["mid_price"]
-        .transform(lambda x: x.pct_change().rolling(12, min_periods=3).std())
-        .fillna(0.0)
-    ).astype(np.float32)
+        results.append(g)
 
-    # ✅ Preserve real daily_volume from ingest.py if available
-    if "daily_volume" in df.columns:
-        df["daily_volume"] = pd.to_numeric(df["daily_volume"], errors="coerce").fillna(0.0).astype(np.float32)
-    else:
-        # Optional fallback if the column is missing (rare)
-        df["daily_volume"] = 0.0
+        # periodic write to disk
+        if (i + 1) % batch_size == 0:
+            batch_df = pd.concat(results, ignore_index=True)
+            if out_path:
+                mode = "a" if out_path.exists() else "w"
+                batch_df.to_parquet(out_path, index=False)
+            results = []  # clear from memory
+            print(f"✅ Processed {i+1:,}/{total:,} items...")
 
-
-
-    df = compute_technical_indicators(df)
-    gc.collect()
-    return df
-
+    # final write
+    if results and out_path:
+        batch_df = pd.concat(results, ignore_index=True)
+        batch_df.to_parquet(out_path, index=False)
+        print(f"💾 Final batch written ({len(batch_df):,} rows).")
+    elif results:
+        return pd.concat(results, ignore_index=True)
 
 # ----------------------------
 # FEATURE LOADING
@@ -218,7 +226,7 @@ def load_recent_features(folder: str = "data/features", days_back: int = 30, max
     combined = pd.concat(frames, ignore_index=True)
     combined = combined.sort_values(["item_id", "timestamp"])
     combined = combined.drop_duplicates(subset=["item_id", "timestamp"], keep="last").reset_index(drop=True)
-    combined = compute_features(combined)
+    combined = compute_features_in_chunks(combined)
     gc.collect()
     return combined
 
@@ -251,7 +259,8 @@ if __name__ == "__main__":
     df_raw = normalize_schema(df_raw)
 
     print(f"🧠 Computing features for {len(df_raw):,} rows...")
-    df_features = compute_features(df_raw)
+    out_path = Path(args.output) if args.output else Path("/root/osrs_flipper_ai/data/features/features_historical.parquet")
+    df_features = compute_features_in_chunks(df_raw, batch_size=500, out_path=out_path)
 
     if df_features.empty:
         print("⚠️ No features generated — nothing to save.")
