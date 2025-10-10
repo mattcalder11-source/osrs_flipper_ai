@@ -12,6 +12,8 @@ import json
 import pandas as pd
 from fastapi import APIRouter
 from pathlib import Path
+from fastapi.responses import JSONResponse
+import numpy as np
 
 router = APIRouter()
 DATA_DIR = Path("/root/osrs_flipper_ai/osrs_flipper_ai/data")
@@ -121,10 +123,35 @@ def load_sell_signals() -> pd.DataFrame:
 @router.get("/flips/buy-recommendations")
 def get_buy_recommendations():
     df = load_latest_predictions()
-    return {"count": len(df), "data": df.to_dict(orient="records")}
+    if df.empty:
+        return JSONResponse({"count": 0, "data": []})
+
+    # Clean types to make FastAPI JSON safe
+    df = df.replace({np.nan: None})
+    for col in df.columns:
+        df[col] = df[col].apply(
+            lambda x: float(x)
+            if isinstance(x, (np.float32, np.float64))
+            else (int(x) if isinstance(x, (np.int32, np.int64)) else x)
+        )
+
+    data = df.to_dict(orient="records")
+    return JSONResponse({"count": len(data), "data": data})
 
 
 @router.get("/flips/sell-recommendations")
 def get_sell_recommendations():
     df = load_sell_signals()
-    return {"count": len(df), "data": df.to_dict(orient="records")}
+    if df.empty:
+        return JSONResponse({"count": 0, "data": []})
+
+    df = df.replace({np.nan: None})
+    for col in df.columns:
+        df[col] = df[col].apply(
+            lambda x: float(x)
+            if isinstance(x, (np.float32, np.float64))
+            else (int(x) if isinstance(x, (np.int32, np.int64)) else x)
+        )
+
+    data = df.to_dict(orient="records")
+    return JSONResponse({"count": len(data), "data": data})
