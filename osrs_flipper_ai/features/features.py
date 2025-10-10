@@ -169,7 +169,7 @@ def compute_features_in_chunks(df, batch_size=1000, out_path=None):
         g["spread"] = (g["high"] - g["low"]).astype(np.float32)
         g["spread_ratio"] = (g["spread"] / g["mid_price"]).astype(np.float32)
         g["volatility_1h"] = (
-            g["mid_price"].pct_change().rolling(12, min_periods=1).std()
+            g["mid_price"].pct_change(fill_method=None).rolling(12, min_periods=1).std()
         ).astype(np.float32)
         g["timestamp"] = pd.to_datetime(g["timestamp"], errors="coerce")
 
