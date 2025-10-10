@@ -26,7 +26,7 @@ FEATURES_DIR = "/root/osrs_flipper_ai/data/features"
 MODEL_DIR = f"{BASE_DIR}/models/trained_models"
 PREDICTIONS_DIR = Path(f"{BASE_DIR}/data/predictions")
 LIMITS_FILE = f"{BASE_DIR}/data/ge_limits.json"
-ITEM_BLACKLIST_FILE = f"{BASE_DIR}/data/blacklist.txt"
+ITEM_BLACKLIST_FILE = f"{BASE_DIR}/data/item_blacklist.txt"
 MIN_VOLUME_RATIO = 2  # daily_volume-to-buy_limit ratio threshold
 
 PREDICTIONS_DIR.mkdir(parents=True, exist_ok=True)
