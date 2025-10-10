@@ -225,6 +225,11 @@ def predict_flips(model_dict, df, top_n=100):
     df = df.sort_values("predicted_profit_gp", ascending=False)
     raw_top_flips = df.head(top_n).copy()
 
+    print(f"📊 Pred summary:\n{df['pred'].describe()}")
+    print(f"🔁 Unique item_ids before dedup: {df['item_id'].nunique()}")
+    df = df.drop_duplicates("item_id")
+    print(f"✅ After deduplication: {df['item_id'].nunique()} unique items")
+
     # --- Save BUY recommendations (raw predictions) ---
     buy_path = PREDICTIONS_DIR / "latest_top_flips.csv"
     raw_top_flips.to_csv(buy_path, index=False)
