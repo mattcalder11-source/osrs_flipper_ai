@@ -1,160 +1,193 @@
 """
-predict_flips.py — Generate OSRS flip predictions using the latest trained model.
-Includes:
-- Item blacklist (by name or ID)
-- Daily volume / buy limit ratio filtering
-- Correct buy/sell price fields for dashboard
+predict_flips.py
+Predict profitable OSRS flips using a trained ML model and precomputed features.
 """
 
 import os
 import sys
+import json
 import joblib
-import pandas as pd
 import numpy as np
+import pandas as pd
 from datetime import datetime
-from pathlib import Path
-
-# Fix relative imports
-sys.path.append(str(Path(__file__).resolve().parents[1]))
 from osrs_flipper_ai.models.recommend_sell import batch_recommend_sell
-from osrs_flipper_ai.src.fetch_latest_prices import fetch_latest_prices_dict
 
 # ---------------------------------------------------------------------
-# CONFIG
+# CONFIGURATION
 # ---------------------------------------------------------------------
-BASE_DIR = Path(__file__).resolve().parents[2]
-MODEL_DIR = BASE_DIR / "osrs_flipper_ai" / "models" / "trained_models"
-FEATURE_DIR = BASE_DIR / "data" / "features"
-PRED_DIR = BASE_DIR / "osrs_flipper_ai" / "data" / "predictions"
-PRED_DIR.mkdir(parents=True, exist_ok=True)
+BASE_DIR = "/root/osrs_flipper_ai/osrs_flipper_ai"
+FEATURES_DIR = "/root/osrs_flipper_ai/data/features"
+MODEL_DIR = f"{BASE_DIR}/models/trained_models"
+PREDICTIONS_DIR = f"{BASE_DIR}/data/predictions"
+LIMITS_FILE = f"{BASE_DIR}/data/ge_limits.json"
+ITEM_BLACKLIST_FILE = f"{BASE_DIR}/models/item_blacklist.txt"
+MIN_VOLUME_RATIO = 2.5 #dily_volume-to-buy_limit ratio threshold
+
+os.makedirs(PREDICTIONS_DIR, exist_ok=True)
+
 
 # ---------------------------------------------------------------------
-# ITEM BLACKLIST
+# LOAD MODEL & FEATURES
 # ---------------------------------------------------------------------
-ITEM_BLACKLIST = set({  
-})
+def load_latest_model():
+    """Load the most recent trained model from MODEL_DIR."""
+    if not os.path.exists(MODEL_DIR):
+        raise FileNotFoundError(f"❌ Model directory not found: {MODEL_DIR}")
 
-BLACKLIST_FILE = BASE_DIR / "osrs_flipper_ai" / "data" / "item_blacklist.txt"
-if BLACKLIST_FILE.exists():
-    with open(BLACKLIST_FILE) as f:
-        for line in f:
-            line = line.strip()
-            if line and not line.startswith("#"):
-                ITEM_BLACKLIST.add(line)
-    print(f"🧾 Loaded {len(ITEM_BLACKLIST)} blacklisted items total.")
+    model_files = [
+        f for f in os.listdir(MODEL_DIR)
+        if f.endswith(".pkl") and "model" in f
+    ]
+    if not model_files:
+        raise FileNotFoundError("❌ No trained models found in trained_models/")
+
+    latest_model_file = max(model_files, key=lambda f: os.path.getmtime(os.path.join(MODEL_DIR, f)))
+    model_path = os.path.join(MODEL_DIR, latest_model_file)
+
+    model_dict = joblib.load(model_path)
+    timestamp = datetime.fromtimestamp(os.path.getmtime(model_path)).strftime("%Y%m%d_%H%M")
+
+    print(f"📦 Loaded model: {model_path}")
+    print(f"   Trained {timestamp} (R²={model_dict.get('r2', 0):.4f})")
+
+    model_dict["path"] = model_path
+    model_dict["timestamp"] = timestamp
+    return model_dict
+
+
+def load_latest_features():
+    """Load the most recent features parquet file from FEATURES_DIR."""
+    if not os.path.exists(FEATURES_DIR):
+        raise FileNotFoundError(f"❌ Feature directory not found: {FEATURES_DIR}")
+
+    files = [f for f in os.listdir(FEATURES_DIR) if f.endswith(".parquet")]
+    if not files:
+        raise FileNotFoundError("❌ No feature snapshots found in data/features/")
+
+    latest_file = max(files, key=lambda f: os.path.getmtime(os.path.join(FEATURES_DIR, f)))
+    feature_path = os.path.join(FEATURES_DIR, latest_file)
+
+    print(f"📊 Loaded features: {feature_path}")
+    df = pd.read_parquet(feature_path)
+    return df
+
 
 # ---------------------------------------------------------------------
-# HELPERS
+# LOAD ITEM BLACKLIST
+# ---------------------------------------------------------------------
+def load_blacklist():
+    if not os.path.exists(ITEM_BLACKLIST_FILE):
+        return set()
+    with open(ITEM_BLACKLIST_FILE, "r") as f:
+        lines = [x.strip() for x in f.readlines() if x.strip()]
+    return set(lines)
+
+
+ITEM_BLACKLIST = load_blacklist()
+print(f"🧱 Loaded blacklist ({len(ITEM_BLACKLIST)} items): {sorted(list(ITEM_BLACKLIST))[:5]}...")
+
+
+# ---------------------------------------------------------------------
+# ADAPTIVE PRICE INTERPRETATION
 # ---------------------------------------------------------------------
 def _compute_sane_prices(preds: np.ndarray, mid: np.ndarray):
-    """Interpret model output into safe predicted sell prices."""
-    mid = np.array(mid, dtype=float)
-    preds = np.array(preds, dtype=float)
+    """Interpret model predictions robustly, converting to realistic sell prices."""
+    preds = np.nan_to_num(np.array(preds, dtype=float))
+    mid = np.nan_to_num(np.array(mid, dtype=float))
+    mid[mid <= 0] = np.nan  # avoid divide by zero
 
-    # Detect type of output (ratio vs percentage)
+    # Detect type of model output
     if np.nanmax(np.abs(preds)) > 10:
-        profit_pct = preds  # already %
-        profit_gp = (preds / 100.0) * mid
+        interpretation = "percent"
+        profit_pct = preds
+        profit_gp = (profit_pct / 100.0) * mid
+    elif np.nanmax(np.abs(preds)) < 5:
+        interpretation = "ratio"
+        profit_pct = 100.0 * (preds - 1)
+        profit_gp = (preds - 1) * mid
     else:
-        profit_pct = 100 * preds
-        profit_gp = preds * mid
+        interpretation = "absolute"
+        profit_gp = preds
+        profit_pct = 100.0 * (profit_gp / mid)
 
-    # Clamp extreme predictions
     profit_pct = np.clip(np.nan_to_num(profit_pct), -99, 2000)
     profit_gp = np.nan_to_num((profit_pct / 100.0) * mid)
-    sell_price = np.maximum(mid + profit_gp, 0)
+    sell_price = np.maximum(mid + profit_gp, 1.0)
+
+    diagnostics = f"{interpretation} mode (max pred={np.nanmax(preds):.2f})"
+    print(f"⚙️ Interpreting model output as {diagnostics}")
 
     return sell_price, profit_gp, profit_pct
 
-def load_latest_model():
-    model_path = MODEL_DIR / "latest_model.pkl"
-    if not model_path.exists():
-        raise FileNotFoundError(f"❌ No trained model found at {model_path}")
-    model_dict = joblib.load(model_path)
-    print(f"📦 Loaded model: {model_path}")
-    print(f"   Trained {model_dict.get('timestamp', 'unknown')} (R²={model_dict.get('r2', 0.0):.4f})")
-    return model_dict
-
-def load_latest_features():
-    files = sorted(FEATURE_DIR.glob("features_*.parquet"), key=os.path.getmtime, reverse=True)
-    if not files:
-        raise FileNotFoundError("❌ No feature snapshots found in data/features/")
-    path = files[0]
-    print(f"📊 Using snapshot: {path}")
-    return pd.read_parquet(path)
 
 # ---------------------------------------------------------------------
-# PREDICT FLIPS
+# MAIN FLIP PREDICTION FUNCTION
 # ---------------------------------------------------------------------
-def predict_flips(model_dict, df, top_n=100, min_volume_ratio=2.0):
-    """Apply model and return flip predictions for top items."""
-    before = len(df)
-    df = df[~df["name"].isin(ITEM_BLACKLIST) & ~df["item_id"].isin(ITEM_BLACKLIST)]
-    if len(df) != before:
-        print(f"🧹 Filtered {before - len(df)} blacklisted items.")
+def predict_flips(model_dict, df, top_n=100):
+    """Generate flip predictions and filter by blacklist and liquidity."""
 
     model = model_dict["model"]
-    features = model_dict.get("features", [])
-    for col in features:
-        if col not in df.columns:
-            df[col] = 0.0
+    features = model_dict["features"]
 
-    X = df[features].replace([np.inf, -np.inf], np.nan).fillna(0.0)
-    preds = model.predict(X)
-    df["predicted_margin"] = preds
+    df = df.dropna(subset=features)
+    preds = model.predict(df[features])
 
-    # Compute safe prices
     sell_price, profit_gp, profit_pct = _compute_sane_prices(preds, df["mid_price"])
-    df["buy_price"] = df["mid_price"]
+    df["buy_price"] = df["mid_price"].clip(lower=1)
     df["sell_price"] = sell_price
     df["predicted_profit_gp"] = profit_gp
     df["profit_pct"] = profit_pct
 
-    # Load GE limits and compute volume ratio
-    if "daily_volume" in df.columns:
-        try:
-            limits = pd.read_html("https://oldschool.runescape.wiki/w/Grand_Exchange/Buying_limits")[0]
-            limits.columns = limits.columns.str.lower().str.strip()
-            limit_map = dict(zip(limits["item"], limits["limit"]))
-            df["limit"] = df["name"].map(limit_map).fillna(100)
-            df["volume_ratio"] = df["daily_volume"].astype(float) / df["limit"].replace(0, np.nan)
-            df = df[df["volume_ratio"] >= float(min_volume_ratio)]
-            print(f"💧 Filtered by volume_ratio ≥ {min_volume_ratio}: {before} → {len(df)}")
-        except Exception as e:
-            print(f"⚠️ Could not load GE limits: {e}")
-            df["limit"], df["volume_ratio"] = 100, 0
+    # Apply blacklist
+    before = len(df)
+    df = df[~df["name"].isin(ITEM_BLACKLIST)]
+    print(f"🚫 Blacklist filter: {before} → {len(df)} rows")
+
+    # Load buy limits
+    if os.path.exists(LIMITS_FILE):
+        with open(LIMITS_FILE, "r") as f:
+            limits = json.load(f)
+        limits_df = pd.DataFrame(list(limits.items()), columns=["item_id", "buy_limit"])
+        limits_df["item_id"] = limits_df["item_id"].astype(int)
+        df = df.merge(limits_df, on="item_id", how="left")
     else:
-        df["limit"], df["volume_ratio"] = 100, 0
+        df["buy_limit"] = np.nan
+        print("⚠️ No GE limit file found!")
 
-    # Clean and rank
-    df = df[df["profit_pct"].between(-99, 2000)]
-    ranked = df.sort_values("predicted_profit_gp", ascending=False).head(top_n)
+    # Volume-to-limit ratio filter
+    if "daily_volume" in df.columns:
+        before = len(df)
+        df["vol_to_limit_ratio"] = df["daily_volume"] / df["buy_limit"].replace(0, np.nan)
+        df = df[df["vol_to_limit_ratio"] >= MIN_VOLUME_RATIO]
+        print(f"💧 Volume-to-limit ratio ≥ {MIN_VOLUME_RATIO}: {before} → {len(df)} rows")
+    else:
+        print("⚠️ No daily_volume column found — skipping liquidity filter.")
 
-    # Save outputs for dashboard
-    ts = datetime.now().strftime("%Y%m%d_%H%M")
-    timestamped = PRED_DIR / f"top_flips_{ts}.csv"
-    latest = PRED_DIR / "latest_top_flips.csv"
-    out_cols = [
-        "item_id", "name", "buy_price", "sell_price", "predicted_profit_gp",
-        "profit_pct", "daily_volume", "limit", "volume_ratio", "volatility_1h"
-    ]
-    ranked.to_csv(timestamped, columns=[c for c in out_cols if c in ranked.columns], index=False)
-    ranked.to_csv(latest, columns=[c for c in out_cols if c in ranked.columns], index=False)
-    print(f"💰 Saved top {len(ranked)} flips → {timestamped}")
+    # Drop unrealistic predictions
+    df = df[df["profit_pct"].between(-50, 1000)]
 
-    return ranked
+    # Rank and select top flips
+    df = df.sort_values("predicted_profit_gp", ascending=False)
+    top_flips = df.head(top_n).copy()
+
+    # Apply sell recommendation logic
+    top_flips = batch_recommend_sell(top_flips)
+
+    return top_flips
+
 
 # ---------------------------------------------------------------------
-# MAIN
+# ENTRY POINT
 # ---------------------------------------------------------------------
 if __name__ == "__main__":
     print("🚀 Starting flip prediction pipeline...")
+
     model_dict = load_latest_model()
     df = load_latest_features()
-    top_flips = predict_flips(model_dict, df, top_n=100)
-    print(f"🔍 DEBUG: predict_flips() returned {len(top_flips)} rows")
 
-    latest_prices = fetch_latest_prices_dict()
-    top_flips["entry_price"] = top_flips.get("buy_price", top_flips["mid_price"])
-    sell_recs = batch_recommend_sell(top_flips, latest_prices)
-    sell_recs.to_csv(PRED_DIR / "sell_signals.csv", index=False)
+    top_flips = predict_flips(model_dict, df, top_n=100)
+
+    latest_csv = os.path.join(PREDICTIONS_DIR, "latest_top_flips.csv")
+    top_flips.to_csv(latest_csv, index=False)
+    print(f"💾 Saved predictions → {latest_csv}")
+    print(f"✅ {len(top_flips)} flips ready for dashboard.")
