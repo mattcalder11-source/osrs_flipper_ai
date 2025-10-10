@@ -1,3 +1,5 @@
+import React from "react";
+
 export default function Loading({ text = "Loading..." }) {
   return (
     <div className="flex justify-center items-center py-12">

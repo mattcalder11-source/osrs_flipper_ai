@@ -1,3 +1,5 @@
+import React from "react";
+
 export default function SellAlerts({ signals }) {
   if (!signals?.length) return <p className="text-gray-400">No sell alerts.</p>;
 
