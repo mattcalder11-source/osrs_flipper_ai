@@ -31,8 +31,8 @@ PRED_DIR.mkdir(parents=True, exist_ok=True)
 # ---------------------------------------------------------------------
 # ITEM BLACKLIST
 # ---------------------------------------------------------------------
-ITEM_BLACKLIST = {  
-}
+ITEM_BLACKLIST = set({  
+})
 
 BLACKLIST_FILE = BASE_DIR / "osrs_flipper_ai" / "data" / "item_blacklist.txt"
 if BLACKLIST_FILE.exists():
