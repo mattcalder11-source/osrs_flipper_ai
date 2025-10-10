@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-fetch_ge_limits.py — Download and cache OSRS GE buy limits
-(fully based on /mapping endpoint, filters untradeable/unavailable items)
+fetch_ge_limits.py — Fetch OSRS GE buy limits from /mapping
+Filters out items with NULL or zero buy limits.
 """
 
 import requests, json
@@ -13,47 +13,45 @@ URL_MAPPING = "https://prices.runescape.wiki/api/v1/osrs/mapping"
 def fetch_ge_limits():
     headers = {"User-Agent": "osrs-flipper-ai (contact: matthew@example.com)"}
 
-    print("📦 Fetching item mapping (buy limits + tradeable flags)...")
+    print("📦 Fetching OSRS item mapping (buy limits)...")
     try:
         resp = requests.get(URL_MAPPING, headers=headers, timeout=45)
         resp.raise_for_status()
         mapping = resp.json()
-        print(f"✅ Retrieved {len(mapping):,} total mapping entries.")
+        print(f"✅ Retrieved {len(mapping):,} total items from /mapping.")
     except Exception as e:
         print(f"❌ Failed to fetch mapping: {e}")
-        mapping = []
+        return
 
-    # Build dictionary: item_id → buy_limit (for tradeable items only)
     limits = {}
-    missing_limit = 0
-    skipped_untradeable = 0
+    null_count = 0
+    zero_count = 0
 
     for item in mapping:
         try:
-            item_id = int(item["id"])
-            # Skip untradeable or unavailable items
-            if not (item.get("tradeable") or item.get("tradeable_on_ge")):
-                skipped_untradeable += 1
+            item_id = int(item.get("id"))
+            limit = item.get("limit")
+            if limit is None:
+                null_count += 1
                 continue
-
-            limit = item.get("buy_limit")
-            # Skip invalid limits (null, 0, etc.)
-            if limit is None or limit == 0:
-                missing_limit += 1
-                limit = 100  # default fallback to avoid NaNs
-
+            if isinstance(limit, str) and not limit.strip():
+                null_count += 1
+                continue
+            limit = int(limit)
+            if limit <= 0:
+                zero_count += 1
+                continue
             limits[item_id] = limit
         except Exception:
             continue
 
-    # Write file
     OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     with open(OUT_PATH, "w") as f:
         json.dump(limits, f, indent=2)
 
-    print(f"✅ Wrote {len(limits):,} tradeable item limits → {OUT_PATH}")
-    print(f"🧹 Skipped {skipped_untradeable:,} untradeable/unavailable items.")
-    print(f"⚠️ {missing_limit:,} items had no explicit limit (defaulted to 100).")
+    print(f"✅ Wrote {len(limits):,} valid item limits → {OUT_PATH}")
+    print(f"🧹 Skipped {null_count:,} items with NULL limits.")
+    print(f"🧹 Skipped {zero_count:,} items with limit = 0.")
 
 if __name__ == "__main__":
     fetch_ge_limits()
