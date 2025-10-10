@@ -75,7 +75,15 @@ def predict_flips(model_dict, df, top_n=100):
 
     # Predictions
     df["predicted_margin"] = model.predict(X)
+
+    # If margin looks like a multiplier (e.g., > 5), scale down to % terms
+    if df["predicted_margin"].abs().max() > 5:
+        print("⚙️ Scaling predicted margins (interpreting as % gain/loss)...")
+        df["predicted_margin"] = df["predicted_margin"] / 100.0
+
+    # Compute profit in gp terms
     df["predicted_profit_gp"] = df["predicted_margin"] * df.get("mid_price", 0)
+
 
     # ------------------------------------------------------------------
     # Liquidity filter using daily_volume / buy_limit ratio
