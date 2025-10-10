@@ -22,7 +22,7 @@ MODEL_DIR = f"{BASE_DIR}/models/trained_models"
 PREDICTIONS_DIR = f"{BASE_DIR}/data/predictions"
 LIMITS_FILE = f"{BASE_DIR}/data/ge_limits.json"
 ITEM_BLACKLIST_FILE = f"{BASE_DIR}/data/blacklist.txt"
-MIN_VOLUME_RATIO = 2.5 #dily_volume-to-buy_limit ratio threshold
+MIN_VOLUME_RATIO = 2 #dily_volume-to-buy_limit ratio threshold
 
 os.makedirs(PREDICTIONS_DIR, exist_ok=True)
 
