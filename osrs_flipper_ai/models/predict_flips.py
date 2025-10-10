@@ -27,7 +27,7 @@ MODEL_DIR = f"{BASE_DIR}/models/trained_models"
 PREDICTIONS_DIR = Path(f"{BASE_DIR}/data/predictions")
 LIMITS_FILE = f"{BASE_DIR}/data/ge_limits.json"
 ITEM_BLACKLIST_FILE = f"{BASE_DIR}/data/item_blacklist.txt"
-MIN_VOLUME_RATIO = 0.1  # gentler ratio for more variety
+MIN_VOLUME_RATIO = 0.6  # gentler ratio for more variety
 
 PREDICTIONS_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -123,7 +123,7 @@ def _compute_sane_prices(preds: np.ndarray, mid: np.ndarray):
 # ---------------------------------------------------------------------
 # MAIN FLIP PREDICTION FUNCTION
 # ---------------------------------------------------------------------
-def predict_flips(model_dict, df, top_n=100):
+def predict_flips(model_dict, df, top_n=50):
     model = model_dict["model"]
     features = model_dict["features"]
 
