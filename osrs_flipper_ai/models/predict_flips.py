@@ -1,6 +1,6 @@
 """
-predict_flips.py - Uses the latest trained model to generate current OSRS flip predictions.
-Loads the newest feature snapshot, applies the model, and saves ranked recommendations.
+predict_flips.py - Uses the latest trained model to generate OSRS flip predictions.
+Loads the newest feature snapshot (already precomputed), applies the model, and saves ranked recommendations.
 """
 
 import os
@@ -17,7 +17,6 @@ sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 from osrs_flipper_ai.models.recommend_sell import batch_recommend_sell
 from osrs_flipper_ai.src.fetch_latest_prices import fetch_latest_prices_dict
-from osrs_flipper_ai.features.features import compute_features, compute_technical_indicators
 
 # ---------------------------------------------------------------------
 # CONFIG
@@ -32,29 +31,25 @@ PRED_DIR.mkdir(parents=True, exist_ok=True)
 # LOADERS
 # ---------------------------------------------------------------------
 def load_latest_model():
-    """Load the most recent trained model from /models/trained_models."""
+    """Load the most recent trained model."""
     model_path = MODEL_DIR / "latest_model.pkl"
     if not model_path.exists():
         raise FileNotFoundError(f"❌ No trained model found at {model_path}")
-    print(f"📦 Loaded model from {model_path}")
-
     model_dict = joblib.load(model_path)
-    timestamp = model_dict.get("timestamp", "unknown")
-    r2 = model_dict.get("r2", 0.0)
-    print(f"📦 Loaded model (trained {timestamp}, R²={r2:.4f})")
-
+    print(f"📦 Loaded model from {model_path}")
+    print(f"   Trained {model_dict.get('timestamp', 'unknown')} (R²={model_dict.get('r2', 0.0):.4f})")
     return model_dict
 
 
 def load_latest_features():
+    """Load precomputed feature snapshot — skip recomputing indicators."""
     feature_files = sorted(FEATURE_DIR.glob("features_*.parquet"), key=os.path.getmtime, reverse=True)
     if not feature_files:
         raise FileNotFoundError("❌ No feature snapshots found in data/features/")
     latest_file = feature_files[0]
-    print(f"📊 Using latest snapshot: {latest_file}")
+    print(f"📊 Using feature snapshot: {latest_file}")
     df = pd.read_parquet(latest_file)
-    df = compute_features(df)
-    df = compute_technical_indicators(df)
+    print("⚙️ Skipping recomputation of technical indicators (already precomputed).")
     return df
 
 
@@ -62,10 +57,10 @@ def load_latest_features():
 # PREDICTION + OUTPUT
 # ---------------------------------------------------------------------
 def predict_flips(model_dict, df, top_n=100):
+    """Apply model to precomputed features and generate flip rankings."""
     model = model_dict["model"]
     feature_cols = model_dict["features"]
 
-    # Fill missing feature columns
     for col in feature_cols:
         if col not in df.columns:
             df[col] = 0
@@ -78,18 +73,18 @@ def predict_flips(model_dict, df, top_n=100):
     MIN_DAILY_VOLUME = 150
     if "daily_volume" in df.columns:
         before = len(df)
-        nonzero = (df["daily_volume"] > 0).sum()
-        print(f"📊 Found {nonzero}/{before} items with nonzero daily_volume.")
         df = df[df["daily_volume"] >= MIN_DAILY_VOLUME]
         print(f"💧 Filtered by daily_volume ≥ {MIN_DAILY_VOLUME}: {before} → {len(df)} rows")
     else:
-        print("⚠️ No daily_volume column found — skipping volume filter.")
+        print("⚠️ No daily_volume column found — skipping liquidity filter.")
 
     ranked = (
         df.sort_values("predicted_profit_gp", ascending=False)
           .head(top_n)
-          .loc[:, ["item_id", "name", "predicted_profit_gp", "predicted_margin",
-                   "mid_price", "daily_volume", "volatility_1h", "technical_score"]]
+          .loc[:, [
+              "item_id", "name", "predicted_profit_gp", "predicted_margin",
+              "mid_price", "daily_volume", "volatility_1h", "technical_score"
+          ]]
     )
 
     ts = datetime.now().strftime("%Y%m%d_%H%M")
@@ -101,7 +96,7 @@ def predict_flips(model_dict, df, top_n=100):
         ranked.to_csv(latest_path, index=False)
         print(f"💰 Saved top {top_n} flips → {timestamped_path}")
     else:
-        print("⚠️ No flips to save — writing placeholder CSV for dashboard.")
+        print("⚠️ No flips to save — writing placeholder CSV.")
         pd.DataFrame(columns=["item_id", "name", "predicted_profit_gp", "roi"]).to_csv(latest_path, index=False)
 
     return ranked
@@ -155,8 +150,8 @@ if __name__ == "__main__":
 
     model_dict = load_latest_model()
     df = load_latest_features()
-    top_flips = predict_flips(model_dict, df, top_n=100)
 
+    top_flips = predict_flips(model_dict, df, top_n=100)
     print(f"🔍 DEBUG: predict_flips() returned {len(top_flips)} rows")
 
     # Load GE buy limits
@@ -186,6 +181,7 @@ if __name__ == "__main__":
 
     sell_recs = batch_recommend_sell(all_tiers, latest_prices)
     sell_recs.to_csv(PRED_DIR / "sell_signals.csv", index=False)
+
     print("\n💰 === SELL RECOMMENDATIONS ===")
     if "should_sell" in sell_recs.columns:
         print(sell_recs[sell_recs["should_sell"]])
