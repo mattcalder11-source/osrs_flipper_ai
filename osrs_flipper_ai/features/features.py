@@ -192,13 +192,20 @@ def compute_features_in_chunks(df, batch_size=1000, out_path=None):
             print(f"✅ Processed {i+1:,}/{total:,} items...")
 
     # final write
-    if results:
-        batch_df = pd.concat(results, ignore_index=True)
-        batch_df["volatility_1h"] = batch_df["volatility_1h"].fillna(0)
-        batch_df.to_parquet(out_path, index=False)
-        print(f"💾 Final batch written ({len(batch_df):,} rows).")
-    elif results:
-        return pd.concat(results, ignore_index=True)
+        if results:
+            batch_df = pd.concat(results, ignore_index=True)
+            batch_df["volatility_1h"] = batch_df["volatility_1h"].fillna(0)
+
+            if out_path:
+                batch_df.to_parquet(out_path, index=False)
+                print(f"💾 Final batch written ({len(batch_df):,} rows).")
+
+            return batch_df  # ✅ always return the DataFrame
+
+        else:
+            print("⚠️ No features generated (empty dataset).")
+            return pd.DataFrame()
+
 
 # ----------------------------
 # FEATURE LOADING
