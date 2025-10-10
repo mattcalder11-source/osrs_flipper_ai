@@ -172,6 +172,7 @@ def compute_features_in_chunks(df, batch_size=1000, out_path=None):
             g["mid_price"].pct_change(fill_method=None).rolling(12, min_periods=1).std()
         ).astype(np.float32)
         g["timestamp"] = pd.to_datetime(g["timestamp"], errors="coerce")
+        g["target_profit_ratio"] = (g["high"] / g["low"] - 1).clip(-0.2, 2.0)
 
         results.append(g)
 
