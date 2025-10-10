@@ -14,6 +14,7 @@ from fastapi import APIRouter
 from pathlib import Path
 from fastapi.responses import JSONResponse
 import numpy as np
+from datetime import datetime
 
 router = APIRouter()
 DATA_DIR = Path("/root/osrs_flipper_ai/osrs_flipper_ai/data")
@@ -120,38 +121,39 @@ def load_sell_signals() -> pd.DataFrame:
 # ---------------------------------------------------------------------
 # API Routes
 # ---------------------------------------------------------------------
+def df_to_safe_json(df: pd.DataFrame):
+    """Safely convert any DataFrame to JSON-serializable dict."""
+    def safe_val(x):
+        if isinstance(x, (np.generic, np.bool_)):
+            return x.item()
+        if pd.isna(x):
+            return None
+        if isinstance(x, (pd.Timestamp, datetime)):
+            return x.isoformat()
+        if isinstance(x, (list, dict)):
+            return json.dumps(x)
+        return x
+
+    return [
+        {col: safe_val(val) for col, val in row.items()}
+        for row in df.to_dict(orient="records")
+    ]
+
 @router.get("/flips/buy-recommendations")
 def get_buy_recommendations():
     df = load_latest_predictions()
     if df.empty:
         return JSONResponse({"count": 0, "data": []})
 
-    # Clean types to make FastAPI JSON safe
-    df = df.replace({np.nan: None})
-    for col in df.columns:
-        df[col] = df[col].apply(
-            lambda x: float(x)
-            if isinstance(x, (np.float32, np.float64))
-            else (int(x) if isinstance(x, (np.int32, np.int64)) else x)
-        )
-
-    data = df.to_dict(orient="records")
+    data = df_to_safe_json(df)
     return JSONResponse({"count": len(data), "data": data})
 
 
-@router.get("/flips/sell-recommendations")
+@router.get("/flips/sell-signals") 
 def get_sell_recommendations():
     df = load_sell_signals()
     if df.empty:
         return JSONResponse({"count": 0, "data": []})
 
-    df = df.replace({np.nan: None})
-    for col in df.columns:
-        df[col] = df[col].apply(
-            lambda x: float(x)
-            if isinstance(x, (np.float32, np.float64))
-            else (int(x) if isinstance(x, (np.int32, np.int64)) else x)
-        )
-
-    data = df.to_dict(orient="records")
+    data = df_to_safe_json(df)
     return JSONResponse({"count": len(data), "data": data})
