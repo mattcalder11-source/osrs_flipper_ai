@@ -1,6 +1,7 @@
 """
 predict_flips.py - Uses the latest trained model to generate OSRS flip predictions.
-Loads precomputed features (no recomputation), applies model, filters by 24h volume, and saves ranked flips.
+Loads precomputed features (no recomputation), applies model, filters by
+liquidity using volume-to-buy-limit ratio, and saves ranked flips.
 """
 
 import os
@@ -26,6 +27,7 @@ MODEL_DIR = BASE_DIR / "osrs_flipper_ai" / "models" / "trained_models"
 FEATURE_DIR = BASE_DIR / "data" / "features"
 PRED_DIR = BASE_DIR / "osrs_flipper_ai" / "data" / "predictions"
 PRED_DIR.mkdir(parents=True, exist_ok=True)
+
 
 # ---------------------------------------------------------------------
 # LOADERS
@@ -75,24 +77,39 @@ def predict_flips(model_dict, df, top_n=100):
     df["predicted_margin"] = model.predict(X)
     df["predicted_profit_gp"] = df["predicted_margin"] * df.get("mid_price", 0)
 
-    # Filter by minimum 24h trade volume
-    MIN_DAILY_VOLUME = 150
+    # ------------------------------------------------------------------
+    # Liquidity filter using daily_volume / buy_limit ratio
+    # ------------------------------------------------------------------
     if "daily_volume" in df.columns:
         before = len(df)
-        df = df[df["daily_volume"] >= MIN_DAILY_VOLUME]
-        print(f"💧 Filtered by daily_volume ≥ {MIN_DAILY_VOLUME}: {before} → {len(df)} rows")
+        try:
+            limits = pd.read_html("https://oldschool.runescape.wiki/w/Grand_Exchange/Buying_limits")[0]
+            limits = limits.rename(columns=lambda c: c.lower().strip())
+            limit_map = dict(zip(limits["item"], limits["limit"]))
+            df["limit"] = df["name"].map(limit_map).fillna(100)
+            print("✅ Loaded GE buying limits for liquidity ratio filter.")
+        except Exception as e:
+            print(f"⚠️ Could not fetch GE limits for liquidity ratio filter: {e}")
+            df["limit"] = 100
+
+        df["volume_ratio"] = df["daily_volume"] / df["limit"].replace(0, np.nan)
+        df["volume_ratio"] = df["volume_ratio"].fillna(0)
+
+        MIN_RATIO = 2.0  # require at least 2× limit traded per day
+        df = df[df["volume_ratio"] >= MIN_RATIO]
+
+        print(f"💧 Filtered by volume_ratio ≥ {MIN_RATIO}: {before} → {len(df)} rows")
     else:
-        print("⚠️ No daily_volume column found — skipping liquidity filter.")
+        print("⚠️ No daily_volume column found — skipping liquidity ratio filter.")
 
     # Rank by profit
     keep_cols = [
         "item_id", "name", "predicted_profit_gp", "predicted_margin",
-        "mid_price", "daily_volume", "volatility_1h"
+        "mid_price", "daily_volume", "limit", "volume_ratio", "volatility_1h"
     ]
-    for col in ["technical_score"]:
-        if col not in df.columns:
-            df[col] = 0.0
-            keep_cols.append(col)
+    if "technical_score" not in df.columns:
+        df["technical_score"] = 0.0
+    keep_cols.append("technical_score")
 
     ranked = (
         df.sort_values("predicted_profit_gp", ascending=False)
@@ -167,29 +184,10 @@ if __name__ == "__main__":
     top_flips = predict_flips(model_dict, df, top_n=100)
     print(f"🔍 DEBUG: predict_flips() returned {len(top_flips)} rows")
 
-    # Load GE buying limits
-    try:
-        limits = pd.read_html("https://oldschool.runescape.wiki/w/Grand_Exchange/Buying_limits")[0]
-        limits = limits.rename(columns=lambda c: c.lower().strip())
-        limits_map = dict(zip(limits["item"], limits["limit"]))
-        top_flips["limit"] = top_flips["name"].map(limits_map).fillna(100)
-        print("✅ Loaded GE buying limits.")
-    except Exception as e:
-        print(f"⚠️ Could not fetch GE limits: {e}")
-        top_flips["limit"] = 100
-
-    # Generate tiered recommendations
-    all_tiers = recommend_flips_by_tier(top_flips)
-
-    # Save unified output
-    latest_path = PRED_DIR / "latest_top_flips.csv"
-    all_tiers.to_csv(latest_path, index=False)
-    print(f"💾 Saved unified flips → {latest_path}")
-
     # SELL RECOMMENDATIONS
     latest_prices = fetch_latest_prices_dict()
-    all_tiers["entry_price"] = all_tiers.get("entry_price", all_tiers["mid_price"])
-    sell_recs = batch_recommend_sell(all_tiers, latest_prices)
+    top_flips["entry_price"] = top_flips.get("entry_price", top_flips["mid_price"])
+    sell_recs = batch_recommend_sell(top_flips, latest_prices)
     sell_recs.to_csv(PRED_DIR / "sell_signals.csv", index=False)
 
     print("\n💰 === SELL RECOMMENDATIONS ===")
