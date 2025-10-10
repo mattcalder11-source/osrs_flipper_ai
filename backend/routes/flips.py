@@ -1,152 +1,108 @@
+#!/usr/bin/env python3
+"""
+flips.py — FastAPI backend for OSRS Flipping Dashboard
+
+Serves:
+  • /flips/buy-recommendations → latest_top_flips.csv (buy signals)
+  • /flips/sell-recommendations → sell_signals.csv (active flips to evaluate)
+Enriches both with item metadata (name, icon, buy_limit) from item_mapping.json.
+"""
+
+import json
+import pandas as pd
 from fastapi import APIRouter
 from pathlib import Path
-import pandas as pd
-import numpy as np
-from datetime import datetime
-from osrs_flipper_ai.models.recommend_sell import batch_recommend_sell
-from osrs_flipper_ai.src.fetch_latest_prices import fetch_latest_prices_dict
 
-router = APIRouter(prefix="/flips", tags=["flips"])
-
-# ----------------------------------------------------
-# Path configuration
-# ----------------------------------------------------
+router = APIRouter()
 DATA_DIR = Path("/root/osrs_flipper_ai/osrs_flipper_ai/data")
+PREDICTIONS_DIR = DATA_DIR / "predictions"
 
-# ----------------------------------------------------
-# CSV helpers
-# ----------------------------------------------------
-def load_csv(path, cols=None):
-    if not path.exists():
-        return pd.DataFrame(columns=cols or [])
-    try:
-        return pd.read_csv(path)
-    except Exception as e:
-        print(f"⚠️ Error reading {path}: {e}")
-        return pd.DataFrame(columns=cols or [])
 
-def save_csv(df, path):
-    path.parent.mkdir(parents=True, exist_ok=True)
-    df.to_csv(path, index=False)
+# ---------------------------------------------------------------------
+# Helper: Load and enrich dataframe with item metadata
+# ---------------------------------------------------------------------
+def enrich_with_metadata(df: pd.DataFrame) -> pd.DataFrame:
+    """Attach item name, icon, and buy limit using item_mapping.json."""
+    mapping_path = DATA_DIR / "item_mapping.json"
 
-# ----------------------------------------------------
-# Predictions loader (main dashboard source)
-# ----------------------------------------------------
-def load_latest_predictions():
-    """Load latest_top_flips.csv and normalize for the frontend."""
-    latest = DATA_DIR / "predictions" / "latest_top_flips.csv"
-    print(f"✅ Loading predictions from: {latest}")
-
-    if not latest.exists():
-        print(f"⚠️ File not found: {latest}")
-        return pd.DataFrame()
-
-    try:
-        df = pd.read_csv(latest)
-    except Exception as e:
-        print(f"❌ Failed to read CSV: {e}")
-        return pd.DataFrame()
-
-    if df.empty:
-        print("⚠️ Empty predictions file.")
+    if not mapping_path.exists():
+        print(f"⚠️ {mapping_path} not found — enrichment skipped.")
+        df["name"] = df["item_id"].astype(str)
+        df["icon"] = None
+        df["buy_limit"] = 100
         return df
 
-    # ----------------------------------------------------------------
-    # Safely add or fill columns expected by dashboard
-    # ----------------------------------------------------------------
-    numeric_defaults = {
-        "predicted_profit_gp": 0.0,
-        "predicted_margin": 1.0,
-        "mid_price": 0.0,
-        "investment_gp": 1.0,
-        "expected_profit_gp_total": 0.0,
-        "limit": 100,
-        "daily_volume": 0.0,
-        "volume_ratio": 0.0,
-        "volatility_1h": 0.0,
-    }
-    for col, default in numeric_defaults.items():
-        if col not in df.columns:
-            df[col] = default
-        df[col] = df[col].replace([np.inf, -np.inf], np.nan).fillna(default).astype(float)
+    try:
+        with open(mapping_path) as f:
+            mapping = {int(item["id"]): item for item in json.load(f)}
 
-    # Derived visualization fields
-    df["low"] = df["mid_price"]
-    df["high"] = df["mid_price"] * df["predicted_margin"]
-    df["potential_profit"] = df["predicted_profit_gp"] / df["investment_gp"]
-    df["potential_profit"] = df["potential_profit"].replace([np.inf, -np.inf], np.nan).fillna(0)
+        df["name"] = df["item_id"].map(lambda x: mapping.get(int(x), {}).get("name", "Unknown"))
+        df["icon"] = df["item_id"].map(lambda x: mapping.get(int(x), {}).get("icon"))
+        df["buy_limit"] = df["item_id"].map(lambda x: mapping.get(int(x), {}).get("buy_limit"))
+        df["icon_url"] = df["icon"].apply(
+            lambda f: f"https://oldschool.runescape.wiki/images/{f}" if pd.notnull(f) else None
+        )
 
-    # ----------------------------------------------------------------
-    # Columns shown on dashboard (aligned with new predictions)
-    # ----------------------------------------------------------------
-    keep_cols = [
-        "item_id", "name", "low", "high", "potential_profit",
-        "predicted_profit_gp", "investment_gp", "predicted_margin",
-        "expected_profit_gp_total", "limit", "daily_volume", "volume_ratio", "volatility_1h"
-    ]
-    df = df[[c for c in keep_cols if c in df.columns]]
+    except Exception as e:
+        print(f"⚠️ Failed to enrich item metadata: {e}")
+        df["name"] = df["item_id"].astype(str)
+        df["icon"] = None
+        df["buy_limit"] = 100
 
-    print(f"✅ Prepared {len(df)} flip rows for dashboard.")
     return df
 
-# ----------------------------------------------------
-# API routes
-# ----------------------------------------------------
-@router.get("/buy-recommendations")
+
+# ---------------------------------------------------------------------
+# Loader: Buy recommendations (latest_top_flips.csv)
+# ---------------------------------------------------------------------
+def load_latest_predictions() -> pd.DataFrame:
+    latest = PREDICTIONS_DIR / "latest_top_flips.csv"
+    if not latest.exists() or latest.stat().st_size == 0:
+        print(f"⚠️ No buy recommendations found at {latest}")
+        return pd.DataFrame()
+
+    df = pd.read_csv(latest)
+    df = enrich_with_metadata(df)
+
+    # Keep relevant columns for dashboard
+    possible_cols = [
+        "item_id", "name", "icon_url", "buy_price", "sell_price", "profit_pct",
+        "predicted_profit_gp", "buy_limit", "volume_ratio", "volatility_1h",
+    ]
+    cols = [c for c in possible_cols if c in df.columns]
+    return df[cols]
+
+
+# ---------------------------------------------------------------------
+# Loader: Sell recommendations (sell_signals.csv)
+# ---------------------------------------------------------------------
+def load_sell_signals() -> pd.DataFrame:
+    sell_path = PREDICTIONS_DIR / "sell_signals.csv"
+    if not sell_path.exists() or sell_path.stat().st_size == 0:
+        print(f"⚠️ No sell signals found at {sell_path}")
+        return pd.DataFrame()
+
+    df = pd.read_csv(sell_path)
+    df = enrich_with_metadata(df)
+
+    possible_cols = [
+        "item_id", "name", "icon_url", "current_price", "should_sell",
+        "reason", "confidence", "profit_pct", "hold_hours", "urgency_score",
+    ]
+    cols = [c for c in possible_cols if c in df.columns]
+    return df[cols]
+
+
+# ---------------------------------------------------------------------
+# API Routes
+# ---------------------------------------------------------------------
+@router.get("/flips/buy-recommendations")
 def get_buy_recommendations():
-    try:
-        df = load_latest_predictions()
-        df = df.replace([np.inf, -np.inf], np.nan).fillna(0)
-        for col in df.select_dtypes(include=[np.number]).columns:
-            df[col] = df[col].astype(float)
-        return df.to_dict(orient="records")
-    except Exception as e:
-        print(f"❌ Error in buy-recommendations: {e}")
-        return {"error": str(e)}
+    df = load_latest_predictions()
+    return {"count": len(df), "data": df.to_dict(orient="records")}
 
-@router.get("/active")
-def get_active_flips():
-    active_file = DATA_DIR / "predictions" / "open_positions.csv"
-    return load_csv(active_file).to_dict(orient="records")
 
-@router.post("/add/{item_id}")
-def add_active_flip(item_id: int):
-    pred_file = DATA_DIR / "predictions" / "latest_top_flips.csv"
-    active_file = DATA_DIR / "predictions" / "open_positions.csv"
-
-    buys = load_csv(pred_file)
-    active = load_csv(active_file)
-
-    row = buys[buys["item_id"] == item_id]
-    if row.empty:
-        return {"error": "Item not found"}
-
-    row = row.copy()
-    row["entry_price"] = row["mid_price"]
-    row["entry_time"] = datetime.utcnow()
-    active = pd.concat([active, row], ignore_index=True).drop_duplicates("item_id", keep="last")
-    save_csv(active, active_file)
-    return {"status": "added", "item_id": item_id}
-
-@router.delete("/remove/{item_id}")
-def remove_active_flip(item_id: int):
-    active_file = DATA_DIR / "predictions" / "open_positions.csv"
-    active = load_csv(active_file)
-    active = active[active["item_id"] != item_id]
-    save_csv(active, active_file)
-    return {"status": "removed", "item_id": item_id}
-
-@router.get("/sell-signals")
-def get_sell_signals():
-    active_file = DATA_DIR / "predictions" / "open_positions.csv"
-    active = load_csv(active_file)
-    if active.empty:
-        return []
-
-    latest_prices = fetch_latest_prices_dict()
-    sell_recs = batch_recommend_sell(active, latest_prices)
-    return (
-        sell_recs.replace([np.inf, -np.inf], np.nan)
-        .fillna(0)
-        .to_dict(orient="records")
-    )
+@router.get("/flips/sell-recommendations")
+def get_sell_recommendations():
+    df = load_sell_signals()
+    return {"count": len(df), "data": df.to_dict(orient="records")}
