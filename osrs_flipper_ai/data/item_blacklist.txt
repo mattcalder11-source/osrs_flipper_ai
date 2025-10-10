@@ -1,24 +1,12 @@
-Unlit bug lantern
-White magic staff
-Uri's hat
-Yellow dark bow paint
-Whiteberry seed
-Wooden spoon
-White boater
-White elegant blouse
-Yanillian seed
-Yellow cape
-Yellow boots
-Unholy symbol
-Yellow flowers
-Zamorak monk top	
-White lily seed	
-Yellow gloves	
-Willow leaves	
-Vial of water	
-White dark bow paint	
-Unlit torch	
-White unicorn mask	
-Volcanic whip mix	
-Weapon poison(+)	
-Watermelon seed	
+23255
+10420
+19912
+12313
+6603
+10824
+10822
+7053
+7051
+29900
+5099
+5105
