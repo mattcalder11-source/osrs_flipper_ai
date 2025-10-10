@@ -171,10 +171,19 @@ def predict_flips(model_dict, df, top_n=100):
     df = df.sort_values("predicted_profit_gp", ascending=False)
     top_flips = df.head(top_n).copy()
 
-    # Apply sell recommendation logic
+        # Apply sell recommendation logic
     latest_prices_dict = save_latest_prices()  # fetch + persist
+
+    # Ensure compatibility with recommend_sell.py
+    if "entry_price" not in top_flips.columns:
+        top_flips["entry_price"] = top_flips["buy_price"]
+    if "entry_time" not in top_flips.columns:
+        top_flips["entry_time"] = pd.Timestamp.utcnow()
+
+
+    # Run sell recommendation (once is sufficient)
     top_flips = batch_recommend_sell(top_flips, latest_prices_dict)
-    top_flips = batch_recommend_sell(top_flips)
+
 
     return top_flips
 
