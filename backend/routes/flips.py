@@ -38,6 +38,7 @@ def enrich_with_metadata(df: pd.DataFrame) -> pd.DataFrame:
         print(f"⚠️ {mapping_path} not found — enrichment skipped.")
         if "name" not in df.columns:
             df["name"] = df["item_id"].astype(str)
+        df["icon"] = df["item_id"].map(lambda x: mapping.get(str(x), {}).get("icon", ""))
         df["icon_url"] = None
         df["buy_limit"] = df.get("buy_limit", 100)
         return df

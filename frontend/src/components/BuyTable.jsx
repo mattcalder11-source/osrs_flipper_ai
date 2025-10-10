@@ -31,7 +31,7 @@ export default function BuyTable({ buys, onRefresh }) {
               <td className="py-2 px-2 flex items-center gap-2 text-left">
                 {b.icon_url && (
                   <img
-                    src={b.icon_url}
+                    src={b.icon_url || "/placeholder.png"}
                     alt={b.name}
                     className="w-5 h-5 inline-block rounded"
                   />

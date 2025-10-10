@@ -62,7 +62,7 @@ export default function ActiveFlips() {
             <tr key={flip.item_id} className="hover:bg-gray-800">
               <td className="px-3 py-2 flex items-center space-x-2">
                 <img
-                  src={flip.icon_url}
+                  src={flip.icon_url || "/placeholder.png"}
                   alt={flip.name}
                   className="w-6 h-6 rounded"
                 />
