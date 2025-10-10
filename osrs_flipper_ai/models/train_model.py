@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 import joblib
 import gc
+from pathlib import Path
 from datetime import datetime, timedelta
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import HistGradientBoostingRegressor
@@ -28,7 +29,12 @@ FEATURE_COLS = [
 TARGET_COL = "net_margin_pct"
 
 FEATURE_DIR = "data/features"
-MODEL_DIR = "models"
+BASE_DIR = Path(__file__).resolve().parents[1] 
+MODEL_DIR = BASE_DIR / "models" / "trained_models"
+MODEL_DIR.mkdir(parents=True, exist_ok=True)
+
+model_path = MODEL_DIR / "latest_model.pkl"
+metrics_path = MODEL_DIR / "metrics_latest.json"
 LOG_PATH = "logs/train_metrics.csv"
 PRED_DIR = "data/predictions"
 

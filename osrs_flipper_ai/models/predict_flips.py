@@ -22,8 +22,10 @@ from osrs_flipper_ai.features.features import compute_features, compute_technica
 # ---------------------------------------------------------------------
 # CONFIG
 # ---------------------------------------------------------------------
+from pathlib import Path
+
 BASE_DIR = Path(__file__).resolve().parents[1]
-MODEL_DIR = BASE_DIR / "models"
+MODEL_DIR = BASE_DIR / "models" / "trained_models"
 FEATURE_DIR = BASE_DIR / "data" / "features"
 PRED_DIR = BASE_DIR / "data" / "predictions"
 PRED_DIR.mkdir(parents=True, exist_ok=True)
@@ -37,24 +39,16 @@ def load_latest_model():
     Automatically detects whether the model is stored in /models
     or inside /osrs_flipper_ai/models (for backward compatibility).
     """
-    primary_path = MODEL_DIR / "latest_model.pkl"
-    fallback_path = MODEL_DIR.parent / "osrs_flipper_ai" / "models" / "latest_model.pkl"
+    model_path = MODEL_DIR / "latest_model.pkl"
+    if not model_path.exists():
+        raise FileNotFoundError(f"❌ No trained model found at {model_path}")
+    print(f"📦 Loaded model from {model_path}")
 
-    if primary_path.exists():
-        latest_model_path = primary_path
-    elif fallback_path.exists():
-        latest_model_path = fallback_path
-        print(f"⚠️ Using fallback model at {latest_model_path}")
-    else:
-        raise FileNotFoundError(
-            f"❌ No trained model found.\nChecked:\n - {primary_path}\n - {fallback_path}"
-        )
-
-    model_dict = joblib.load(latest_model_path)
+    model_dict = joblib.load(model_path)
 
     timestamp = model_dict.get("timestamp", "unknown")
     r2 = model_dict.get("r2", 0.0)
-    print(f"📦 Loaded model from {latest_model_path} (trained {timestamp}, R²={r2:.4f})")
+    print(f"📦 Loaded model from {model_path} (trained {timestamp}, R²={r2:.4f})")
 
     return model_dict
 
@@ -89,7 +83,7 @@ def predict_flips(model_dict, df, top_n=100):
     df["predicted_profit_gp"] = df["predicted_margin"] * df.get("mid_price", 0)
 
     # ✅ Filter by minimum 24 hour volume
-    MIN_DAILY_VOLUME = 10
+    MIN_DAILY_VOLUME = 60
     if "daily_volume" in df.columns:
         before = len(df)
         nonzero = (df["daily_volume"] > 0).sum()
