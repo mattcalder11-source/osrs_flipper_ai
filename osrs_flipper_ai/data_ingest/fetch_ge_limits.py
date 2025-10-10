@@ -15,8 +15,8 @@ def fetch_ge_limits():
     r.raise_for_status()
     mapping = r.json()
 
-    # Build dict: item_id → buy_limit
-    limits = {int(item["id"]): item.get("buy_limit", None) for item in mapping if "id" in item}
+    # Build dict: item_id → limit
+    limits = {int(item["id"]): item.get("limit", None) for item in mapping if "id" in item}
     with open(OUT_PATH, "w") as f:
         json.dump(limits, f, indent=2)
     print(f"✅ Wrote {len(limits):,} buy limits → {OUT_PATH}")
