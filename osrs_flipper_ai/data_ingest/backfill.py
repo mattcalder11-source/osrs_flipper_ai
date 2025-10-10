@@ -133,25 +133,48 @@ def backfill_all_items(timeframe="5m", batch_size=10):
 # -----------------------------------------
 # Merge all JSON → Parquet
 # -----------------------------------------
-def merge_to_parquet(timeframe="5m"):
-    files = list(ITEM_DIR.glob(f"*_{timeframe}.json"))
-    rows = []
-    for file in files:
-        with open(file) as f:
+def merge_to_parquet_safe(timeframe="5m", batch_size=500):
+    """
+    Incrementally merges item JSONs into a single Parquet file without using too much RAM.
+    """
+    files = sorted(ITEM_DIR.glob(f"*_{timeframe}.json"))
+    total = len(files)
+    if total == 0:
+        print("⚠️ No JSON files found.")
+        return
+
+    print(f"📂 Merging {total:,} files into snapshot parquet (batch size {batch_size})...")
+    temp_parquets = []
+
+    for i in range(0, total, batch_size):
+        batch_files = files[i:i+batch_size]
+        batch_rows = []
+        for f in batch_files:
             try:
-                data = json.load(f)
-                rows.extend(data)
+                with open(f) as j:
+                    data = json.load(j)
+                    batch_rows.extend(data)
             except Exception as e:
-                print(f"⚠️ Failed to read {file}: {e}")
+                print(f"⚠️ Skipping {f.name}: {e}")
 
-    if not rows:
-        print("⚠️ No data found to merge.")
-        return None
+        if not batch_rows:
+            continue
 
-    df = pd.DataFrame(rows)
-    df["timestamp"] = pd.to_datetime(df["timestamp"], unit="s", errors="coerce")
-    df = df.dropna(subset=["timestamp"])
-    df.sort_values(["item_id", "timestamp"], inplace=True)
+        df_batch = pd.DataFrame(batch_rows)
+        df_batch["timestamp"] = pd.to_datetime(df_batch["timestamp"], unit="s", errors="coerce")
+        df_batch = df_batch.dropna(subset=["timestamp"])
+        df_batch.sort_values(["item_id", "timestamp"], inplace=True)
+
+        tmp_path = RAW_DIR / f"_tmp_batch_{i//batch_size}.parquet"
+        df_batch.to_parquet(tmp_path, compression="snappy")
+        temp_parquets.append(tmp_path)
+        print(f"✅ Wrote batch {i//batch_size+1} → {len(df_batch):,} rows")
+
+        del df_batch, batch_rows
+
+    print("📦 Concatenating batch parquets...")
+    df_iter = (pd.read_parquet(p) for p in temp_parquets)
+    df = pd.concat(df_iter, ignore_index=True)
 
     ts = int(time.time())
     out_path = RAW_DIR / f"snapshot_{ts}.parquet"
@@ -160,7 +183,12 @@ def merge_to_parquet(timeframe="5m"):
     df.to_parquet(out_path, compression="snappy")
     df.to_parquet(latest_path, compression="snappy")
 
-    print(f"✅ Wrote {len(df):,} rows to {out_path}")
+    print(f"✅ Wrote {len(df):,} total rows to {out_path}")
+
+    # cleanup
+    for p in temp_parquets:
+        p.unlink(missing_ok=True)
+
     return df
 
 
@@ -169,4 +197,4 @@ def merge_to_parquet(timeframe="5m"):
 # -----------------------------------------
 if __name__ == "__main__":
     backfill_all_items(timeframe="5m")
-    merge_to_parquet(timeframe="5m")
+    merge_to_parquet_safe(timeframe="5m")
