@@ -41,30 +41,50 @@ def load_latest_predictions():
         print(f"⚠️ File not found: {latest}")
         return pd.DataFrame()
 
-    df = pd.read_csv(latest)
+    try:
+        df = pd.read_csv(latest)
+    except Exception as e:
+        print(f"❌ Failed to read CSV: {e}")
+        return pd.DataFrame()
 
-    # Compute columns expected by frontend
+    if df.empty:
+        print("⚠️ Empty predictions file.")
+        return df
+
+    # ----------------------------------------------------------------
+    # Safely add or fill columns expected by dashboard
+    # ----------------------------------------------------------------
+    numeric_defaults = {
+        "predicted_profit_gp": 0.0,
+        "predicted_margin": 1.0,
+        "mid_price": 0.0,
+        "investment_gp": 1.0,
+        "expected_profit_gp_total": 0.0,
+        "limit": 100,
+        "daily_volume": 0.0,
+        "volume_ratio": 0.0,
+        "volatility_1h": 0.0,
+    }
+    for col, default in numeric_defaults.items():
+        if col not in df.columns:
+            df[col] = default
+        df[col] = df[col].replace([np.inf, -np.inf], np.nan).fillna(default).astype(float)
+
+    # Derived visualization fields
     df["low"] = df["mid_price"]
     df["high"] = df["mid_price"] * df["predicted_margin"]
     df["potential_profit"] = df["predicted_profit_gp"] / df["investment_gp"]
-    df["potential_profit"] = df["potential_profit"].fillna(0)
+    df["potential_profit"] = df["potential_profit"].replace([np.inf, -np.inf], np.nan).fillna(0)
 
-    # Keep relevant columns
+    # ----------------------------------------------------------------
+    # Columns shown on dashboard (aligned with new predictions)
+    # ----------------------------------------------------------------
     keep_cols = [
-        "item_id",
-        "name",
-        "low",
-        "high",
-        "potential_profit",
-        "predicted_profit_gp",
-        "investment_gp",
-        "predicted_margin",
-        "expected_profit_gp_total",
+        "item_id", "name", "low", "high", "potential_profit",
+        "predicted_profit_gp", "investment_gp", "predicted_margin",
+        "expected_profit_gp_total", "limit", "daily_volume", "volume_ratio", "volatility_1h"
     ]
-    df = df[keep_cols]
-
-    # Sanitize invalid values
-    df = df.replace([np.inf, -np.inf], np.nan).fillna(0)
+    df = df[[c for c in keep_cols if c in df.columns]]
 
     print(f"✅ Prepared {len(df)} flip rows for dashboard.")
     return df
@@ -74,8 +94,15 @@ def load_latest_predictions():
 # ----------------------------------------------------
 @router.get("/buy-recommendations")
 def get_buy_recommendations():
-    df = load_latest_predictions()
-    return df.to_dict(orient="records")
+    try:
+        df = load_latest_predictions()
+        df = df.replace([np.inf, -np.inf], np.nan).fillna(0)
+        for col in df.select_dtypes(include=[np.number]).columns:
+            df[col] = df[col].astype(float)
+        return df.to_dict(orient="records")
+    except Exception as e:
+        print(f"❌ Error in buy-recommendations: {e}")
+        return {"error": str(e)}
 
 @router.get("/active")
 def get_active_flips():
